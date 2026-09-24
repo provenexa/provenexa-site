@@ -1,0 +1,259 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Provenexa Research</title>
+<meta name="description" content="Provenexa turns scattered market information into real, actionable intelligence for Indian businesses.">
+<meta property="og:title" content="Provenexa Research">
+<meta property="og:description" content="Scattered market information, turned into real, actionable intelligence.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://provenexa.com/">
+<meta property="og:image" content="https://provenexa.com/assets/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://provenexa.com/assets/og-image.png">
+<link rel="canonical" href="https://provenexa.com/">
+<link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
+<link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32.png">
+<link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --navy:#0F1B33; --navy2:#12162B; --blue:#0B4F8F; --blue2:#1273B5; --cyan:#2BC4DA; --sky:#8ED8E7;
+  --mist:#E8F6F9; --mist2:#F4FBFC; --ink:#0F2A4A; --muted:#4F6478; --line:#D5E8EE; --white:#fff;
+  --sans:"Montserrat","Segoe UI",system-ui,-apple-system,Roboto,Helvetica,Arial,sans-serif;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;color-scheme:light}
+body{margin:0;background:var(--white);color:var(--ink);font-family:var(--sans);line-height:1.65;-webkit-font-smoothing:antialiased}
+a{color:inherit}
+.wrap{max-width:1180px;margin:0 auto;padding:0 28px}
+
+/* ---------- hero ---------- */
+.hero{position:relative;background:var(--mist);overflow:hidden;min-height:min(100vh,760px)}
+.hero .art{position:absolute;inset:0;width:100%;height:100%}
+.top{position:relative;z-index:3;display:flex;align-items:center;justify-content:space-between;height:96px}
+.brand{display:flex;align-items:center;gap:12px;text-decoration:none;font-weight:700;font-size:19px;letter-spacing:.2px;color:var(--ink)}
+.logo{width:44px;height:44px;flex:0 0 auto}
+.links{display:flex;align-items:center;gap:34px}
+.links a{color:#fff;text-decoration:none;font-weight:600;font-size:15.5px;text-shadow:0 1px 8px rgba(8,50,100,.35)}
+.links a:hover{opacity:.85}
+.links .pill{background:#fff;color:var(--blue);padding:9px 22px;border-radius:9px;font-weight:700;text-shadow:none;box-shadow:0 8px 22px rgba(8,50,100,.22)}
+.copy{position:relative;z-index:3;padding:70px 0 120px;max-width:560px}
+.kicker{display:inline-flex;align-items:center;gap:10px;font-weight:700;font-size:14px;letter-spacing:1.4px;text-transform:uppercase;color:var(--blue2)}
+.kicker i{display:block;width:34px;height:3px;border-radius:2px;background:linear-gradient(90deg,var(--cyan),var(--blue))}
+h1{font-size:clamp(34px,4.6vw,58px);line-height:1.08;font-weight:800;letter-spacing:-.025em;margin:18px 0 22px;color:var(--ink)}
+.lead{font-size:clamp(16px,1.5vw,18.5px);color:var(--muted);margin:0 0 36px;font-weight:500;max-width:48ch}
+.cta{display:inline-flex;align-items:center;gap:0;text-decoration:none;background:linear-gradient(90deg,var(--sky),var(--cyan));border-radius:999px;padding:6px 34px 6px 6px;color:var(--navy);font-weight:700;font-size:18px;box-shadow:0 14px 30px rgba(43,196,218,.35);transition:transform .2s}
+.cta:hover{transform:translateY(-2px)}
+.cta .ar{width:44px;height:44px;border-radius:50%;border:2px solid #fff;display:grid;place-items:center;margin-right:22px;background:rgba(255,255,255,.35)}
+.cta .ar svg{width:22px;height:22px}
+
+/* floating shapes */
+@keyframes drift{0%,100%{transform:translateY(0)}50%{transform:translateY(-14px)}}
+@keyframes drift2{0%,100%{transform:translateY(0)}50%{transform:translateY(10px)}}
+@keyframes draw{from{stroke-dashoffset:1}to{stroke-dashoffset:0}}
+.f1{animation:drift 7s ease-in-out infinite}
+.f2{animation:drift2 9s ease-in-out infinite}
+.f3{animation:drift 11s ease-in-out infinite 1s}
+.f4{animation:drift2 8s ease-in-out infinite .5s}
+.path{stroke-dasharray:1;stroke-dashoffset:0;animation:draw 3.2s ease-out both}
+@media (prefers-reduced-motion:reduce){.f1,.f2,.f3,.f4,.path{animation:none}}
+
+/* ---------- sections ---------- */
+section{padding:96px 0}
+.eyebrow{font-weight:700;font-size:13.5px;letter-spacing:1.5px;text-transform:uppercase;color:var(--blue2)}
+h2{font-size:clamp(28px,3.4vw,42px);line-height:1.12;font-weight:800;letter-spacing:-.02em;margin:12px 0 16px;max-width:22ch}
+.sub{color:var(--muted);font-weight:500;max-width:58ch;margin:0}
+
+.story{background:var(--white)}
+.steps{display:grid;grid-template-columns:repeat(3,1fr);gap:34px;margin-top:60px;position:relative}
+.steps::before{content:"";position:absolute;left:8%;right:8%;top:58px;border-top:3px dashed var(--sky);z-index:0}
+.step{position:relative;z-index:1;text-align:center;padding:0 10px}
+.step .ic{width:132px;height:118px;margin:0 auto 22px;background:var(--white);border-radius:24px;box-shadow:0 18px 40px rgba(11,79,143,.14);display:grid;place-items:center;border:1px solid var(--line)}
+.step .ic svg{width:96px;height:80px}
+.step h3{margin:0 0 8px;font-size:22px;font-weight:800}
+.step p{margin:0 auto;color:var(--muted);max-width:28ch;font-weight:500;font-size:15.5px}
+
+.apps{background:var(--mist)}
+.appgrid{display:grid;grid-template-columns:1.5fr 1fr;gap:26px;margin-top:44px}
+.appmain{position:relative;overflow:hidden;border-radius:28px;padding:44px;color:#fff;background:linear-gradient(135deg,var(--blue) 0%,var(--blue2) 55%,var(--cyan) 130%);box-shadow:0 26px 60px rgba(11,79,143,.28)}
+.appmain::after{content:"";position:absolute;right:-60px;bottom:-80px;width:280px;height:280px;border-radius:60px;transform:rotate(22deg);background:rgba(255,255,255,.12)}
+.appmain::before{content:"";position:absolute;right:120px;top:-40px;width:110px;height:110px;border-radius:26px;transform:rotate(-14deg);background:rgba(255,255,255,.10)}
+.tag{display:inline-block;background:rgba(255,255,255,.2);border:1px solid rgba(255,255,255,.45);padding:6px 16px;border-radius:999px;font-weight:700;font-size:12.5px;letter-spacing:1.2px;text-transform:uppercase}
+.appmain h3{font-size:clamp(26px,3vw,36px);font-weight:800;line-height:1.15;margin:20px 0 14px;letter-spacing:-.015em;max-width:16ch}
+.appmain p{margin:0;font-weight:500;max-width:44ch;position:relative;z-index:1}
+.appmain .aud{margin-top:14px;font-size:14.5px;opacity:.88}
+.more{border:2px dashed #A9D9E4;border-radius:28px;padding:40px;display:flex;flex-direction:column;justify-content:center;background:rgba(255,255,255,.55)}
+.more b{font-size:19px;font-weight:800}
+.more p{margin:8px 0 0;color:var(--muted);font-weight:500;font-size:15.5px}
+
+.how{background:var(--white)}
+.rules{display:grid;grid-template-columns:repeat(2,1fr);gap:22px 40px;margin-top:44px}
+.rule{display:flex;gap:20px;align-items:flex-start}
+.rule .sq{flex:0 0 46px;height:46px;border-radius:13px;background:linear-gradient(135deg,var(--cyan),var(--blue));box-shadow:0 10px 22px rgba(11,79,143,.25);position:relative}
+.rule .sq::after{content:"";position:absolute;inset:14px;border-radius:5px;background:rgba(255,255,255,.85)}
+.rule b{display:block;font-weight:800;font-size:18px;margin-bottom:3px}
+.rule span{color:var(--muted);font-weight:500;font-size:15.5px}
+
+.contact{background:var(--navy2);color:#fff;position:relative;overflow:hidden}
+.contact::before{content:"";position:absolute;right:-90px;top:-110px;width:380px;height:380px;border-radius:90px;transform:rotate(24deg);background:linear-gradient(135deg,rgba(43,196,218,.35),rgba(11,79,143,.05))}
+.contact::after{content:"";position:absolute;left:-70px;bottom:-120px;width:260px;height:260px;border-radius:64px;transform:rotate(-18deg);background:linear-gradient(135deg,rgba(43,196,218,.22),rgba(11,79,143,.02))}
+.contact .wrap{position:relative;z-index:1;text-align:center}
+.contact h2{margin-left:auto;margin-right:auto;max-width:20ch}
+.contact .sub{color:#B7C7DA;margin:0 auto 34px}
+.contact .cta{font-size:clamp(16px,2.2vw,21px)}
+footer{background:#0B1226;color:#8DA0B8;font-size:14px;padding:30px 0 40px}
+footer p{margin:4px 0}
+footer b{color:#fff}
+
+@media (max-width:900px){
+  .links a:not(.pill){display:none}
+  .top{height:80px}
+  .hero{min-height:0}
+  .hero .art{inset:auto 0 0 auto;width:640px;max-width:none;height:347px;-webkit-mask-image:linear-gradient(to bottom,transparent 0,#000 38%);mask-image:linear-gradient(to bottom,transparent 0,#000 38%)}
+  .copy{padding:36px 0 270px;max-width:none}
+  section{padding:70px 0}
+  .steps{grid-template-columns:1fr;gap:46px}
+  .steps::before{display:none}
+  .appgrid,.rules{grid-template-columns:1fr}
+  .appmain,.more{padding:32px}
+}
+</style>
+</head>
+<body>
+
+<div class="hero" id="top">
+  <!-- illustration: gradient sweep, floating squares, dashed arcs, connecting curve -->
+  <svg class="art" viewBox="0 0 1440 780" preserveAspectRatio="xMaxYMid slice" aria-hidden="true">
+    <defs>
+      <linearGradient id="gSky" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#9ADFEC"/><stop offset=".55" stop-color="#3FC9DF"/><stop offset="1" stop-color="#2BB5D0"/></linearGradient>
+      <linearGradient id="gDeep" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#1B87BC"/><stop offset=".5" stop-color="#0F67A8"/><stop offset="1" stop-color="#0A3F7C"/></linearGradient>
+      <linearGradient id="gSq" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#3ACDE2"/><stop offset="1" stop-color="#0C55A0"/></linearGradient>
+      <filter id="sh" x="-30%" y="-30%" width="170%" height="170%"><feDropShadow dx="0" dy="10" stdDeviation="9" flood-color="#08417D" flood-opacity=".28"/></filter>
+    </defs>
+    <!-- light band -->
+    <path d="M760 0 H1440 V780 H1150 C1040 700 1070 610 1160 560 C1255 505 1245 395 1165 345 C1080 295 985 345 925 388 C850 440 770 395 745 315 C722 240 730 110 760 0 Z" fill="url(#gSky)"/>
+    <!-- deep lobe -->
+    <path d="M985 0 H1440 V690 C1395 728 1330 722 1290 672 C1245 615 1300 555 1330 505 C1365 445 1338 365 1262 336 C1185 306 1122 340 1072 380 C1018 422 960 372 940 305 C920 235 940 110 985 0 Z" fill="url(#gDeep)"/>
+    <!-- thin outline echoing the shape -->
+    <path d="M985 0 C940 110 920 235 940 305 C960 372 1018 422 1072 380 C1122 340 1185 306 1262 336 C1338 365 1365 445 1330 505" fill="none" stroke="#fff" stroke-opacity=".55" stroke-width="2"/>
+    <!-- dashed arcs -->
+    <circle cx="1090" cy="330" r="118" fill="none" stroke="#fff" stroke-opacity=".5" stroke-width="2.4" stroke-dasharray="7 9"/>
+    <path d="M820 130 C900 60 990 60 1050 118" fill="none" stroke="#fff" stroke-opacity=".5" stroke-width="2.4" stroke-dasharray="7 9"/>
+    <!-- translucent squares on the sweep -->
+    <g class="f2"><rect x="1230" y="470" width="84" height="84" rx="20" fill="#fff" fill-opacity=".26" transform="rotate(14 1272 512)"/></g>
+    <g class="f3"><rect x="1310" y="585" width="52" height="52" rx="13" fill="#fff" fill-opacity=".3" transform="rotate(-12 1336 611)"/></g>
+    <g class="f1"><rect x="1140" y="605" width="58" height="58" rx="15" fill="#fff" fill-opacity=".22" transform="rotate(10 1169 634)"/></g>
+    <g class="f4"><rect x="1340" y="410" width="44" height="44" rx="11" fill="#fff" fill-opacity=".2" transform="rotate(-8 1362 432)"/></g>
+    <!-- scattered squares joining up: information becoming connected -->
+    <path class="path" pathLength="1" d="M70 668 C120 702 165 716 245 702 C335 686 352 644 432 648 C512 652 540 702 620 702 C692 702 730 668 772 662" fill="none" stroke="#2BB5D0" stroke-width="2.2" stroke-opacity=".9"/>
+    <g class="f1" filter="url(#sh)"><rect x="40" y="628" width="64" height="64" rx="16" fill="url(#gSq)"/></g>
+    <g class="f3" filter="url(#sh)"><rect x="222" y="676" width="44" height="44" rx="11" fill="url(#gSq)"/></g>
+    <g class="f2" filter="url(#sh)"><rect x="406" y="616" width="52" height="52" rx="13" fill="url(#gSq)"/></g>
+    <g class="f4" filter="url(#sh)"><rect x="600" y="680" width="40" height="40" rx="10" fill="url(#gSq)"/></g>
+  </svg>
+
+  <div class="wrap">
+    <div class="top">
+      <a class="brand" href="#top" aria-label="Provenexa Research">
+        <svg class="logo" viewBox="0 0 120 120" aria-hidden="true"><defs><linearGradient id="gPl" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#3ACDE2"/><stop offset="1" stop-color="#0B4F8F"/></linearGradient></defs><path d="M36 104 V24 H68 a26 26 0 0 1 0 52 H36" fill="none" stroke="url(#gPl)" stroke-width="20" stroke-linecap="round" stroke-linejoin="round"/><rect x="88" y="6" width="24" height="24" rx="7" fill="#2BC4DA"/></svg>
+        Provenexa Research
+      </a>
+      <nav class="links">
+        <a href="#top">Home</a>
+        <a href="#engine">The engine</a>
+        <a href="#applications">Applications</a>
+        <a class="pill" href="#contact">Contact</a>
+      </nav>
+    </div>
+    <div class="copy">
+      <span class="kicker"><i></i>Near Real-Time Intelligence</span>
+      <h1>Market and industry intelligence for Indian businesses.</h1>
+      <p class="lead">The market rarely tells you what matters in one place. Provenexa gathers the scattered information and turns it into real, actionable intelligence.</p>
+      <a class="cta" href="#contact"><span class="ar"><svg viewBox="0 0 24 24" fill="none" stroke="#0F2A4A" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12h15M13 6l6 6-6 6"/></svg></span>Get in touch</a>
+    </div>
+  </div>
+</div>
+
+<main>
+  <section class="story" id="engine">
+    <div class="wrap">
+      <span class="eyebrow">The engine</span>
+      <h2>From scattered information to something you can act on</h2>
+      <p class="sub">Useful information is spread across many places and buried in noise. Our engine brings it together and makes it clear.</p>
+      <div class="steps">
+        <div class="step">
+          <div class="ic"><svg viewBox="0 0 96 80" aria-hidden="true"><defs><linearGradient id="s1" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#8ED8E7"/><stop offset="1" stop-color="#3FA9D0"/></linearGradient></defs><rect x="6" y="10" width="20" height="20" rx="6" fill="url(#s1)"/><rect x="60" y="6" width="14" height="14" rx="4" fill="url(#s1)" opacity=".8"/><rect x="36" y="34" width="12" height="12" rx="4" fill="url(#s1)" opacity=".9"/><rect x="72" y="46" width="18" height="18" rx="5" fill="url(#s1)"/><rect x="14" y="52" width="14" height="14" rx="4" fill="url(#s1)" opacity=".75"/><rect x="50" y="62" width="10" height="10" rx="3" fill="url(#s1)" opacity=".7"/></svg></div>
+          <h3>Scattered</h3>
+          <p>Important changes show up in many places and in many forms, rarely together and rarely at the right time.</p>
+        </div>
+        <div class="step">
+          <div class="ic"><svg viewBox="0 0 96 80" aria-hidden="true"><defs><linearGradient id="s2" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#3ACDE2"/><stop offset="1" stop-color="#1273B5"/></linearGradient></defs><path d="M16 20 C34 34 36 42 42 42 C56 42 62 20 66 14 M42 42 C58 50 66 54 80 55 M42 42 C34 56 26 58 21 59" fill="none" stroke="#2BB5D0" stroke-width="2.4"/><rect x="6" y="10" width="20" height="20" rx="6" fill="url(#s2)"/><rect x="59" y="6" width="14" height="14" rx="4" fill="url(#s2)"/><rect x="35" y="35" width="14" height="14" rx="4" fill="url(#s2)"/><rect x="71" y="46" width="18" height="18" rx="5" fill="url(#s2)"/><rect x="13" y="52" width="14" height="14" rx="4" fill="url(#s2)"/></svg></div>
+          <h3>Connected</h3>
+          <p>Provenexa brings the pieces together, checks them, and shows how they fit.</p>
+        </div>
+        <div class="step">
+          <div class="ic"><svg viewBox="0 0 96 80" aria-hidden="true"><defs><linearGradient id="s3" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#2BC4DA"/><stop offset="1" stop-color="#0B4F8F"/></linearGradient></defs><path d="M10 16 C28 22 34 36 52 40 M12 62 C30 58 36 46 52 42 M84 12 C72 24 66 34 58 40" fill="none" stroke="#2BB5D0" stroke-width="2.4"/><rect x="4" y="8" width="12" height="12" rx="4" fill="#8ED8E7"/><rect x="6" y="56" width="12" height="12" rx="4" fill="#8ED8E7"/><rect x="80" y="6" width="12" height="12" rx="4" fill="#8ED8E7"/><rect x="42" y="24" width="36" height="36" rx="10" fill="url(#s3)"/><path d="M52 42 l7 7 l12 -14" fill="none" stroke="#fff" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+          <h3>Actionable</h3>
+          <p>You get clear intelligence on what changed and what it means for you, ready to act on.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="apps" id="applications">
+    <div class="wrap">
+      <span class="eyebrow">Applications</span>
+      <h2>One engine, many uses</h2>
+      <p class="sub">Provenexa is the umbrella. Each application uses the same engine to answer a different question.</p>
+      <div class="appgrid">
+        <div class="appmain">
+          <span class="tag">First application</span>
+          <h3>Near Real-Time Intelligence</h3>
+          <p>Timely intelligence on what is changing across Indian industry, from new plants and expansions to the demand they create.</p>
+          <p class="aud">Built for industry, engineering and staffing firms.</p>
+        </div>
+        <div class="more">
+          <b>More to come</b>
+          <p>The engine is not limited to one use. New applications will be added here as they are ready.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="how" id="principles">
+    <div class="wrap">
+      <span class="eyebrow">How we work</span>
+      <h2>The rules we work by</h2>
+      <div class="rules">
+        <div class="rule"><span class="sq"></span><div><b>Sources and dates on every claim</b><span>You can always see where a signal came from and when.</span></div></div>
+        <div class="rule"><span class="sq"></span><div><b>Unknown stays unknown</b><span>We do not fill gaps with guesses. Uncertainty is shown, not hidden.</span></div></div>
+        <div class="rule"><span class="sq"></span><div><b>Public information only</b><span>Built on open, verifiable sources.</span></div></div>
+        <div class="rule"><span class="sq"></span><div><b>Information, not advice</b><span>Our signals describe what happened. They are not investment advice.</span></div></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="contact" id="contact">
+    <div class="wrap">
+      <span class="eyebrow" style="color:var(--sky)">Contact</span>
+      <h2>Talk to us</h2>
+      <p class="sub">Want to see what this could do for your business? Write to us.</p>
+      <a class="cta" href="mailto:research@provenexa.com"><span class="ar"><svg viewBox="0 0 24 24" fill="none" stroke="#0F2A4A" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12h15M13 6l6 6-6 6"/></svg></span>research@provenexa.com</a>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <p><b>Provenexa Research</b> &middot; India</p>
+    <p>&copy; 2026 Provenexa Research. Information on this site is for general information only and is not investment advice.</p>
+  </div>
+</footer>
+</body>
+</html>
