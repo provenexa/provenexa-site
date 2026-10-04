@@ -192,7 +192,7 @@ footer a{color:var(--sky)}
 <main>
   <section class="week" id="week">
     <div class="wrap">
-      <span class="eyebrow">This week · week to 3 Oct 2026</span>
+      <span class="eyebrow" id="weeklabel">This week · week to 3 Oct 2026</span>
       <h2>Five projects from this week's ledger</h2>
       <p class="sub">A sample of what subscribers get each Monday. Each one links to where it was published.</p>
       <!--WEEK:START-->
@@ -335,6 +335,21 @@ footer a{color:var(--sky)}
     }).catch(function(){msg.className='fmsg err';msg.textContent='That did not go through. Please try again, or write to research@provenexa.com.';})
     .finally(function(){btn.disabled=false;});
   });
+})();
+</script>
+<script>
+/* this week's five: refreshed every Monday by the Pi (week.json next to the ledger); the static rows stay if it fails */
+(function(){
+  var esc=function(s){return String(s||'').replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]})};
+  fetch('https://ledger.provenexa.com/week.json',{cache:'no-cache'}).then(function(r){return r.ok?r.json():null}).then(function(w){
+    if(!w||!w.rows||w.rows.length<3) return;
+    document.querySelector('.week .rows').innerHTML=w.rows.map(function(r){
+      return '<div class="row"><div><b>'+esc(r.company)+'</b>: <span class="what">'+esc(r.what)+'</span></div>'+
+        '<span class="stage '+esc(r.stage_class)+'">'+esc(r.stage)+'</span><div class="meta">'+
+        (r.where?'<span>'+esc(r.where)+'</span>':'')+'<span>'+esc(r.day)+'</span>'+
+        '<a href="'+esc(r.url)+'" rel="noopener" target="_blank">Source: '+esc(r.source)+'</a></div></div>';}).join('');
+    if(w.label) document.getElementById('weeklabel').textContent='This week · '+w.label;
+  }).catch(function(){});
 })();
 </script>
 <script data-goatcounter="https://provenexa-ledger.goatcounter.com/count" data-goatcounter-settings='{"path": "landing/ledger"}' async src="//gc.zgo.at/count.js"></script>
