@@ -339,7 +339,7 @@ footer a{color:var(--sky)}
     if(!f.querySelector('.chks input:checked')){msg.className='fmsg err';msg.textContent='Please pick at least one trade.';return;}
     btn.disabled=true; msg.textContent='Sending...';
     fetch(f.action,{method:'POST',body:new FormData(f)}).then(function(r){return r.json()}).then(function(d){
-      if(d&&d.success){msg.className='fmsg ok';msg.textContent='Done, you are on the list. The first five arrive next Monday; every email has an unsubscribe link.';f.reset();
+      if(d&&d.success){msg.className='fmsg ok';msg.textContent='Almost done: please check your inbox and click "Confirm your email". The first five arrive next Monday; every email has an unsubscribe link.';f.reset();
         if(window.goatcounter&&goatcounter.count) goatcounter.count({path:'signup/email',event:true});}
       else{msg.className='fmsg err';msg.textContent='That did not go through. Please try again, or write to research@provenexa.com.';}
     }).catch(function(){msg.className='fmsg err';msg.textContent='That did not go through. Please try again, or write to research@provenexa.com.';})
