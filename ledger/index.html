@@ -1,0 +1,296 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Project Ledger · Provenexa Research</title>
+<meta name="description" content="New plants, expansions and tenders across India, sorted by the trade that can act on them. Free weekly five on WhatsApp or email.">
+<meta property="og:title" content="Project Ledger by Provenexa Research">
+<meta property="og:description" content="New plants, expansions and tenders across India, sorted by the trade that can act on them.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://provenexa.com/ledger/">
+<meta property="og:image" content="https://provenexa.com/assets/og-image.png">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="canonical" href="https://provenexa.com/ledger/">
+<link rel="icon" type="image/svg+xml" href="../assets/favicon.svg">
+<link rel="icon" type="image/png" sizes="32x32" href="../assets/favicon-32.png">
+<link rel="apple-touch-icon" href="../assets/apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --navy:#0F1B33; --navy2:#12162B; --blue:#0B4F8F; --blue2:#1273B5; --cyan:#2BC4DA; --sky:#8ED8E7;
+  --mist:#E8F6F9; --mist2:#F4FBFC; --ink:#0F2A4A; --muted:#4F6478; --line:#D5E8EE; --white:#fff;
+  --wa:#1FA855;
+  --sans:"Montserrat","Segoe UI",system-ui,-apple-system,Roboto,Helvetica,Arial,sans-serif;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;color-scheme:light}
+body{margin:0;background:var(--white);color:var(--ink);font-family:var(--sans);line-height:1.6;-webkit-font-smoothing:antialiased}
+a{color:inherit}
+.wrap{max-width:1120px;margin:0 auto;padding:0 24px}
+
+/* top + hero */
+.hero{background:linear-gradient(160deg,var(--mist) 0%,var(--mist2) 60%,#fff 100%);position:relative;overflow:hidden}
+.hero::after{content:"";position:absolute;right:-120px;top:-90px;width:420px;height:420px;border-radius:96px;transform:rotate(22deg);
+  background:linear-gradient(135deg,rgba(43,196,218,.55),rgba(11,79,143,.85));opacity:.9}
+.hero::before{content:"";position:absolute;right:250px;top:300px;width:90px;height:90px;border-radius:22px;transform:rotate(-12deg);background:rgba(43,196,218,.25)}
+.top{position:relative;z-index:3;display:flex;align-items:center;justify-content:space-between;height:84px}
+.brand{display:flex;align-items:center;gap:12px;text-decoration:none;font-weight:700;font-size:18px;color:var(--ink)}
+.logo{width:40px;height:40px}
+.links{display:flex;align-items:center;gap:28px}
+.links a{text-decoration:none;font-weight:600;font-size:15px;color:var(--ink)}
+.links a:hover{color:var(--blue2)}
+.links .pill{white-space:nowrap;background:#fff;color:var(--blue);padding:8px 20px;border-radius:9px;font-weight:700;text-shadow:none;box-shadow:0 8px 22px rgba(8,50,100,.2)}
+.copy{position:relative;z-index:3;padding:46px 0 84px;max-width:610px}
+.kicker{display:inline-flex;align-items:center;gap:10px;font-weight:700;font-size:13.5px;letter-spacing:1.4px;text-transform:uppercase;color:var(--blue2)}
+.kicker i{display:block;width:34px;height:3px;border-radius:2px;background:linear-gradient(90deg,var(--cyan),var(--blue))}
+h1{font-size:clamp(32px,4.4vw,54px);line-height:1.08;font-weight:800;letter-spacing:-.025em;margin:16px 0 20px}
+.lead{font-size:clamp(16px,1.5vw,18px);color:var(--muted);margin:0 0 32px;font-weight:500;max-width:52ch}
+.ctas{display:flex;flex-wrap:wrap;gap:14px;align-items:center}
+.cta{display:inline-flex;align-items:center;text-decoration:none;background:linear-gradient(90deg,var(--sky),var(--cyan));border-radius:999px;padding:6px 28px 6px 6px;color:var(--navy);font-weight:700;font-size:17px;box-shadow:0 14px 30px rgba(43,196,218,.35);transition:transform .2s}
+.cta:hover{transform:translateY(-2px)}
+.cta .ar{width:40px;height:40px;border-radius:50%;border:2px solid #fff;display:grid;place-items:center;margin-right:16px;background:rgba(255,255,255,.35)}
+.cta .ar svg{width:20px;height:20px}
+.ghost{font-weight:700;color:var(--blue);text-decoration:none;border-bottom:2px solid var(--sky);padding-bottom:2px}
+
+section{padding:84px 0}
+.eyebrow{font-weight:700;font-size:13px;letter-spacing:1.5px;text-transform:uppercase;color:var(--blue2)}
+h2{font-size:clamp(26px,3.2vw,38px);line-height:1.15;font-weight:800;letter-spacing:-.02em;margin:10px 0 14px;max-width:24ch}
+.sub{color:var(--muted);font-weight:500;max-width:60ch;margin:0}
+
+/* this week */
+.week{background:#fff}
+.rows{margin-top:34px;border-top:1px solid var(--line)}
+.row{display:grid;grid-template-columns:1fr auto;gap:6px 24px;padding:18px 4px;border-bottom:1px solid var(--line)}
+.row b{font-weight:800;font-size:17px}
+.row .what{color:var(--ink);font-weight:500}
+.row .meta{grid-column:1/-1;display:flex;flex-wrap:wrap;gap:8px 16px;align-items:center;font-size:13.5px;color:var(--muted);font-weight:600}
+.row .meta a{color:var(--blue2);text-decoration:none;border-bottom:1px dotted var(--blue2)}
+.stage{grid-row:1;grid-column:2;align-self:start;font-size:12px;font-weight:700;letter-spacing:.6px;text-transform:uppercase;padding:5px 12px;border-radius:999px;white-space:nowrap}
+.s-land{background:#E4F6EA;color:#17663A}
+.s-build{background:#E6EEF8;color:var(--blue)}
+.s-tender{background:#FFF1DC;color:#8A5300}
+.note{margin-top:16px;font-size:14px;color:var(--muted);font-weight:500}
+
+/* how */
+.how{background:var(--mist)}
+.ladder{display:grid;grid-template-columns:repeat(5,1fr);gap:0;margin-top:40px;counter-reset:s}
+.ladder div{position:relative;padding:18px 16px 18px 18px;background:#fff;border:1px solid var(--line);border-right:none;font-size:14.5px;font-weight:500;color:var(--muted)}
+.ladder div:first-child{border-radius:16px 0 0 16px}
+.ladder div:last-child{border-right:1px solid var(--line);border-radius:0 16px 16px 0}
+.ladder b{display:block;color:var(--ink);font-size:16px;font-weight:800;margin-bottom:4px}
+.ladder b::before{counter-increment:s;content:counter(s);display:inline-grid;place-items:center;width:24px;height:24px;border-radius:7px;margin-right:8px;font-size:12.5px;color:#fff;background:linear-gradient(135deg,var(--cyan),var(--blue))}
+.three{display:grid;grid-template-columns:repeat(3,1fr);gap:22px;margin-top:34px}
+.card{background:#fff;border:1px solid var(--line);border-radius:20px;padding:26px}
+.card h3{margin:0 0 8px;font-size:19px;font-weight:800}
+.card p{margin:0;color:var(--muted);font-weight:500;font-size:15px}
+
+/* who */
+.who{background:#fff}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-top:38px}
+.aud{border-radius:26px;padding:36px;position:relative;overflow:hidden}
+.aud h3{font-size:24px;font-weight:800;margin:14px 0 10px;letter-spacing:-.01em}
+.aud p{margin:0 0 12px;font-weight:500}
+.aud ul{margin:0;padding-left:20px;font-weight:500}
+.aud li{margin:4px 0}
+.co{color:#fff;background:linear-gradient(135deg,var(--blue) 0%,var(--blue2) 60%,var(--cyan) 140%);box-shadow:0 24px 56px rgba(11,79,143,.25)}
+.co::after{content:"";position:absolute;right:-50px;bottom:-70px;width:220px;height:220px;border-radius:52px;transform:rotate(22deg);background:rgba(255,255,255,.12)}
+.ind{background:var(--mist2);border:2px solid var(--line)}
+.tag{display:inline-block;padding:5px 14px;border-radius:999px;font-weight:700;font-size:12px;letter-spacing:1.1px;text-transform:uppercase}
+.co .tag{background:rgba(255,255,255,.2);border:1px solid rgba(255,255,255,.45)}
+.ind .tag{background:#fff;border:1px solid var(--line);color:var(--blue2)}
+
+/* trades + signup */
+.join{background:var(--navy2);color:#fff;position:relative;overflow:hidden}
+.join::before{content:"";position:absolute;right:-90px;top:-110px;width:380px;height:380px;border-radius:90px;transform:rotate(24deg);background:linear-gradient(135deg,rgba(43,196,218,.32),rgba(11,79,143,.05))}
+.join .wrap{position:relative;z-index:1}
+.join .sub{color:#B7C7DA}
+.join .eyebrow{color:var(--sky)}
+.trades{display:grid;grid-template-columns:repeat(5,1fr);gap:16px;margin-top:36px}
+.trade{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.16);border-radius:20px;padding:22px 20px;display:flex;flex-direction:column;gap:10px}
+.trade b{font-size:17px;font-weight:800}
+.trade span{color:#B7C7DA;font-size:14px;font-weight:500;flex:1}
+.wa{display:inline-flex;align-items:center;justify-content:center;gap:8px;text-decoration:none;background:var(--wa);color:#fff;font-weight:700;font-size:14.5px;border-radius:12px;padding:10px 12px}
+.wa svg{width:18px;height:18px}
+.mail{display:block;text-align:center;color:var(--sky);font-size:13.5px;font-weight:600;text-decoration:none}
+.small{margin-top:26px;font-size:13.5px;color:#8DA0B8;font-weight:500;max-width:70ch}
+
+.rules{background:#fff}
+.rl{display:grid;grid-template-columns:repeat(2,1fr);gap:18px 40px;margin-top:30px}
+.rl div{font-weight:500;color:var(--muted);font-size:15px}
+.rl b{display:block;color:var(--ink);font-weight:800;font-size:17px}
+footer{background:#0B1226;color:#8DA0B8;font-size:14px;padding:28px 0 36px}
+footer p{margin:4px 0}
+footer b{color:#fff}
+footer a{color:var(--sky)}
+
+@media (max-width:960px){
+  .trades{grid-template-columns:repeat(2,1fr)}
+  .ladder{grid-template-columns:1fr}
+  .ladder div{border-right:1px solid var(--line);border-bottom:none;border-radius:0}
+  .ladder div:first-child{border-radius:16px 16px 0 0}
+  .ladder div:last-child{border-bottom:1px solid var(--line);border-radius:0 0 16px 16px}
+}
+@media (max-width:760px){
+  .links a:not(.pill){display:none}
+  .hero::after{width:260px;height:260px;right:-120px;top:-120px}
+  .hero::before{display:none}
+  .copy{padding:20px 0 60px}
+  section{padding:60px 0}
+  .three,.two,.rl{grid-template-columns:1fr}
+  .trades{grid-template-columns:1fr}
+  .aud{padding:28px}
+  .row{grid-template-columns:1fr}
+  .stage{grid-row:auto;grid-column:auto;justify-self:start}
+}
+</style>
+</head>
+<body>
+
+<div class="hero" id="top">
+  <div class="wrap">
+    <div class="top">
+      <a class="brand" href="/" aria-label="Provenexa Research home">
+        <svg class="logo" viewBox="0 0 120 120" aria-hidden="true"><defs><linearGradient id="gPl" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#3ACDE2"/><stop offset="1" stop-color="#0B4F8F"/></linearGradient></defs><path d="M36 104 V24 H68 a26 26 0 0 1 0 52 H36" fill="none" stroke="url(#gPl)" stroke-width="20" stroke-linecap="round" stroke-linejoin="round"/><rect x="88" y="6" width="24" height="24" rx="7" fill="#2BC4DA"/></svg>
+        Provenexa Research
+      </a>
+      <nav class="links">
+        <a href="#week">This week</a>
+        <a href="#how">How it works</a>
+        <a href="#who">Who it's for</a>
+        <a class="pill" href="#join">Get it free</a>
+      </nav>
+    </div>
+    <div class="copy">
+      <span class="kicker"><i></i>Project Ledger</span>
+      <h1>Know which projects are coming up in your trade.</h1>
+      <p class="lead">New plants, expansions, clearances and tenders across India, sorted by the kind of firm that can act on them. Every row has its public source and date.</p>
+      <div class="ctas">
+        <a class="cta" href="#join"><span class="ar"><svg viewBox="0 0 24 24" fill="none" stroke="#0F2A4A" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12h15M13 6l6 6-6 6"/></svg></span>Get the free weekly five</a>
+        <a class="ghost" href="#week">See this week's five</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<main>
+  <section class="week" id="week">
+    <div class="wrap">
+      <span class="eyebrow">This week · week to 3 Oct 2026</span>
+      <h2>Five projects from this week's ledger</h2>
+      <p class="sub">A sample of what subscribers get each Monday. Each one links to where it was published.</p>
+      <!--WEEK:START-->
+      <div class="rows">
+        <div class="row"><div><b>Mahindra and Embraer</b> <span class="what">plan a ₹6,000 crore assembly line for the C‑390 military transport aircraft</span></div><span class="stage s-build">Being set up</span>
+          <div class="meta"><span>Nagpur, Maharashtra</span><span>3 Oct</span><a href="https://www.thehindubusinessline.com/economy/logistics/embraer-mahindra-group-plan-to-invest-6000-crore-in-nagpur-assembly-line/article71537075.ece" rel="noopener" target="_blank">Source: BusinessLine</a></div></div>
+        <div class="row"><div><b>Polycab India</b> <span class="what">proposes a copper cathode manufacturing unit (6,300 MT a month)</span></div><span class="stage s-land">Clearance stage</span>
+          <div class="meta"><span>Vadodara district, Gujarat</span><span>3 Oct</span><a href="https://parivesh.nic.in/utildoc/1243359070_1790330435806.pdf#SIA/GJ/IND1/579931/2026" rel="noopener" target="_blank">Source: PARIVESH agenda</a></div></div>
+        <div class="row"><div><b>Jyoti Strips</b> <span class="what">proposes a cold rolling mill complex with galvanising and colour-coating lines (80,000 MTPA)</span></div><span class="stage s-land">Clearance stage</span>
+          <div class="meta"><span>Palwal, Haryana</span><span>3 Oct</span><a href="https://parivesh.nic.in/utildoc/1243772250_1790790102191.pdf#SIA/HR/IND1/591575/2026" rel="noopener" target="_blank">Source: PARIVESH agenda</a></div></div>
+        <div class="row"><div><b>Sugar, cogeneration and distillery expansion</b> <span class="what">crushing 10,000 → 15,000 TCD, cogeneration 38 → 50 MW, distillery 90 → 450 KLPD</span></div><span class="stage s-land">Clearance stage</span>
+          <div class="meta"><span>Vijayapura, Karnataka</span><span>29 Sep</span><a href="https://parivesh.nic.in/utildoc/1241178062_1789638278482.pdf#IA/KA/IND2/590753/2026" rel="noopener" target="_blank">Source: PARIVESH agenda</a></div></div>
+        <div class="row"><div><b>Fujifilm</b> <span class="what">is investing about ₹800 crore in a semiconductor materials plant</span></div><span class="stage s-build">Being set up</span>
+          <div class="meta"><span>Dholera, Gujarat</span><span>28 Sep</span><a href="https://www.business-standard.com/companies/news/fujifilm-exploring-semicon-chemical-supply-deals-with-indian-chipmakers-126092301503_1.html" rel="noopener" target="_blank">Source: Business Standard</a></div></div>
+      </div>
+      <!--WEEK:END-->
+      <p class="note">The full ledger had several hundred such rows this week across five trades. Stages are read from public evidence and can lag what is happening on the ground.</p>
+    </div>
+  </section>
+
+  <section class="how" id="how">
+    <div class="wrap">
+      <span class="eyebrow">How it works</span>
+      <h2>We follow each project from first sign to order</h2>
+      <p class="sub">A project leaves a trail long before work starts. We read that trail every day and show where each project stands.</p>
+      <div class="ladder">
+        <div><b>Capex announced</b>Board approvals, funding, investor updates.</div>
+        <div><b>Land &amp; clearances</b>Land allotment, environmental and state approvals.</div>
+        <div><b>Tender out</b>Contracts put out to bid, with the closing date.</div>
+        <div><b>Being built</b>Construction and installation under way.</div>
+        <div><b>Order won</b>Who won which contract.</div>
+      </div>
+      <div class="three">
+        <div class="card"><h3>We read the public trail</h3><p>Company filings, environmental-clearance agendas, government tenders and the business press, every day.</p></div>
+        <div class="card"><h3>We sort it by trade</h3><p>Steel buildings, process plants, MEP, design-build, and local suppliers each see the rows that fit their work.</p></div>
+        <div class="card"><h3>You get what to do next</h3><p>Each row says what usually happens next at that stage and who to approach, with the source one click away.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="who" id="who">
+    <div class="wrap">
+      <span class="eyebrow">Who it's for</span>
+      <h2>For companies, and for the people who sell for them</h2>
+      <div class="two">
+        <div class="aud co">
+          <span class="tag">For companies</span>
+          <h3>A private page for your trade</h3>
+          <p>Your business-development team sees every project that fits your work, early, with the stage and the source.</p>
+          <ul>
+            <li>Steel and pre-engineered buildings</li>
+            <li>Process plants, boilers, water and effluent</li>
+            <li>HVAC, electrical, fire and clean utilities</li>
+            <li>Design-build and civil contractors</li>
+            <li>Local suppliers in Maharashtra and Gujarat</li>
+          </ul>
+        </div>
+        <div class="aud ind">
+          <span class="tag">For individual salespeople</span>
+          <h3>Fresh leads every Monday</h3>
+          <p>If you sell to factories, builders or contractors, you need to know who is setting up what, and where. Get the five best new projects for your trade on WhatsApp every Monday, free.</p>
+          <p>Reply STOP at any time and they stop.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="join" id="join">
+    <div class="wrap">
+      <span class="eyebrow">Get it free</span>
+      <h2>Pick your trade, get five projects every Monday</h2>
+      <p class="sub">Tap your trade: WhatsApp opens with a message already typed, just press send. Prefer email? Use the link under it.</p>
+      <div class="trades">
+        <div class="trade"><b>Steel buildings</b><span>Pre-engineered buildings, sheds, structures and cladding.</span>
+          <a class="wa" href="https://wa.me/918169603074?text=JOIN%20STEEL" data-goatcounter-click="join/steel"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2zm5.3 14.1c-.2.6-1.3 1.2-1.8 1.2-.5.1-1 .1-3.3-.9-2.8-1.2-4.6-4.1-4.7-4.3-.1-.2-1.1-1.5-1.1-2.9s.7-2.1 1-2.4c.3-.3.6-.3.8-.3h.6c.2 0 .4 0 .6.5l.9 2.1c.1.2.1.4 0 .6l-.4.6-.4.5c-.1.2-.3.3-.1.6.2.3.8 1.3 1.7 2.1 1.2 1 2.1 1.3 2.4 1.5.3.1.5.1.6-.1l.9-1.1c.2-.3.4-.2.7-.1l2 1c.3.1.5.2.6.3 0 .2 0 .8-.2 1.4z"/></svg>WhatsApp</a>
+          <a class="mail" href="mailto:research@provenexa.com?subject=Weekly%20Project%20Ledger%3A%20Steel%20buildings" data-goatcounter-click="mail/steel">or by email</a></div>
+        <div class="trade"><b>Process plants</b><span>Chemicals, pharma, sugar and distilleries, steel, boilers, water and effluent.</span>
+          <a class="wa" href="https://wa.me/918169603074?text=JOIN%20PROCESS" data-goatcounter-click="join/process"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2zm5.3 14.1c-.2.6-1.3 1.2-1.8 1.2-.5.1-1 .1-3.3-.9-2.8-1.2-4.6-4.1-4.7-4.3-.1-.2-1.1-1.5-1.1-2.9s.7-2.1 1-2.4c.3-.3.6-.3.8-.3h.6c.2 0 .4 0 .6.5l.9 2.1c.1.2.1.4 0 .6l-.4.6-.4.5c-.1.2-.3.3-.1.6.2.3.8 1.3 1.7 2.1 1.2 1 2.1 1.3 2.4 1.5.3.1.5.1.6-.1l.9-1.1c.2-.3.4-.2.7-.1l2 1c.3.1.5.2.6.3 0 .2 0 .8-.2 1.4z"/></svg>WhatsApp</a>
+          <a class="mail" href="mailto:research@provenexa.com?subject=Weekly%20Project%20Ledger%3A%20Process%20plants" data-goatcounter-click="mail/process">or by email</a></div>
+        <div class="trade"><b>MEP</b><span>HVAC, electrical, fire and clean utilities for factories, data centres and buildings.</span>
+          <a class="wa" href="https://wa.me/918169603074?text=JOIN%20MEP" data-goatcounter-click="join/mep"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2zm5.3 14.1c-.2.6-1.3 1.2-1.8 1.2-.5.1-1 .1-3.3-.9-2.8-1.2-4.6-4.1-4.7-4.3-.1-.2-1.1-1.5-1.1-2.9s.7-2.1 1-2.4c.3-.3.6-.3.8-.3h.6c.2 0 .4 0 .6.5l.9 2.1c.1.2.1.4 0 .6l-.4.6-.4.5c-.1.2-.3.3-.1.6.2.3.8 1.3 1.7 2.1 1.2 1 2.1 1.3 2.4 1.5.3.1.5.1.6-.1l.9-1.1c.2-.3.4-.2.7-.1l2 1c.3.1.5.2.6.3 0 .2 0 .8-.2 1.4z"/></svg>WhatsApp</a>
+          <a class="mail" href="mailto:research@provenexa.com?subject=Weekly%20Project%20Ledger%3A%20MEP" data-goatcounter-click="mail/mep">or by email</a></div>
+        <div class="trade"><b>Design-build &amp; civil</b><span>Factories, warehouses, data centres and buildings to be built.</span>
+          <a class="wa" href="https://wa.me/918169603074?text=JOIN%20BUILD" data-goatcounter-click="join/build"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2zm5.3 14.1c-.2.6-1.3 1.2-1.8 1.2-.5.1-1 .1-3.3-.9-2.8-1.2-4.6-4.1-4.7-4.3-.1-.2-1.1-1.5-1.1-2.9s.7-2.1 1-2.4c.3-.3.6-.3.8-.3h.6c.2 0 .4 0 .6.5l.9 2.1c.1.2.1.4 0 .6l-.4.6-.4.5c-.1.2-.3.3-.1.6.2.3.8 1.3 1.7 2.1 1.2 1 2.1 1.3 2.4 1.5.3.1.5.1.6-.1l.9-1.1c.2-.3.4-.2.7-.1l2 1c.3.1.5.2.6.3 0 .2 0 .8-.2 1.4z"/></svg>WhatsApp</a>
+          <a class="mail" href="mailto:research@provenexa.com?subject=Weekly%20Project%20Ledger%3A%20Design-build" data-goatcounter-click="mail/build">or by email</a></div>
+        <div class="trade"><b>Maharashtra &amp; Gujarat</b><span>Everything coming up locally, for suppliers and service firms.</span>
+          <a class="wa" href="https://wa.me/918169603074?text=JOIN%20LOCAL" data-goatcounter-click="join/local"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2zm5.3 14.1c-.2.6-1.3 1.2-1.8 1.2-.5.1-1 .1-3.3-.9-2.8-1.2-4.6-4.1-4.7-4.3-.1-.2-1.1-1.5-1.1-2.9s.7-2.1 1-2.4c.3-.3.6-.3.8-.3h.6c.2 0 .4 0 .6.5l.9 2.1c.1.2.1.4 0 .6l-.4.6-.4.5c-.1.2-.3.3-.1.6.2.3.8 1.3 1.7 2.1 1.2 1 2.1 1.3 2.4 1.5.3.1.5.1.6-.1l.9-1.1c.2-.3.4-.2.7-.1l2 1c.3.1.5.2.6.3 0 .2 0 .8-.2 1.4z"/></svg>WhatsApp</a>
+          <a class="mail" href="mailto:research@provenexa.com?subject=Weekly%20Project%20Ledger%3A%20Maharashtra%20and%20Gujarat" data-goatcounter-click="mail/local">or by email</a></div>
+      </div>
+      <p class="small">Your number or email is used only to send the weekly list. Reply STOP to stop. Companies that want their team's private page: write to <a href="mailto:research@provenexa.com" style="color:var(--sky)">research@provenexa.com</a>.</p>
+    </div>
+  </section>
+
+  <section class="rules">
+    <div class="wrap">
+      <span class="eyebrow">How we work</span>
+      <div class="rl">
+        <div><b>Source and date on every row</b>You can always see where a project came from and when.</div>
+        <div><b>Unknown stays unknown</b>If a detail is not public, we say so instead of guessing.</div>
+        <div><b>Public information only</b>Built on open filings, clearances, tenders and news.</div>
+        <div><b>Information, not advice</b>We describe projects, not stocks. Nothing here is investment advice.</div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <p><b>Provenexa Research</b> · India · <a href="/">provenexa.com</a></p>
+    <p>© 2026 Provenexa Research. Information on this site is for general information only and is not investment advice.</p>
+  </div>
+</footer>
+<script data-goatcounter="https://provenexa-ledger.goatcounter.com/count" data-goatcounter-settings='{"path": "landing/ledger"}' async src="//gc.zgo.at/count.js"></script>
+</body>
+</html>
