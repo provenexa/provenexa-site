@@ -53,6 +53,7 @@ h1{font-size:clamp(32px,4.4vw,54px);line-height:1.08;font-weight:800;letter-spac
 .cta:hover{transform:translateY(-2px)}
 .cta .ar{width:40px;height:40px;border-radius:50%;border:2px solid #fff;display:grid;place-items:center;margin-right:16px;background:rgba(255,255,255,.35)}
 .cta .ar svg{width:20px;height:20px}
+.cta.sm{font-size:15px;padding:12px 22px}
 .ghost{font-weight:700;color:var(--blue);text-decoration:none;border-bottom:2px solid var(--sky);padding-bottom:2px}
 
 section{padding:84px 0}
@@ -62,12 +63,16 @@ h2{font-size:clamp(26px,3.2vw,38px);line-height:1.15;font-weight:800;letter-spac
 
 /* this week */
 .week{background:#fff}
-.rows{margin-top:34px;border-top:1px solid var(--line)}
-.row{display:grid;grid-template-columns:1fr auto;gap:6px 24px;padding:18px 4px;border-bottom:1px solid var(--line)}
-.row b{font-weight:800;font-size:17px}
-.row .what{color:var(--ink);font-weight:500}
-.row .meta{grid-column:1/-1;display:flex;flex-wrap:wrap;gap:8px 16px;align-items:center;font-size:13.5px;color:var(--muted);font-weight:600}
-.row .meta a{color:var(--blue2);text-decoration:none;border-bottom:1px dotted var(--blue2)}
+.rows{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:34px}
+.pc{background:#fff;border:1px solid var(--line);border-top:5px solid var(--c);border-radius:18px;padding:18px 18px 16px;display:flex;flex-direction:column;gap:10px;box-shadow:0 6px 18px rgba(15,42,74,.06)}
+.pc:first-child{grid-column:1/-1}.pc:first-child .what{font-size:18px}
+.pc .hd{display:flex;gap:12px;align-items:center}.pc .hd b{display:block;font-size:17px;font-weight:800;line-height:1.2}
+.pc .tr{display:block;font-size:12px;font-weight:700;color:var(--c);margin-top:2px}
+.lg{width:50px;height:50px;border-radius:13px;background:#fff;border:1px solid var(--line);display:grid;place-items:center;overflow:hidden;flex:0 0 auto}
+.lg img{max-width:40px;max-height:40px;object-fit:contain}.lg.ini{background:var(--c);border:0;color:#fff;font-weight:800;font-size:17px;letter-spacing:.02em}
+.pc .what{margin:0;color:var(--ink);font-weight:500;line-height:1.5}
+.pc .ft{display:flex;flex-wrap:wrap;gap:6px 14px;align-items:center;font-size:13px;color:var(--muted);font-weight:600;margin-top:auto}
+.pc .ft a{color:var(--blue2);text-decoration:none;border-bottom:1px dotted var(--blue2)}
 .stage{grid-row:1;grid-column:2;align-self:start;font-size:12px;font-weight:700;letter-spacing:.6px;text-transform:uppercase;padding:5px 12px;border-radius:999px;white-space:nowrap}
 .s-land{background:#E4F6EA;color:#17663A}
 .s-build{background:#E6EEF8;color:var(--blue)}
@@ -179,7 +184,7 @@ footer a{color:var(--sky)}
   .three,.two,.rl{grid-template-columns:1fr}
   .trades{grid-template-columns:1fr}
   .aud{padding:28px}
-  .row{grid-template-columns:1fr}
+  .rows{grid-template-columns:1fr}
   .stage{grid-row:auto;grid-column:auto;justify-self:start}
 }
 </style>
@@ -197,16 +202,16 @@ footer a{color:var(--sky)}
         <a href="#week">This week</a>
         <a href="#how">How it works</a>
         <a href="#who">Who it's for</a>
-        <a class="pill" href="#join">Get it free</a>
+        <a class="pill" href="mailto:research@provenexa.com?subject=Private%20page%20trial%20for%20my%20company&amp;body=Company%3A%20%0AWhat%20we%20sell%3A%20%0AStates%20we%20work%20in%3A%20%0A" data-goatcounter-click="nav/trial">2 weeks free</a>
       </nav>
     </div>
     <div class="copy">
       <span class="kicker"><i></i>Project Ledger</span>
       <h1>Know which projects are coming up in your trade.</h1>
-      <p class="lead">New plants, expansions, clearances and tenders across India, sorted by the kind of firm that can act on them. Every row has its public source and date.</p>
+      <p class="lead">New plants, expansions, clearances and tenders across India, sorted by the kind of firm that can act on them. Your team gets a private page of every project that fits what you sell, updated daily. Try it free for two weeks.</p>
       <div class="ctas">
-        <a class="cta" href="#join"><span class="ar"><svg viewBox="0 0 24 24" fill="none" stroke="#0F2A4A" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12h15M13 6l6 6-6 6"/></svg></span>Get the free weekly five</a>
-        <a class="ghost" href="#week">See this week's five</a>
+        <a class="cta" href="mailto:research@provenexa.com?subject=Private%20page%20trial%20for%20my%20company&amp;body=Company%3A%20%0AWhat%20we%20sell%3A%20%0AStates%20we%20work%20in%3A%20%0A" data-goatcounter-click="hero/trial"><span class="ar"><svg viewBox="0 0 24 24" fill="none" stroke="#0F2A4A" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12h15M13 6l6 6-6 6"/></svg></span>Your company's page: 2 weeks free</a>
+        <a class="ghost" href="#join">or get the free weekly five</a>
       </div>
     </div>
   </div>
@@ -215,21 +220,16 @@ footer a{color:var(--sky)}
 <main>
   <section class="week" id="week">
     <div class="wrap">
-      <span class="eyebrow" id="weeklabel">This week · week to 3 Oct 2026</span>
+      <span class="eyebrow" id="weeklabel">This week · week to 4 Oct 2026</span>
       <h2>Five projects from this week's ledger</h2>
       <p class="sub">A sample of what subscribers get each Monday. Each one links to where it was published.</p>
       <!--WEEK:START-->
       <div class="rows">
-        <div class="row"><div><b>Mahindra and Embraer</b> <span class="what">plan a ₹6,000 crore assembly line for the C‑390 military transport aircraft</span></div><span class="stage s-build">Being set up</span>
-          <div class="meta"><span>Nagpur, Maharashtra</span><span>3 Oct</span><a href="https://www.thehindubusinessline.com/economy/logistics/embraer-mahindra-group-plan-to-invest-6000-crore-in-nagpur-assembly-line/article71537075.ece" rel="noopener" target="_blank">Source: BusinessLine</a></div></div>
-        <div class="row"><div><b>Polycab India</b> <span class="what">proposes a copper cathode manufacturing unit (6,300 MT a month)</span></div><span class="stage s-land">Clearance stage</span>
-          <div class="meta"><span>Vadodara district, Gujarat</span><span>3 Oct</span><a href="https://parivesh.nic.in/utildoc/1243359070_1790330435806.pdf#SIA/GJ/IND1/579931/2026" rel="noopener" target="_blank">Source: PARIVESH agenda</a></div></div>
-        <div class="row"><div><b>Jyoti Strips</b> <span class="what">proposes a cold rolling mill complex with galvanising and colour-coating lines (80,000 MTPA)</span></div><span class="stage s-land">Clearance stage</span>
-          <div class="meta"><span>Palwal, Haryana</span><span>3 Oct</span><a href="https://parivesh.nic.in/utildoc/1243772250_1790790102191.pdf#SIA/HR/IND1/591575/2026" rel="noopener" target="_blank">Source: PARIVESH agenda</a></div></div>
-        <div class="row"><div><b>Sugar, cogeneration and distillery expansion</b> <span class="what">crushing 10,000 → 15,000 TCD, cogeneration 38 → 50 MW, distillery 90 → 450 KLPD</span></div><span class="stage s-land">Clearance stage</span>
-          <div class="meta"><span>Vijayapura, Karnataka</span><span>29 Sep</span><a href="https://parivesh.nic.in/utildoc/1241178062_1789638278482.pdf#IA/KA/IND2/590753/2026" rel="noopener" target="_blank">Source: PARIVESH agenda</a></div></div>
-        <div class="row"><div><b>Fujifilm</b> <span class="what">is investing about ₹800 crore in a semiconductor materials plant</span></div><span class="stage s-build">Being set up</span>
-          <div class="meta"><span>Dholera, Gujarat</span><span>28 Sep</span><a href="https://www.business-standard.com/companies/news/fujifilm-exploring-semicon-chemical-supply-deals-with-indian-chipmakers-126092301503_1.html" rel="noopener" target="_blank">Source: Business Standard</a></div></div>
+        <div class="pc" style="--c:#3D6CB9"><div class="hd"><span class="lg ini">RI</span><div><b>Reliance Industries</b><span class="tr">Steel buildings</span></div></div><p class="what">To Invest ₹1 Lakh Crore in Andhra Pradesh Biogas Projects</p><div class="ft"><span class="stage s-build">Capex announced</span><span>Andhra Pradesh</span><span>4 Oct</span><a href="https://www.deccanherald.com/india/andhra-pradesh/reliance-plans-rs-1-lakh-crore-investment-in-andhra-pradesh-says-anant-ambani-4168163" rel="noopener" target="_blank">Source: Deccan Herald</a></div></div>
+        <div class="pc" style="--c:#0F766E"><div class="hd"><span class="lg"><img src="https://ledger.provenexa.com/logos/tata-steel.png" alt="" loading="lazy"></span><div><b>Tata Steel</b><span class="tr">Process plants</span></div></div><p class="what">Expands production capacity in Maharashtra</p><div class="ft"><span class="stage s-land">Clearance stage</span><span>Maharashtra</span><span>4 Oct</span><a href="https://parivesh.nic.in/utildoc/1244000311_1791043383941.pdf#SIA/MH/IND1/593559/2026" rel="noopener" target="_blank">Source: PARIVESH agenda</a></div></div>
+        <div class="pc" style="--c:#B45309"><div class="hd"><span class="lg ini">GS</span><div><b>Gochem Speciality Chemicals</b><span class="tr">MEP</span></div></div><p class="what">Launches Vegetable Wax Refining Plant</p><div class="ft"><span class="stage s-land">Clearance stage</span><span>SL Hitech, West Bengal</span><span>3 Oct</span><a href="https://parivesh.nic.in/utildoc/1243120777_1790141916728.pdf#SIA/WB/IND3/576319/2026" rel="noopener" target="_blank">Source: PARIVESH agenda</a></div></div>
+        <div class="pc" style="--c:#C2410C"><div class="hd"><span class="lg ini">AT</span><div><b>Allmaker Technologies</b><span class="tr">Design-build &amp; civil</span></div></div><p class="what">Launches Pharma Intermediate Project</p><div class="ft"><span class="stage s-land">Clearance stage</span><span>Sonipat, Haryana</span><span>3 Oct</span><a href="https://parivesh.nic.in/utildoc/1241387494_1789843431469.pdf#SIA/HR/IND3/586987/2026" rel="noopener" target="_blank">Source: PARIVESH agenda</a></div></div>
+        <div class="pc" style="--c:#15803D"><div class="hd"><span class="lg"><img src="https://ledger.provenexa.com/logos/indian-oil.png" alt="" loading="lazy"></span><div><b>Indian Oil Corporation</b><span class="tr">Maharashtra &amp; Gujarat</span></div></div><p class="what">Gujarat refinery to expand to 18 million metric tons by FY27</p><div class="ft"><span class="stage s-build">Being set up</span><span>Gujarat</span><span>2 Oct</span><a href="https://economictimes.indiatimes.com/industry/energy/oil-gas/indian-oil-gujarat-refinery-to-start-operating-at-expanded-capacity-by-end-of-fy27-executive-says/articleshow/134589095.cms" rel="noopener" target="_blank">Source: Economic Times</a></div></div>
       </div>
       <!--WEEK:END-->
       <p class="note">The full ledger had several hundred such rows this week across five trades. Stages are read from public evidence and can lag what is happening on the ground.</p>
@@ -265,6 +265,7 @@ footer a{color:var(--sky)}
           <span class="tag">For companies</span>
           <h3>A private page for your trade</h3>
           <p>Your business-development team sees every project that fits your work, early, with the stage and the source.</p>
+          <p><a class="cta sm" href="mailto:research@provenexa.com?subject=Private%20page%20trial%20for%20my%20company&amp;body=Company%3A%20%0AWhat%20we%20sell%3A%20%0AStates%20we%20work%20in%3A%20%0A" data-goatcounter-click="who/trial">Ask for 2 weeks free</a></p>
           <ul>
             <li>Steel and pre-engineered buildings</li>
             <li>Process plants, boilers, water and effluent</li>
@@ -366,9 +367,12 @@ footer a{color:var(--sky)}
   var esc=function(s){return String(s||'').replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]})};
   fetch('https://ledger.provenexa.com/week.json',{cache:'no-cache'}).then(function(r){return r.ok?r.json():null}).then(function(w){
     if(!w||!w.rows||w.rows.length<3) return;
-    document.querySelector('.week .rows').innerHTML=w.rows.map(function(r){
-      return '<div class="row"><div><b>'+esc(r.company)+'</b>: <span class="what">'+esc(r.what)+'</span></div>'+
-        '<span class="stage '+esc(r.stage_class)+'">'+esc(r.stage)+'</span><div class="meta">'+
+    var L={"steel": ["#3D6CB9", "Steel buildings"], "process": ["#0F766E", "Process plants"], "mep": ["#B45309", "MEP"], "build": ["#C2410C", "Design-build & civil"], "staffing": ["#6D28D9", "Staffing"], "gcc": ["#BE185D", "GCCs"], "local": ["#15803D", "Maharashtra & Gujarat"]};
+    var ini=function(n){var w=String(n).split(/\s+/).filter(function(x){return /^[A-Za-z0-9]/.test(x)});return (((w[0]||'')[0]||'')+(w[1]?w[1][0]:'')).toUpperCase()};
+    document.querySelector('.week .rows').innerHTML=w.rows.map(function(r){var t=L[r.trade]||['#0B4F8F',''];
+      var lg=r.logo?'<span class="lg"><img src="'+esc(r.logo)+'" alt="" loading="lazy"></span>':'<span class="lg ini">'+esc(ini(r.company))+'</span>';
+      return '<div class="pc" style="--c:'+t[0]+'"><div class="hd">'+lg+'<div><b>'+esc(r.company)+'</b><span class="tr">'+esc(t[1])+'</span></div></div>'+
+        '<p class="what">'+esc(r.what)+'</p><div class="ft"><span class="stage '+esc(r.stage_class)+'">'+esc(r.stage)+'</span>'+
         (r.where?'<span>'+esc(r.where)+'</span>':'')+'<span>'+esc(r.day)+'</span>'+
         '<a href="'+esc(r.url)+'" rel="noopener" target="_blank">Source: '+esc(r.source)+'</a></div></div>';}).join('');
     if(w.label) document.getElementById('weeklabel').textContent='This week · '+w.label;
