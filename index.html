@@ -4,9 +4,9 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Provenexa Research</title>
-<meta name="description" content="Provenexa shows Indian businesses where to go next: which regions, sectors and customers to focus on, based on what India is actually building.">
-<meta property="og:title" content="Provenexa Research · Know where to go next">
-<meta property="og:description" content="Where to go next, based on what India is actually building: new plants, expansions, clearances and tenders, each with its source.">
+<meta name="description" content="Provenexa tells sales teams which Indian companies are about to need them: new plants, branch roll-outs, global centres, big orders and people changes, with who to call and why now.">
+<meta property="og:title" content="Provenexa Research · Know your customer's next move">
+<meta property="og:description" content="Next Moves: which companies are about to need you, why now, and who to speak to, from what India's companies are actually doing.">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://provenexa.com/">
 <meta property="og:image" content="https://provenexa.com/assets/og-image.png">
@@ -29,7 +29,7 @@
       "logo": "https://provenexa.com/assets/icon-512.png",
       "image": "https://provenexa.com/assets/og-image.png",
       "email": "research@provenexa.com",
-      "description": "Provenexa shows Indian businesses where to go next, based on what India is actually building: new plants, expansions, clearances and tenders, each traced to a public source.",
+      "description": "Provenexa tells sales teams which Indian companies are about to need them, why now and who to speak to, from public information, each traced to its source.",
       "areaServed": "IN",
       "sameAs": ["https://www.linkedin.com/company/provenexa-research/", "https://github.com/provenexa"]
     },
@@ -121,6 +121,12 @@ h2{font-size:clamp(28px,3.4vw,42px);line-height:1.12;font-weight:800;letter-spac
 .more b{font-size:19px;font-weight:800}
 .more p{margin:8px 0 0;color:var(--muted);font-weight:500;font-size:15.5px}
 
+.tiles{display:grid;grid-template-columns:repeat(2,1fr);gap:22px;margin-top:44px}
+.tiles.five{grid-template-columns:repeat(3,1fr)}
+.tile{background:#fff;border:1px solid var(--line);border-radius:22px;padding:26px 28px;box-shadow:0 14px 34px rgba(11,79,143,.08)}
+.tile b{display:block;font-size:19px;font-weight:800;margin-bottom:6px;color:var(--ink)}
+.tile span{color:var(--muted);font-weight:500;font-size:15.5px}
+.tile a{color:var(--blue2)}
 .how{background:var(--white)}
 .rules{display:grid;grid-template-columns:repeat(2,1fr);gap:22px 40px;margin-top:44px}
 .rule{display:flex;gap:20px;align-items:flex-start}
@@ -149,7 +155,7 @@ footer b{color:#fff}
   section{padding:70px 0}
   .steps{grid-template-columns:1fr;gap:46px}
   .steps::before{display:none}
-  .appgrid,.rules{grid-template-columns:1fr}
+  .appgrid,.rules,.tiles,.tiles.five{grid-template-columns:1fr}
   .appmain,.more{padding:32px}
 }
 </style>
@@ -196,14 +202,16 @@ footer b{color:#fff}
       <nav class="links">
         <a href="#top">Home</a>
         <a href="#engine">The engine</a>
-        <a href="#applications">Applications</a>
+        <a href="#get">What you get</a>
+        <a href="#who">Who it's for</a>
+        <a href="#jobs">Jobs and skills</a>
         <a class="pill" href="#contact">Contact</a>
       </nav>
     </div>
     <div class="copy">
-      <span class="kicker"><i></i>Where India is building next</span>
-      <h1>Know where to go next.</h1>
-      <p class="lead">Every business faces the same question: which regions, sectors and customers to put its effort into. Provenexa answers it from what India is actually building, with new plants, expansions, clearances and tenders read from the public record every day and a source behind every answer.</p>
+      <span class="kicker"><i></i>Next Moves</span>
+      <h1>Know your customer's next move.</h1>
+      <p class="lead">New plants, branch roll-outs, global centres, big orders and people changes. We follow what India's companies are about to do and tell your sales team who to call, why now and what to say, often months before the news.</p>
       <a class="cta" href="#contact"><span class="ar"><svg viewBox="0 0 24 24" fill="none" stroke="#0F2A4A" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12h15M13 6l6 6-6 6"/></svg></span>Get in touch</a>
     </div>
   </div>
@@ -214,7 +222,7 @@ footer b{color:#fff}
     <div class="wrap">
       <span class="eyebrow">The engine</span>
       <h2>From scattered information to something you can act on</h2>
-      <p class="sub">Useful information is spread across many places and buried in noise. Our engine brings it together and makes it clear.</p>
+      <p class="sub">Nobody lists what a company will do next. The signs are spread across thousands of public records, company announcements and regional newspapers in many languages. We read them every day, check them and connect them.</p>
       <div class="steps">
         <div class="step">
           <div class="ic"><svg viewBox="0 0 96 80" aria-hidden="true"><defs><linearGradient id="s1" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#8ED8E7"/><stop offset="1" stop-color="#3FA9D0"/></linearGradient></defs><rect x="6" y="10" width="20" height="20" rx="6" fill="url(#s1)"/><rect x="60" y="6" width="14" height="14" rx="4" fill="url(#s1)" opacity=".8"/><rect x="36" y="34" width="12" height="12" rx="4" fill="url(#s1)" opacity=".9"/><rect x="72" y="46" width="18" height="18" rx="5" fill="url(#s1)"/><rect x="14" y="52" width="14" height="14" rx="4" fill="url(#s1)" opacity=".75"/><rect x="50" y="62" width="10" height="10" rx="3" fill="url(#s1)" opacity=".7"/></svg></div>
@@ -228,36 +236,75 @@ footer b{color:#fff}
         </div>
         <div class="step">
           <div class="ic"><svg viewBox="0 0 96 80" aria-hidden="true"><defs><linearGradient id="s3" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#2BC4DA"/><stop offset="1" stop-color="#0B4F8F"/></linearGradient></defs><path d="M10 16 C28 22 34 36 52 40 M12 62 C30 58 36 46 52 42 M84 12 C72 24 66 34 58 40" fill="none" stroke="#2BB5D0" stroke-width="2.4"/><rect x="4" y="8" width="12" height="12" rx="4" fill="#8ED8E7"/><rect x="6" y="56" width="12" height="12" rx="4" fill="#8ED8E7"/><rect x="80" y="6" width="12" height="12" rx="4" fill="#8ED8E7"/><rect x="42" y="24" width="36" height="36" rx="10" fill="url(#s3)"/><path d="M52 42 l7 7 l12 -14" fill="none" stroke="#fff" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
-          <h3>Where to go next</h3>
-          <p>You see which regions, sectors and customers to focus on, with the projects behind each answer.</p>
+          <h3>Your next move</h3>
+          <p>Your team sees who to call this week, why now, and who might be the right person to speak to.</p>
         </div>
       </div>
     </div>
   </section>
 
-  <section class="apps" id="applications">
+  <section class="apps" id="get">
     <div class="wrap">
-      <span class="eyebrow">Applications</span>
-      <h2>One engine, many uses</h2>
-      <p class="sub">Provenexa is the umbrella. Each application uses the same engine to answer a different question.</p>
+      <span class="eyebrow">What your team gets</span>
+      <h2>Next Moves, ready to act on</h2>
+      <p class="sub">Not a database to dig through. A short list of companies that are moving, in your trade and your states, with what to do about each.</p>
+      <div class="tiles">
+        <div class="tile"><b>A weekly Next Moves page</b><span>Your trade, your states. Each company on one line: what it is doing, what it will need, and what to check before calling.</span></div>
+        <div class="tile"><b>A card when something moves</b><span>An approval, an order, a new site, a start of production. The card shows the steps with dates, so your team knows when to call.</span></div>
+        <div class="tile"><b>Who to speak to</b><span>The role to approach and, where we can find it, the person who may be right for that move, from their public profile.</span></div>
+        <div class="tile"><b>People moves</b><span>A new HR head, plant head or sales head at a company you follow. New people bring new decisions about partners.</span></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="story" id="who">
+    <div class="wrap">
+      <span class="eyebrow">Who it's for</span>
+      <h2>One engine, many trades</h2>
+      <p class="sub">The same engine, read for what each kind of firm sells.</p>
+      <div class="tiles five">
+        <div class="tile"><b>Staffing, RPO and apprenticeships</b><span>New plants filling shifts, branch and store roll-outs, new global centres hiring, apprentice seats at new sites.</span></div>
+        <div class="tile"><b>Facility services</b><span>New offices, data centres, warehouses and campuses that need security, housekeeping and upkeep from day one.</span></div>
+        <div class="tile"><b>Contractors and suppliers</b><span>Projects from first sign to award, sorted by trade, with the winners and who gets work next. <a href="ledger/" style="font-weight:700">See the Project Ledger →</a></span></div>
+        <div class="tile"><b>Ports, logistics and warehousing</b><span>Plants and exporters starting near the ports, project cargo ahead, new parks and changes at the terminals.</span></div>
+        <div class="tile"><b>Energy, operations and maintenance</b><span>Farms and plants changing owner, just commissioned or about to be built, when the owner chooses a partner.</span></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="apps" id="jobs">
+    <div class="wrap">
+      <span class="eyebrow">Jobs and skills</span>
+      <h2>The same signals, for people looking for work</h2>
+      <p class="sub">Every new plant, office or global centre is also a set of new jobs. We read the same moves for job seekers and for the people who train and place them.</p>
+      <div class="tiles five">
+        <div class="tile"><b>Job seekers</b><span>Where the new jobs are, before the rush. For example: which new global capability centres are hiring now, how many roles and in which city, which have just opened and which are coming next, refreshed every morning. We never charge job seekers.</span></div>
+        <div class="tile"><b>Colleges and career services</b><span>Placement cells, career coaches and outplacement firms get a live view of the employers about to hire in their region and field, to plan drives and guide candidates.</span></div>
+        <div class="tile"><b>Government and skill missions</b><span>A district-level view of new plants and offices, the trades and apprentice seats they will need, so skill departments and training institutes can plan courses and placement drives ahead of demand.</span></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="story" id="work">
+    <div class="wrap">
+      <span class="eyebrow">How we work with you</span>
+      <h2>Two ways to start</h2>
       <div class="appgrid">
         <div class="appmain">
-          <span class="tag">First application</span>
-          <h3>Project Ledger</h3>
-          <p>Every new plant, expansion, clearance and tender in India, followed from first sign to start-up, and sorted by the firms that can act on it. Your team gets a private page of the projects that fit what you sell.</p>
-          <p class="aud">Built for contractors, suppliers, staffing and logistics firms. Two weeks free.</p>
-          <p class="aud" style="margin-top:22px"><a href="ledger/" style="color:#fff;font-weight:700;text-decoration:none;border-bottom:2px solid rgba(255,255,255,.6);padding-bottom:2px;position:relative;z-index:1">See the Project Ledger →</a></p>
+          <span class="tag">Next Moves pages</span>
+          <h3>Your private pages, every week</h3>
+          <p>We set up the pages for your trade and states, watch the companies you care about, and send a card whenever one of them moves.</p>
         </div>
         <div class="more">
-          <b>Where to go next review</b>
-          <p>A one-off report for your company: which regions and sectors are growing in your line of work, and the projects behind each, so you can plan the year's effort.</p>
-          <p style="margin-top:10px"><a href="mailto:research@provenexa.com?subject=Where%20to%20go%20next%20review" style="font-weight:700">Ask about a review →</a></p>
+          <b>Pipeline partner</b>
+          <p>For teams that want help using it. We find the accounts, prepare the notes and the first message, and sit with your team every week to plan the calls. Your team opens, sells and closes.</p>
+          <p style="margin-top:10px"><a href="mailto:research@provenexa.com?subject=Pipeline%20partner" style="font-weight:700">Ask how it works →</a></p>
         </div>
       </div>
     </div>
   </section>
 
-  <section class="how" id="principles">
+  <section class="apps" id="principles">
     <div class="wrap">
       <span class="eyebrow">How we work</span>
       <h2>The rules we work by</h2>
@@ -274,7 +321,7 @@ footer b{color:#fff}
     <div class="wrap">
       <span class="eyebrow" style="color:var(--sky)">Contact</span>
       <h2>Talk to us</h2>
-      <p class="sub">Tell us what you sell and where you work. We will show you where to go next.</p>
+      <p class="sub">Tell us what you sell and where you work. We will show you your customers' next moves.</p>
       <a class="cta" href="mailto:research@provenexa.com"><span class="ar"><svg viewBox="0 0 24 24" fill="none" stroke="#0F2A4A" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12h15M13 6l6 6-6 6"/></svg></span>research@provenexa.com</a>
     </div>
   </section>
