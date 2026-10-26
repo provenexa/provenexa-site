@@ -31,7 +31,7 @@
       "email": "research@provenexa.com",
       "description": "Provenexa tells sales teams which Indian companies are about to need them, why now and who to speak to, from public information, each traced to its source.",
       "areaServed": "IN",
-      "founder": {"@type": "Person", "name": "Sumit Jaswal", "jobTitle": "Founder", "sameAs": ["https://www.linkedin.com/in/sumitjaswal/"]},
+      "founder": {"@type": "Person", "name": "Sumit Jaswal", "jobTitle": "Founder", "image": "https://provenexa.com/assets/founder-sumit-jaswal.jpg", "sameAs": ["https://www.linkedin.com/in/sumitjaswal/"]},
       "sameAs": ["https://www.linkedin.com/company/provenexa-research/", "https://github.com/provenexa"]
     },
     {
@@ -118,6 +118,10 @@ h2{font-size:clamp(28px,3.4vw,42px);line-height:1.12;font-weight:800;letter-spac
 .appmain h3{font-size:clamp(26px,3vw,36px);font-weight:800;line-height:1.15;margin:20px 0 14px;letter-spacing:-.015em;max-width:16ch}
 .appmain p{margin:0;font-weight:500;max-width:44ch;position:relative;z-index:1}
 .appmain .aud{margin-top:14px;font-size:14.5px;opacity:.88}
+.founderhead{display:flex;gap:22px;align-items:center;position:relative;z-index:1;margin-bottom:20px}
+.founderhead img{width:132px;height:165px;object-fit:cover;border-radius:20px;border:4px solid rgba(255,255,255,.9);box-shadow:0 14px 30px rgba(0,0,0,.18);flex:none}
+.founderhead h3{margin:12px 0 0}
+@media (max-width:520px){.founderhead{flex-direction:column;align-items:flex-start}}
 .more{border:2px dashed #A9D9E4;border-radius:28px;padding:40px;display:flex;flex-direction:column;justify-content:center;background:rgba(255,255,255,.55)}
 .more b{font-size:19px;font-weight:800}
 .more p{margin:8px 0 0;color:var(--muted);font-weight:500;font-size:15.5px}
@@ -330,8 +334,13 @@ footer b{color:#fff}
       <h2>Why I built Provenexa</h2>
       <div class="appgrid">
         <div class="appmain">
-          <span class="tag">Sumit Jaswal</span>
-          <h3>Founder, Provenexa Research</h3>
+          <div class="founderhead">
+            <img src="assets/founder-sumit-jaswal.jpg" alt="Sumit Jaswal, founder of Provenexa Research" width="132" height="165" loading="lazy">
+            <div>
+              <span class="tag">Sumit Jaswal</span>
+              <h3>Founder, Provenexa Research</h3>
+            </div>
+          </div>
           <p>I spent 25 years in sales and business growth, across industries. Almost a decade of it was close to staffing and hiring.</p>
           <p style="margin-top:14px">In all those years, one problem never went away. Sales teams heard about new plants and offices too late. Companies could not find people with the right skills. Trained people in the same district could not find the jobs. They simply did not meet in time.</p>
         </div>
