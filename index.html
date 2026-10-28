@@ -48,180 +48,170 @@
 <link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
 <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32.png">
 <link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
-:root{
-  --navy:#0F1B33; --navy2:#12162B; --blue:#0B4F8F; --blue2:#1273B5; --cyan:#2BC4DA; --sky:#8ED8E7;
-  --mist:#E8F6F9; --mist2:#F4FBFC; --ink:#0F2A4A; --muted:#4F6478; --line:#D5E8EE; --white:#fff;
-  --sans:"Montserrat","Segoe UI",system-ui,-apple-system,Roboto,Helvetica,Arial,sans-serif;
-}
+:root{--bg:#f2f1ed;--card:#fff;--ink:#111;--body:#2b2b2b;--muted:#6b6b6b;--hair:#d4d2ca;--line:#111;--acc:#1d5c45;--acc-soft:#e0ebe5;--soft:#eceae4;--on-acc:#fff;--panel:#111;--on-panel:#f2f1ed;
+  --sans:Inter,"Segoe UI",system-ui,-apple-system,Roboto,Helvetica,Arial,sans-serif}
+@media (prefers-color-scheme:dark){:root:not([data-theme=light]){--panel:#1b2a22;--on-panel:#f1f0ec;--bg:#0e0f0e;--card:#171816;--ink:#f1f0ec;--body:#d6d4cd;--muted:#9b998f;--hair:#34352f;--line:#5a5b54;--acc:#5fb58d;--acc-soft:#18291f;--soft:#22231f;--on-acc:#0e0f0e}}
+:root[data-theme=dark]{--panel:#1b2a22;--on-panel:#f1f0ec;--bg:#0e0f0e;--card:#171816;--ink:#f1f0ec;--body:#d6d4cd;--muted:#9b998f;--hair:#34352f;--line:#5a5b54;--acc:#5fb58d;--acc-soft:#18291f;--soft:#22231f;--on-acc:#0e0f0e}
 *{box-sizing:border-box}
-html{scroll-behavior:smooth;color-scheme:light}
-body{margin:0;background:var(--white);color:var(--ink);font-family:var(--sans);line-height:1.65;-webkit-font-smoothing:antialiased}
-a{color:inherit}
-.wrap{max-width:1180px;margin:0 auto;padding:0 28px}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--body);font-family:var(--sans);line-height:1.6;-webkit-font-smoothing:antialiased}
+a{color:var(--acc)}
+.wrap{max-width:1180px;margin:0 auto;padding:0 24px}
 
-/* ---------- hero ---------- */
-.hero{position:relative;background:var(--mist);overflow:hidden;min-height:min(100vh,760px)}
-.hero .art{position:absolute;inset:0;width:100%;height:100%}
-.top{position:relative;z-index:3;display:flex;align-items:center;justify-content:space-between;height:96px}
-.brand{display:flex;align-items:center;gap:12px;text-decoration:none;font-weight:700;font-size:19px;letter-spacing:.2px;color:var(--ink)}
-.logo{width:44px;height:44px;flex:0 0 auto}
-.links{display:flex;align-items:center;gap:34px}
-.links a{color:#fff;text-decoration:none;font-weight:600;font-size:15.5px;text-shadow:0 1px 8px rgba(8,50,100,.35)}
-.links a:hover{opacity:.85}
-.links .pill{background:#fff;color:var(--blue);padding:9px 22px;border-radius:9px;font-weight:700;text-shadow:none;box-shadow:0 8px 22px rgba(8,50,100,.22)}
-.copy{position:relative;z-index:3;padding:70px 0 120px;max-width:560px}
-.kicker{display:inline-flex;align-items:center;gap:10px;font-weight:700;font-size:14px;letter-spacing:1.4px;text-transform:uppercase;color:var(--blue2)}
-.kicker i{display:block;width:34px;height:3px;border-radius:2px;background:linear-gradient(90deg,var(--cyan),var(--blue))}
-h1{font-size:clamp(34px,4.6vw,58px);line-height:1.08;font-weight:800;letter-spacing:-.025em;margin:18px 0 22px;color:var(--ink)}
-.lead{font-size:clamp(16px,1.5vw,18.5px);color:var(--muted);margin:0 0 36px;font-weight:500;max-width:48ch}
-.cta{display:inline-flex;align-items:center;gap:0;text-decoration:none;background:linear-gradient(90deg,var(--sky),var(--cyan));border-radius:999px;padding:6px 34px 6px 6px;color:var(--navy);font-weight:700;font-size:18px;box-shadow:0 14px 30px rgba(43,196,218,.35);transition:transform .2s}
-.cta:hover{transform:translateY(-2px)}
-.cta .ar{width:44px;height:44px;border-radius:50%;border:2px solid #fff;display:grid;place-items:center;margin-right:22px;background:rgba(255,255,255,.35)}
-.cta .ar svg{width:22px;height:22px}
+/* top bar */
+.topbar{background:var(--card);border-bottom:1px solid var(--line)}
+.top{display:flex;align-items:center;justify-content:space-between;height:64px;gap:20px}
+.brand{display:flex;align-items:center;gap:10px;text-decoration:none;font-weight:800;font-size:18px;letter-spacing:-.2px;color:var(--ink)}
+.logo{width:30px;height:30px;flex:0 0 auto}
+.links{display:flex;align-items:center;gap:22px}
+.links a{color:var(--body);text-decoration:none;font-size:15px}
+.links a:hover{color:var(--ink)}
+.links .pill{background:var(--ink);color:var(--bg);padding:10px 16px;font-weight:700}
 
-/* floating shapes */
-@keyframes drift{0%,100%{transform:translateY(0)}50%{transform:translateY(-14px)}}
-@keyframes drift2{0%,100%{transform:translateY(0)}50%{transform:translateY(10px)}}
-@keyframes draw{from{stroke-dashoffset:1}to{stroke-dashoffset:0}}
-.f1{animation:drift 7s ease-in-out infinite}
-.f2{animation:drift2 9s ease-in-out infinite}
-.f3{animation:drift 11s ease-in-out infinite 1s}
-.f4{animation:drift2 8s ease-in-out infinite .5s}
-.path{stroke-dasharray:1;stroke-dashoffset:0;animation:draw 3.2s ease-out both}
-@media (prefers-reduced-motion:reduce){.f1,.f2,.f3,.f4,.path{animation:none}}
+/* hero */
+.hero{border-bottom:3px solid var(--ink)}
+.herogrid{display:grid;grid-template-columns:1.15fr 1fr;gap:48px;align-items:center;padding:64px 0 56px}
+.kicker{display:inline-block;background:var(--acc);color:var(--on-acc);font-weight:800;font-size:12px;letter-spacing:.12em;text-transform:uppercase;padding:6px 10px}
+h1{font-size:clamp(36px,5vw,60px);line-height:1.03;font-weight:800;letter-spacing:-.04em;margin:18px 0 18px;color:var(--ink)}
+.lead{font-size:clamp(16px,1.5vw,19px);color:var(--body);margin:0 0 28px;max-width:52ch}
+.btns{display:flex;gap:12px;flex-wrap:wrap}
+.cta{display:inline-block;text-decoration:none;background:var(--ink);color:var(--bg);border:1px solid var(--ink);padding:13px 22px;font-weight:700;font-size:16px}
+.cta.acc{background:var(--acc);border-color:var(--acc);color:var(--on-acc)}
+.cta.ghost{background:transparent;color:var(--ink)}
+.cta .ar{display:none}
+.ladder{border:1px solid var(--line);background:var(--card)}
+.ladder .lh{padding:12px 16px;border-bottom:1px solid var(--line);font-size:12px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+.ladder ol{list-style:none;margin:0;padding:6px 16px 10px;counter-reset:st}
+.ladder li{display:grid;grid-template-columns:34px 1fr auto;gap:12px;align-items:center;padding:11px 0;border-bottom:1px solid var(--hair);counter-increment:st}
+.ladder li:last-child{border-bottom:0}
+.ladder li::before{content:counter(st,decimal-leading-zero);font-weight:800;color:var(--acc);font-size:15px}
+.ladder li b{color:var(--ink);font-size:16px}
+.ladder li span{font-size:13.5px;color:var(--muted);text-align:right}
+.ladder li.you{background:var(--acc-soft);margin:0 -16px;padding:11px 16px}
+.ladder li.you span{color:var(--acc);font-weight:700}
 
-/* ---------- sections ---------- */
-section{padding:96px 0}
-.eyebrow{font-weight:700;font-size:13.5px;letter-spacing:1.5px;text-transform:uppercase;color:var(--blue2)}
-h2{font-size:clamp(28px,3.4vw,42px);line-height:1.12;font-weight:800;letter-spacing:-.02em;margin:12px 0 16px;max-width:22ch}
-.sub{color:var(--muted);font-weight:500;max-width:58ch;margin:0}
-
-.story{background:var(--white)}
-.steps{display:grid;grid-template-columns:repeat(3,1fr);gap:34px;margin-top:60px;position:relative}
-.steps::before{content:"";position:absolute;left:8%;right:8%;top:58px;border-top:3px dashed var(--sky);z-index:0}
-.step{position:relative;z-index:1;text-align:center;padding:0 10px}
-.step .ic{width:132px;height:118px;margin:0 auto 22px;background:var(--white);border-radius:24px;box-shadow:0 18px 40px rgba(11,79,143,.14);display:grid;place-items:center;border:1px solid var(--line)}
-.step .ic svg{width:96px;height:80px}
-.step h3{margin:0 0 8px;font-size:22px;font-weight:800}
-.step p{margin:0 auto;color:var(--muted);max-width:28ch;font-weight:500;font-size:15.5px}
-
-.apps{background:var(--mist)}
-.appgrid{display:grid;grid-template-columns:1.5fr 1fr;gap:26px;margin-top:44px}
-.appmain{position:relative;overflow:hidden;border-radius:28px;padding:44px;color:#fff;background:linear-gradient(135deg,var(--blue) 0%,var(--blue2) 55%,var(--cyan) 130%);box-shadow:0 26px 60px rgba(11,79,143,.28)}
-.appmain::after{content:"";position:absolute;right:-60px;bottom:-80px;width:280px;height:280px;border-radius:60px;transform:rotate(22deg);background:rgba(255,255,255,.12)}
-.appmain::before{content:"";position:absolute;right:120px;top:-40px;width:110px;height:110px;border-radius:26px;transform:rotate(-14deg);background:rgba(255,255,255,.10)}
-.tag{display:inline-block;background:rgba(255,255,255,.2);border:1px solid rgba(255,255,255,.45);padding:6px 16px;border-radius:999px;font-weight:700;font-size:12.5px;letter-spacing:1.2px;text-transform:uppercase}
-.appmain h3{font-size:clamp(26px,3vw,36px);font-weight:800;line-height:1.15;margin:20px 0 14px;letter-spacing:-.015em;max-width:16ch}
-.appmain p{margin:0;font-weight:500;max-width:44ch;position:relative;z-index:1}
-.appmain .aud{margin-top:14px;font-size:14.5px;opacity:.88}
-.founderhead{display:flex;gap:22px;align-items:center;position:relative;z-index:1;margin-bottom:20px}
-.founderhead img{width:132px;height:165px;object-fit:cover;border-radius:20px;border:4px solid rgba(255,255,255,.9);box-shadow:0 14px 30px rgba(0,0,0,.18);flex:none}
-.founderhead h3{margin:12px 0 0}
-@media (max-width:520px){.founderhead{flex-direction:column;align-items:flex-start}}
-.more{border:2px dashed #A9D9E4;border-radius:28px;padding:40px;display:flex;flex-direction:column;justify-content:center;background:rgba(255,255,255,.55)}
-.more b{font-size:19px;font-weight:800}
-.more p{margin:8px 0 0;color:var(--muted);font-weight:500;font-size:15.5px}
-
-.tiles{display:grid;grid-template-columns:repeat(2,1fr);gap:22px;margin-top:44px}
+/* sections */
+section{padding:80px 0;border-bottom:1px solid var(--line)}
+.eyebrow{font-weight:800;font-size:12.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--acc)}
+h2{font-size:clamp(28px,3.4vw,42px);line-height:1.08;font-weight:800;letter-spacing:-.03em;margin:10px 0 14px;max-width:24ch;color:var(--ink)}
+.sub{color:var(--body);max-width:62ch;margin:0}
+.story{background:var(--bg)}
+.apps{background:var(--card)}
+.steps{display:grid;grid-template-columns:repeat(3,1fr);margin-top:44px;border:1px solid var(--line)}
+.step{padding:26px 24px;border-right:1px solid var(--line);background:var(--card)}
+.step:last-child{border-right:0}
+.step .ic{display:none}
+.step h3{margin:0 0 8px;font-size:22px;font-weight:800;color:var(--ink)}
+.step h3::before{display:block;font-size:13px;font-weight:800;letter-spacing:.1em;color:var(--acc);margin-bottom:8px}
+.step:nth-child(1) h3::before{content:"01"}.step:nth-child(2) h3::before{content:"02"}.step:nth-child(3) h3::before{content:"03"}
+.step p{margin:0;color:var(--body);font-size:15.5px}
+.tiles{display:grid;grid-template-columns:repeat(2,1fr);margin-top:40px;border:1px solid var(--line)}
 .tiles.five{grid-template-columns:repeat(3,1fr)}
-.tile{background:#fff;border:1px solid var(--line);border-radius:22px;padding:26px 28px;box-shadow:0 14px 34px rgba(11,79,143,.08)}
-.tile b{display:block;font-size:19px;font-weight:800;margin-bottom:6px;color:var(--ink)}
-.tile span{color:var(--muted);font-weight:500;font-size:15.5px}
-.tile a{color:var(--blue2)}
-.how{background:var(--white)}
-.rules{display:grid;grid-template-columns:repeat(2,1fr);gap:22px 40px;margin-top:44px}
-.rule{display:flex;gap:20px;align-items:flex-start}
-.rule .sq{flex:0 0 46px;height:46px;border-radius:13px;background:linear-gradient(135deg,var(--cyan),var(--blue));box-shadow:0 10px 22px rgba(11,79,143,.25);position:relative}
-.rule .sq::after{content:"";position:absolute;inset:14px;border-radius:5px;background:rgba(255,255,255,.85)}
-.rule b{display:block;font-weight:800;font-size:18px;margin-bottom:3px}
-.rule span{color:var(--muted);font-weight:500;font-size:15.5px}
-
-.contact{background:var(--navy2);color:#fff;position:relative;overflow:hidden}
-.contact::before{content:"";position:absolute;right:-90px;top:-110px;width:380px;height:380px;border-radius:90px;transform:rotate(24deg);background:linear-gradient(135deg,rgba(43,196,218,.35),rgba(11,79,143,.05))}
-.contact::after{content:"";position:absolute;left:-70px;bottom:-120px;width:260px;height:260px;border-radius:64px;transform:rotate(-18deg);background:linear-gradient(135deg,rgba(43,196,218,.22),rgba(11,79,143,.02))}
-.contact .wrap{position:relative;z-index:1;text-align:center}
-.contact h2{margin-left:auto;margin-right:auto;max-width:20ch}
-.contact .sub{color:#B7C7DA;margin:0 auto 34px}
-.contact .cta{font-size:clamp(16px,2.2vw,21px)}
-footer{background:#0B1226;color:#8DA0B8;font-size:14px;padding:30px 0 40px}
+.tile{background:var(--card);border-right:1px solid var(--hair);border-bottom:1px solid var(--hair);padding:24px 24px}
+.tiles .tile:nth-child(2n){border-right:0}
+/* before the contact tools (Sumit, 28 Oct): we come first, the contact tool comes last */
+.flow{display:grid;grid-template-columns:repeat(3,1fr);margin-top:40px;border:1px solid var(--line)}
+.fstep{padding:22px 24px;background:var(--card);border-right:1px solid var(--hair)}
+.fstep:last-child{border-right:0;background:var(--soft)}
+.fstep .k{font-size:12px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:var(--acc)}
+.fstep:last-child .k{color:var(--muted)}
+.fstep b{display:block;font-size:19px;color:var(--ink);margin:8px 0 6px}
+.fstep span{color:var(--body);font-size:15px}
+.vs{width:100%;border-collapse:collapse;margin-top:28px;font-size:15px;background:var(--card);border:1px solid var(--line)}
+.vs th,.vs td{text-align:left;padding:14px 18px;border-bottom:1px solid var(--hair);vertical-align:top}
+.vs th{font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);font-weight:800}
+.vs th.us,.vs td.us{color:var(--ink);font-weight:600;background:var(--acc-soft)}
+.vs td:first-child{color:var(--muted);width:24%}
+.punch{margin-top:26px;font-size:clamp(20px,2.2vw,26px);font-weight:800;letter-spacing:-.02em;color:var(--ink)}
+@media (max-width:760px){.flow{grid-template-columns:1fr}.fstep{border-right:0;border-bottom:1px solid var(--hair)}.vs th,.vs td{padding:10px 12px}}
+.tiles.five .tile{border-right:1px solid var(--hair)}
+.tiles.five .tile:nth-child(3n){border-right:0}
+.apps .tile{background:var(--bg)}
+.tile b{display:block;font-size:18.5px;font-weight:800;margin-bottom:6px;color:var(--ink)}
+.tile span{color:var(--body);font-size:15.5px}
+.appgrid{display:grid;grid-template-columns:1.4fr 1fr;margin-top:40px;border:1px solid var(--line)}
+.appmain{padding:36px;background:var(--panel);color:var(--on-panel);border-right:1px solid var(--line)}
+.appmain h3{font-size:clamp(24px,2.8vw,34px);font-weight:800;line-height:1.12;margin:16px 0 12px;letter-spacing:-.02em;max-width:18ch;color:var(--on-panel)}
+.appmain p{margin:0;max-width:48ch;opacity:.9}
+.appmain a{color:#9fd3b8}
+.tag{display:inline-block;background:var(--acc);color:#fff;padding:5px 10px;font-weight:800;font-size:12px;letter-spacing:.1em;text-transform:uppercase}
+.founderhead{display:flex;gap:20px;align-items:center;margin-bottom:18px}
+.founderhead img{width:120px;height:150px;object-fit:cover;border:3px solid var(--on-panel);flex:none}
+.founderhead h3{margin:12px 0 0}
+.more{padding:36px;display:flex;flex-direction:column;justify-content:center;background:var(--card)}
+.more b{font-size:19px;font-weight:800;color:var(--ink)}
+.more p{margin:8px 0 0;color:var(--body);font-size:15.5px}
+.plansmini{display:grid;grid-template-columns:repeat(4,auto);gap:4px 18px;margin:18px 0 6px;font-size:15px;opacity:.95}
+.plansmini b{display:block;font-size:20px;color:var(--on-panel)}
+.rules{display:grid;grid-template-columns:repeat(2,1fr);margin-top:40px;border:1px solid var(--line)}
+.rule{display:flex;gap:16px;align-items:flex-start;padding:22px 24px;background:var(--bg);border-right:1px solid var(--hair);border-bottom:1px solid var(--hair)}
+.rule:nth-child(2n){border-right:0}
+.rule .sq{flex:0 0 14px;height:14px;background:var(--acc);margin-top:6px}
+.rule b{display:block;font-weight:800;font-size:18px;margin-bottom:3px;color:var(--ink)}
+.rule span{color:var(--body);font-size:15.5px}
+.contact{background:var(--panel);color:var(--on-panel);border-bottom:0}
+.contact .wrap{text-align:left}
+.contact h2{color:var(--on-panel)}
+.contact .eyebrow{color:#9fd3b8!important}
+.contact .sub{color:var(--on-panel);opacity:.8;margin:0 0 28px}
+.contact .cta{background:var(--acc);border-color:var(--acc);color:#fff}
+footer{background:var(--bg);color:var(--muted);font-size:14px;padding:26px 0 40px;border-top:1px solid var(--line)}
 footer p{margin:4px 0}
-footer b{color:#fff}
+footer b{color:var(--ink)}
+footer a{color:var(--acc)}
+.themebtn{border:1px solid var(--hair);background:transparent;color:var(--body);padding:5px 10px;font:600 13px var(--sans);cursor:pointer;margin-left:8px}
 
 @media (max-width:900px){
   .links a:not(.pill){display:none}
-  .top{height:80px}
-  .hero{min-height:0}
-  .hero .art{inset:auto 0 0 auto;width:640px;max-width:none;height:347px;-webkit-mask-image:linear-gradient(to bottom,transparent 0,#000 38%);mask-image:linear-gradient(to bottom,transparent 0,#000 38%)}
-  .copy{padding:36px 0 270px;max-width:none}
-  section{padding:70px 0}
-  .steps{grid-template-columns:1fr;gap:46px}
-  .steps::before{display:none}
-  .appgrid,.rules,.tiles,.tiles.five{grid-template-columns:1fr}
-  .appmain,.more{padding:32px}
+  .herogrid{grid-template-columns:1fr;padding:40px 0 36px;gap:32px}
+  section{padding:56px 0}
+  .steps,.appgrid,.rules,.tiles,.tiles.five{grid-template-columns:1fr}
+  .step,.appmain{border-right:0;border-bottom:1px solid var(--line)}
+  .tile,.tiles.five .tile,.rule{border-right:0}
+  .appmain,.more{padding:26px}
+  .plansmini{grid-template-columns:repeat(2,auto)}
 }
+@media (max-width:520px){.wrap{padding:0 16px}.founderhead{flex-direction:column;align-items:flex-start}}
 </style>
 </head>
 <body>
 
-<div class="hero" id="top">
-  <!-- illustration: gradient sweep, floating squares, dashed arcs, connecting curve -->
-  <svg class="art" viewBox="0 0 1440 780" preserveAspectRatio="xMaxYMid slice" aria-hidden="true">
-    <defs>
-      <linearGradient id="gSky" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#9ADFEC"/><stop offset=".55" stop-color="#3FC9DF"/><stop offset="1" stop-color="#2BB5D0"/></linearGradient>
-      <linearGradient id="gDeep" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#1B87BC"/><stop offset=".5" stop-color="#0F67A8"/><stop offset="1" stop-color="#0A3F7C"/></linearGradient>
-      <linearGradient id="gSq" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#3ACDE2"/><stop offset="1" stop-color="#0C55A0"/></linearGradient>
-      <filter id="sh" x="-30%" y="-30%" width="170%" height="170%"><feDropShadow dx="0" dy="10" stdDeviation="9" flood-color="#08417D" flood-opacity=".28"/></filter>
-    </defs>
-    <!-- light band -->
-    <path d="M760 0 H1440 V780 H1150 C1040 700 1070 610 1160 560 C1255 505 1245 395 1165 345 C1080 295 985 345 925 388 C850 440 770 395 745 315 C722 240 730 110 760 0 Z" fill="url(#gSky)"/>
-    <!-- deep lobe -->
-    <path d="M985 0 H1440 V690 C1395 728 1330 722 1290 672 C1245 615 1300 555 1330 505 C1365 445 1338 365 1262 336 C1185 306 1122 340 1072 380 C1018 422 960 372 940 305 C920 235 940 110 985 0 Z" fill="url(#gDeep)"/>
-    <!-- thin outline echoing the shape -->
-    <path d="M985 0 C940 110 920 235 940 305 C960 372 1018 422 1072 380 C1122 340 1185 306 1262 336 C1338 365 1365 445 1330 505" fill="none" stroke="#fff" stroke-opacity=".55" stroke-width="2"/>
-    <!-- dashed arcs -->
-    <circle cx="1090" cy="330" r="118" fill="none" stroke="#fff" stroke-opacity=".5" stroke-width="2.4" stroke-dasharray="7 9"/>
-    <path d="M820 130 C900 60 990 60 1050 118" fill="none" stroke="#fff" stroke-opacity=".5" stroke-width="2.4" stroke-dasharray="7 9"/>
-    <!-- translucent squares on the sweep -->
-    <g class="f2"><rect x="1230" y="470" width="84" height="84" rx="20" fill="#fff" fill-opacity=".26" transform="rotate(14 1272 512)"/></g>
-    <g class="f3"><rect x="1310" y="585" width="52" height="52" rx="13" fill="#fff" fill-opacity=".3" transform="rotate(-12 1336 611)"/></g>
-    <g class="f1"><rect x="1140" y="605" width="58" height="58" rx="15" fill="#fff" fill-opacity=".22" transform="rotate(10 1169 634)"/></g>
-    <g class="f4"><rect x="1340" y="410" width="44" height="44" rx="11" fill="#fff" fill-opacity=".2" transform="rotate(-8 1362 432)"/></g>
-    <!-- scattered squares joining up: information becoming connected -->
-    <path class="path" pathLength="1" d="M70 668 C120 702 165 716 245 702 C335 686 352 644 432 648 C512 652 540 702 620 702 C692 702 730 668 772 662" fill="none" stroke="#2BB5D0" stroke-width="2.2" stroke-opacity=".9"/>
-    <g class="f1" filter="url(#sh)"><rect x="40" y="628" width="64" height="64" rx="16" fill="url(#gSq)"/></g>
-    <g class="f3" filter="url(#sh)"><rect x="222" y="676" width="44" height="44" rx="11" fill="url(#gSq)"/></g>
-    <g class="f2" filter="url(#sh)"><rect x="406" y="616" width="52" height="52" rx="13" fill="url(#gSq)"/></g>
-    <g class="f4" filter="url(#sh)"><rect x="600" y="680" width="40" height="40" rx="10" fill="url(#gSq)"/></g>
-  </svg>
-
-  <div class="wrap">
+<div class="topbar"><div class="wrap">
     <div class="top">
       <a class="brand" href="#top" aria-label="Provenexa Research">
-        <svg class="logo" viewBox="0 0 120 120" aria-hidden="true"><defs><linearGradient id="gPl" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#3ACDE2"/><stop offset="1" stop-color="#0B4F8F"/></linearGradient></defs><path d="M36 104 V24 H68 a26 26 0 0 1 0 52 H36" fill="none" stroke="url(#gPl)" stroke-width="20" stroke-linecap="round" stroke-linejoin="round"/><rect x="88" y="6" width="24" height="24" rx="7" fill="#2BC4DA"/></svg>
+        <svg class="logo" viewBox="0 0 120 120" aria-hidden="true"><path d="M36 104 V24 H68 a26 26 0 0 1 0 52 H36" fill="none" stroke="currentColor" stroke-width="20" stroke-linecap="square" stroke-linejoin="miter"/><rect x="88" y="6" width="24" height="24" fill="var(--acc)"/></svg>
         Provenexa Research
       </a>
       <nav class="links">
-        <a href="#top">Home</a>
-        <a href="#engine">The engine</a>
-        <a href="#get">What you get</a>
-        <a href="#who">Who it's for</a>
-        <a href="#jobs">Jobs and skills</a>
+        <a href="#get">Next Moves</a>
+        <a href="pricing/">Pricing</a>
         <a href="#founder">Founder</a>
-        <a class="pill" href="#contact">Contact</a>
+        <a class="pill" href="mailto:research@provenexa.com?subject=Early%20access">Get early access</a>
       </nav>
     </div>
+</div></div>
+
+<div class="hero" id="top"><div class="wrap">
+  <div class="herogrid">
     <div class="copy">
-      <span class="kicker"><i></i>Next Moves</span>
+      <span class="kicker">Next Moves</span>
       <h1>Know your customer's next move.</h1>
       <p class="lead">New plants, branch roll-outs, global centres, big orders and people changes. We follow what India's companies are about to do and tell your sales team who to call, why now and what to say, often months before the news.</p>
-      <a class="cta" href="#contact"><span class="ar"><svg viewBox="0 0 24 24" fill="none" stroke="#0F2A4A" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12h15M13 6l6 6-6 6"/></svg></span>Get in touch</a>
+      <div class="btns"><a class="cta acc" href="mailto:research@provenexa.com?subject=Early%20access">Get early access</a><a class="cta ghost" href="pricing/">See pricing</a></div>
+    </div>
+    <div class="ladder" aria-label="How a company moves, step by step">
+      <div class="lh">Every move, step by step</div>
+      <ol>
+        <li><b>Set up in India</b><span>months before the news</span></li>
+        <li><b>Hiring quietly</b><span>first roles appear</span></li>
+        <li class="you"><b>You call here</b><span>before your competitors</span></li>
+        <li><b>Announced</b><span>everyone knows</span></li>
+        <li><b>Opened and growing</b><span>the crowd arrives</span></li>
+      </ol>
     </div>
   </div>
-</div>
+</div></div>
 
 <main>
   <section class="story" id="engine">
@@ -263,6 +253,27 @@ footer b{color:#fff}
     </div>
   </section>
 
+  <section class="story" id="before">
+    <div class="wrap">
+      <span class="eyebrow">Where we fit</span>
+      <h2>We come before your contact tool, not after it</h2>
+      <p class="sub">Contact tools give you names, emails and phone numbers for almost anyone. They can't tell you which company is about to need you, or why this week. That is the part we do.</p>
+      <div class="flow">
+        <div class="fstep"><span class="k">1 · Provenexa</span><b>Which account is moving</b><span>A new plant, office, order or hire, with dated steps and the source.</span></div>
+        <div class="fstep"><span class="k">2 · Provenexa</span><b>Why now, and who to approach</b><span>Our read of what they will need, the role to call and, on paid plans, the likely person's public profile.</span></div>
+        <div class="fstep"><span class="k">3 · Your contact tool</span><b>The email and phone number</b><span>Open the profile link in the contact tool you already use. We never sell contact details.</span></div>
+      </div>
+      <table class="vs">
+        <tr><th></th><th>Contact tools</th><th class="us">Provenexa</th></tr>
+        <tr><td>What you get</td><td>Names, emails, phone numbers</td><td class="us">Which companies are moving, and why now</td></tr>
+        <tr><td>When to call</td><td>Any day, for anyone</td><td class="us">The week it matters, before the news</td></tr>
+        <tr><td>What to say</td><td>Not their job</td><td class="us">What the company will need next</td></tr>
+        <tr><td>Contact details</td><td>Yes</td><td class="us">No. Use your own tool for that.</td></tr>
+      </table>
+      <p class="punch">Phone numbers are easy to get. A reason to call is not.</p>
+    </div>
+  </section>
+
   <section class="story" id="who">
     <div class="wrap">
       <span class="eyebrow">Who it's for</span>
@@ -271,7 +282,7 @@ footer b{color:#fff}
       <div class="tiles five">
         <div class="tile"><b>Staffing, RPO and apprenticeships</b><span>New plants filling shifts, branch and store roll-outs, new global centres hiring, apprentice seats at new sites.</span></div>
         <div class="tile"><b>Facility services</b><span>New offices, data centres, warehouses and campuses that need security, housekeeping and upkeep from day one.</span></div>
-        <div class="tile"><b>Contractors and suppliers</b><span>Projects from first sign to award, sorted by trade, with the winners and who gets work next. <a href="ledger/" style="font-weight:700">See the Project Ledger →</a></span></div>
+        <div class="tile"><b>Contractors and suppliers</b><span>Projects from first sign to award, sorted by trade, with the winners and who gets work next.</span></div>
         <div class="tile"><b>Ports, logistics and warehousing</b><span>Plants and exporters starting near the ports, project cargo ahead, new parks and changes at the terminals.</span></div>
         <div class="tile"><b>Energy, operations and maintenance</b><span>Farms and plants changing owner, just commissioned or about to be built, when the owner chooses a partner.</span></div>
       </div>
@@ -288,7 +299,7 @@ footer b{color:#fff}
         <div class="tile"><b>Supply: where the trained people are (being added)</b><span>Which trades nearby training institutes teach, and how many places they have, set against the jobs coming up. So it is clear where a city has the people, and where it will need to train or bring them in.</span></div>
       </div>
       <div class="tiles five">
-        <div class="tile"><b>Job seekers</b><span>Where the new jobs are, before the rush: which new plants and global capability centres are hiring now or coming next, and in which city. We never charge job seekers.</span></div>
+        <div class="tile"><b>Job seekers</b><span>Where the new jobs are, before the rush: which new plants and global capability centres are hiring now or coming next, and in which city. We never charge job seekers. <a href="https://jobs.provenexa.com/" style="font-weight:700">Provenexa Jobs →</a></span></div>
         <div class="tile"><b>ITIs, colleges and career services</b><span>Which employers are about to hire in your region and field, and the trades they need, so you can plan courses, batches and placement drives in time.</span></div>
         <div class="tile"><b>Government and skill missions</b><span>New plants and offices with the trades and apprentice seats they will need, next to where people are trained, so skills departments can plan ahead of demand.</span></div>
       </div>
@@ -300,11 +311,14 @@ footer b{color:#fff}
     <div class="wrap">
       <span class="eyebrow">How we work with you</span>
       <h2>Two ways to start</h2>
+      <p class="sub">Use it yourself, or have us help your team use it. Prices are before GST.</p>
       <div class="appgrid">
         <div class="appmain">
-          <span class="tag">Next Moves pages</span>
-          <h3>Your private pages, every week</h3>
-          <p>We set up the pages for your trade and states, watch the companies you care about, and send a card whenever one of them moves.</p>
+          <span class="tag">Founding member prices · till 31 March 2027</span>
+          <h3>Start free. Pay when it finds work for you.</h3>
+          <p>Pick your category and state, add the companies you sell to, and see their moves. Upgrade for same-day moves, all of India and the person likely to decide.</p>
+          <div class="plansmini"><span><b>Rs 0</b>Free</span><span><b>Rs 999</b>a month</span><span><b>Rs 1,999</b>Plus</span><span><b>Rs 4,999</b>team of 5</span></div>
+          <p style="margin-top:14px"><a href="pricing/" style="font-weight:700">See all plans →</a></p>
         </div>
         <div class="more">
           <b>Pipeline partner</b>
@@ -342,11 +356,13 @@ footer b{color:#fff}
             </div>
           </div>
           <p>I spent 25 years in sales and business growth, across industries. Almost a decade of it was close to staffing and hiring.</p>
-          <p style="margin-top:14px">In all those years, one problem never went away. Sales teams heard about new plants and offices too late. Companies could not find people with the right skills. Trained people in the same district could not find the jobs. They simply did not meet in time.</p>
+          <p style="margin-top:14px">In all those years, one problem never went away. Sales teams heard about a new plant, office or big order too late. They heard on the same day as everyone else. By then the first calls had been made. The best accounts went to whoever got there first.</p>
+          <p style="margin-top:14px">The signs were always there, months earlier: a company registered, land bought, an approval, quiet hiring. But they were scattered across records and newspapers in many languages. Nobody had time to join them up.</p>
+          <p style="margin-top:14px"><b>Good salespeople are not short of phone numbers. They are short of a reason to call, at the right time.</b></p>
         </div>
         <div class="more">
           <b>What Provenexa does about it</b>
-          <p>We track the first quiet steps a company takes. We check each one against its source. And we tell the people who can act on it, so the jobs and the people can meet in time.</p>
+          <p>We follow those first quiet steps, every day, across India. We check each one against its source. Then we tell your sales team which accounts are moving, why now, and who to approach. So you call first.</p>
           <p style="margin-top:10px"><a href="https://www.linkedin.com/in/sumitjaswal/" target="_blank" rel="noopener" style="font-weight:700">Connect on LinkedIn →</a></p>
           <p style="margin-top:6px"><a href="mailto:research@provenexa.com?subject=Hello%20Sumit" style="font-weight:700">Write to me →</a></p>
         </div>
@@ -366,9 +382,16 @@ footer b{color:#fff}
 
 <footer>
   <div class="wrap">
-    <p><b>Provenexa Research</b> &middot; India &middot; <a href="https://www.linkedin.com/company/provenexa-research/" target="_blank" rel="noopener">LinkedIn</a></p>
-    <p>&copy; 2026 Provenexa Research. Information on this site is for general information only and is not investment advice.</p>
+    <p><b>Provenexa Research</b> &middot; India &middot; <a href="pricing/">Pricing</a> &middot; <a href="https://jobs.provenexa.com/">Job seekers</a> &middot; <a href="https://www.linkedin.com/company/provenexa-research/" target="_blank" rel="noopener">LinkedIn</a></p>
+    <p>&copy; 2026 Provenexa Research. Information on this site is for general information only and is not investment advice. <button class="themebtn" id="theme">Dark</button></p>
   </div>
 </footer>
+<script>
+(function(){const r=document.documentElement,b=document.getElementById('theme');if(!b)return;
+ if(location.hash==='#light'||location.hash==='#dark')r.dataset.theme=location.hash.slice(1);
+ const dark=()=>r.dataset.theme?r.dataset.theme==='dark':matchMedia('(prefers-color-scheme: dark)').matches;
+ const set=()=>{b.textContent=dark()?'Light':'Dark'};set();
+ b.onclick=()=>{r.dataset.theme=dark()?'light':'dark';set()};})();
+</script>
 </body>
 </html>

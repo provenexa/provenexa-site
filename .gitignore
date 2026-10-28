@@ -1,0 +1,5 @@
+# local backups and preview shots never go to the public site (28 Oct 2026)
+*.bak-*
+*.bak
+_preview_*
+preview_*.png
