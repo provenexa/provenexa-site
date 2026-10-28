@@ -1,0 +1,248 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>My accounts · Provenexa</title>
+<style>
+:root{--bg:#f2f1ed;--card:#fff;--ink:#111;--body:#2b2b2b;--muted:#6b6b6b;--hair:#d4d2ca;--line:#111;--acc:#1d5c45;--acc-soft:#e0ebe5;--on-acc:#fff;--warn:#8a3b12;
+  --sans:Inter,"Segoe UI",system-ui,-apple-system,Roboto,Helvetica,Arial,sans-serif}
+@media (prefers-color-scheme:dark){:root:not([data-theme=light]){--bg:#0e0f0e;--card:#171816;--ink:#f1f0ec;--body:#d6d4cd;--muted:#9b998f;--hair:#34352f;--line:#5a5b54;--acc:#5fb58d;--acc-soft:#18291f;--on-acc:#0e0f0e;--warn:#e39a6b}}
+:root[data-theme=dark]{--bg:#0e0f0e;--card:#171816;--ink:#f1f0ec;--body:#d6d4cd;--muted:#9b998f;--hair:#34352f;--line:#5a5b54;--acc:#5fb58d;--acc-soft:#18291f;--on-acc:#0e0f0e;--warn:#e39a6b}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--body);font-family:var(--sans);line-height:1.55;-webkit-font-smoothing:antialiased}
+a{color:var(--acc)}
+.wrap{max-width:720px;margin:0 auto;padding:0 16px}
+.topbar{background:var(--card);border-bottom:1px solid var(--line)}
+.top{display:flex;align-items:center;justify-content:space-between;height:56px;gap:12px}
+.brand{display:flex;align-items:center;gap:10px;font-weight:800;font-size:17px;color:var(--ink);text-decoration:none}
+.logo{width:26px;height:26px;flex:none}
+.who{font-size:14px;color:var(--muted);text-align:right}
+.who button{margin-left:8px}
+h1{font-size:clamp(28px,6vw,40px);line-height:1.05;letter-spacing:-.03em;margin:28px 0 8px;color:var(--ink);font-weight:800}
+.lead{margin:0 0 22px;font-size:16.5px}
+.card{background:var(--card);border:1px solid var(--line);padding:20px}
+label{display:block;font-weight:700;color:var(--ink);margin:0 0 6px;font-size:15px}
+input{width:100%;font:16px var(--sans);padding:11px 12px;border:1px solid var(--line);background:var(--card);color:var(--ink);border-radius:0}
+input:focus{outline:2px solid var(--acc);outline-offset:1px}
+button{font:700 15px var(--sans);cursor:pointer;border-radius:0}
+.btn{background:var(--acc);color:var(--on-acc);border:0;padding:12px 18px}
+.btn[disabled]{opacity:.55;cursor:default}
+.ghost{background:transparent;color:var(--body);border:1px solid var(--hair);padding:6px 10px;font-weight:600;font-size:13px}
+.row{display:flex;gap:10px;margin-top:12px}
+.row input{flex:1}
+.note{font-size:14px;color:var(--muted);margin:10px 0 0}
+.msg{margin:12px 0 0;font-size:14.5px;font-weight:600}
+.msg.err{color:var(--warn)}
+.msg.ok{color:var(--acc)}
+.plan{display:flex;justify-content:space-between;align-items:baseline;gap:12px;border-bottom:3px solid var(--ink);padding:0 0 10px;margin:0 0 14px}
+.plan b{color:var(--ink);font-size:17px}
+.plan span{font-size:14px;color:var(--muted)}
+ul{list-style:none;margin:16px 0 0;padding:0;border:1px solid var(--line)}
+li{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:12px 14px;border-bottom:1px solid var(--hair);background:var(--card)}
+li:last-child{border-bottom:0}
+li b{color:var(--ink);font-size:16px}
+li small{display:block;color:var(--muted);font-size:13px}
+.empty{padding:16px 14px;color:var(--muted);font-size:15px}
+li.acc{display:block}
+li.acc .hd{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:6px}
+.mv{padding:6px 0 0;font-size:14.5px;line-height:1.4}
+.mv .d{color:var(--muted);font-size:13px;margin-right:8px;white-space:nowrap}
+.mv .k{font-size:11px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--ink);border:1px solid var(--hair);padding:1px 5px;margin-right:8px}
+.mv a{color:var(--body);text-decoration:none}
+.mv a:hover{text-decoration:underline;color:var(--acc)}
+.tag.now{background:var(--acc);color:var(--on-acc)}
+.tag{display:inline-block;background:var(--acc-soft);color:var(--acc);font-size:11px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;padding:2px 6px;margin-left:6px}
+.private{margin:18px 0 0;border:3px solid var(--ink);background:var(--card);padding:14px 16px;font-size:14.5px}
+.private b{color:var(--ink)}
+footer{padding:28px 0 36px;font-size:13px;color:var(--muted)}
+.hide{display:none}
+</style>
+</head>
+<body>
+<header class="topbar"><div class="wrap top">
+  <a class="brand" href="https://provenexa.com/">
+    <svg class="logo" viewBox="0 0 120 120" aria-hidden="true"><path d="M36 104 V24 H68 a26 26 0 0 1 0 52 H36" fill="none" stroke="currentColor" stroke-width="20" stroke-linecap="square" stroke-linejoin="miter"/><rect x="88" y="6" width="24" height="24" fill="var(--acc)"/></svg>
+    Provenexa
+  </a>
+  <div class="who" id="who"></div>
+</div></header>
+
+<main class="wrap">
+  <!-- signed out: step 1, email -->
+  <section id="s-email" class="hide">
+    <h1>Sign in</h1>
+    <p class="lead">No password. We email you a one-time code.</p>
+    <form class="card" id="f-email">
+      <label for="email">Your work email</label>
+      <input id="email" type="email" autocomplete="email" required placeholder="you@company.com">
+      <div class="row"><button class="btn" id="b-email" type="submit">Send me a code</button></div>
+      <p class="msg" id="m-email"></p>
+    </form>
+  </section>
+
+  <!-- signed out: step 2, code -->
+  <section id="s-code" class="hide">
+    <h1>Check your email</h1>
+    <p class="lead">We sent a code to <b id="sent-to"></b>. It works for a few minutes. If the email has a button instead of a code, click it and you are signed in.</p>
+    <form class="card" id="f-code">
+      <label for="code">The code from the email</label>
+      <input id="code" inputmode="numeric" autocomplete="one-time-code" required pattern="[0-9]{6,8}" maxlength="8" placeholder="123456">
+      <div class="row"><button class="btn" id="b-code" type="submit">Sign in</button>
+        <button class="ghost" id="b-back" type="button">Use another email</button></div>
+      <p class="msg" id="m-code"></p>
+    </form>
+  </section>
+
+  <!-- signed in -->
+  <section id="s-app" class="hide">
+    <h1>My accounts</h1>
+    <p class="lead">The companies you sell to, or want to. We tell you when they move.</p>
+    <div class="card">
+      <div class="plan"><b id="plan-name">Free plan</b><span id="plan-left"></span></div>
+      <form id="f-add">
+        <label for="company">Add a company</label>
+        <div class="row" style="margin-top:0">
+          <input id="company" list="companies" autocomplete="off" required minlength="2" maxlength="120" placeholder="Start typing a company name">
+          <button class="btn" id="b-add" type="submit">Add</button>
+        </div>
+        <datalist id="companies"></datalist>
+        <p class="msg" id="m-add"></p>
+      </form>
+      <ul id="list"></ul>
+      <p class="note hide" id="free-note">The Free plan shows each move a week after it happens. Paid plans show it the same day.</p>
+    </div>
+    <div class="private"><b>Only you can see your list.</b> It is kept under your sign-in. We never share it, and we delete it if you leave.</div>
+  </section>
+</main>
+
+<footer><div class="wrap">Provenexa Research · research@provenexa.com</div></footer>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
+<script>
+// Public values only (they are meant to be in the page; row-level security protects the data).
+const SUPABASE_URL = "https://kgkstbcrhpdxrrnswdju.supabase.co";
+const SUPABASE_KEY = "sb_publishable_wQZMIp77ig07CxrbHiGXlQ_jl1QlRYw";
+const LIMITS = {free: 3, individual: 10, plus: 25, team: 50, pilot: 25, staff: 1000};
+const PLAN_NAMES = {free: "Free plan", individual: "Individual plan", plus: "Plus plan", team: "Team plan", pilot: "Pilot", staff: "Provenexa staff"};
+
+const sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+const $ = id => document.getElementById(id);
+let known = new Set(), member = null, email = "";
+
+function show(id) { for (const s of ["s-email", "s-code", "s-app"]) $(s).classList.toggle("hide", s !== id); }
+function say(id, text, kind) { const m = $(id); m.textContent = text || ""; m.className = "msg" + (kind ? " " + kind : ""); }
+function esc(s) { return String(s).replace(/[&<>"]/g, c => ({"&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;"}[c])); }
+
+// company names for the suggestions: members only (read from Supabase after sign-in, 1,000 rows per request)
+let namesLoaded = false;
+async function loadNames() {
+  if (namesLoaded) return;
+  const names = [];
+  for (let from = 0; ; from += 1000) {
+    const {data, error} = await sb.from("companies").select("name").order("name").range(from, from + 999);
+    if (error || !data) break;
+    names.push(...data.map(r => r.name));
+    if (data.length < 1000) break;
+  }
+  if (!names.length) return;
+  namesLoaded = true;
+  known = new Set(names.map(n => n.toLowerCase()));
+  $("companies").innerHTML = names.map(n => `<option value="${esc(n)}">`).join("");
+}
+
+$("f-email").onsubmit = async e => {
+  e.preventDefault();
+  email = $("email").value.trim().toLowerCase();
+  $("b-email").disabled = true; say("m-email", "Sending…");
+  const {error} = await sb.auth.signInWithOtp({email, options: {shouldCreateUser: true}});
+  $("b-email").disabled = false;
+  if (error) { say("m-email", "We could not send the code: " + error.message, "err"); return; }
+  say("m-email", ""); $("sent-to").textContent = email; show("s-code"); $("code").focus();
+};
+
+$("f-code").onsubmit = async e => {
+  e.preventDefault();
+  $("b-code").disabled = true; say("m-code", "Checking…");
+  const token = $("code").value.trim();
+  let {error} = await sb.auth.verifyOtp({email, token, type: "email"});
+  // a first-time sign-in comes from the "Confirm signup" email; its code checks as type "signup"
+  if (error) ({error} = await sb.auth.verifyOtp({email, token, type: "signup"}));
+  $("b-code").disabled = false;
+  if (error) { say("m-code", "That code did not work. Check it, or ask for a new one.", "err"); return; }
+  say("m-code", "");
+};
+$("b-back").onclick = () => { $("code").value = ""; say("m-code", ""); show("s-email"); };
+
+async function load() {
+  await loadNames();
+  const {data: m} = await sb.from("members").select("plan, extra_accounts").maybeSingle();
+  member = m || {plan: "free", extra_accounts: 0};
+  const {data: rows, error} = await sb.from("my_accounts").select("id, company, added_at").order("added_at", {ascending: false});
+  if (error) { say("m-add", "Could not load your list: " + error.message, "err"); return; }
+  const lim = (LIMITS[member.plan] ?? 3) + (member.extra_accounts || 0);
+  $("plan-name").textContent = PLAN_NAMES[member.plan] || "Your plan";
+  const left = Math.max(lim - rows.length, 0);
+  $("plan-left").textContent = `${rows.length} of ${lim} accounts used` + (left ? "" : " · list full");
+  $("b-add").disabled = !left;
+  if (!left) say("m-add", `Your ${PLAN_NAMES[member.plan] || "plan"} holds ${lim} accounts. Remove one to add another.`);
+  // moves: the table only returns rows for this member's own companies (and, on Free, only those 7+ days old)
+  const {data: mv} = await sb.from("moves").select("company, day, kind_label, headline, url").order("day", {ascending: false}).limit(1000);
+  const byCo = {};
+  for (const x of mv || []) (byCo[x.company.toLowerCase()] ||= []).push(x);
+  const fmt = d => new Date(d + "T00:00:00").toLocaleDateString("en-IN", {day: "numeric", month: "short", year: "numeric"});
+  const week = new Date(Date.now() - 7 * 864e5).toISOString().slice(0, 10);
+  // newest move first, so the account that just moved sits on top
+  rows.sort((a, b) => ((byCo[b.company.toLowerCase()] || [])[0]?.day || "").localeCompare((byCo[a.company.toLowerCase()] || [])[0]?.day || ""));
+  $("list").innerHTML = rows.length ? rows.map(r => {
+    const ms = byCo[r.company.toLowerCase()] || [];
+    const tracked = known.has(r.company.toLowerCase());
+    const fresh = ms[0] && ms[0].day >= week;
+    const items = ms.slice(0, 3).map(x => `<div class="mv"><span class="d">${fmt(x.day)}</span><span class="k">${esc(x.kind_label || "")}</span>
+        ${x.url ? `<a href="${esc(x.url)}" target="_blank" rel="noopener">${esc(x.headline)}</a>` : esc(x.headline)}</div>`).join("");
+    const more = ms.length > 3 ? `<small>${ms.length - 3} earlier move${ms.length - 3 > 1 ? "s" : ""} not shown</small>` : "";
+    const none = tracked ? `<small>No moves we can show yet${member.plan === "free" ? " (Free shows moves a week after they happen)" : ""}.</small>`
+                         : `<small>We don't track this one yet. It shows here as soon as it moves.</small>`;
+    return `<li class="acc"><div class="hd"><div><b>${esc(r.company)}</b>${tracked ? "" : '<span class="tag">not tracked yet</span>'}${fresh ? '<span class="tag now">moved this week</span>' : ""}</div>
+      <button class="ghost" data-id="${r.id}">Remove</button></div>${ms.length ? items + more : none}</li>`;
+  }).join("") : '<li class="empty">No companies yet. Add the first one above.</li>';
+  for (const b of $("list").querySelectorAll("button[data-id]")) b.onclick = () => remove(b.dataset.id);
+  $("free-note").classList.toggle("hide", member.plan !== "free");
+}
+
+$("f-add").onsubmit = async e => {
+  e.preventDefault();
+  const company = $("company").value.trim().replace(/\s+/g, " ");
+  if (company.length < 2) return;
+  $("b-add").disabled = true;
+  const {error} = await sb.from("my_accounts").insert({company});
+  if (error) {
+    const text = error.code === "23505" ? "It is already on your list." : (error.message || "Could not add it.");
+    say("m-add", text, "err"); $("b-add").disabled = false; return;
+  }
+  $("company").value = "";
+  say("m-add", known.has(company.toLowerCase()) ? "Added." : "Added. We don't track this one yet; it shows here as soon as it moves.", "ok");
+  load();
+};
+
+async function remove(id) {
+  const {error} = await sb.from("my_accounts").delete().eq("id", id);
+  if (error) say("m-add", "Could not remove it: " + error.message, "err"); else { say("m-add", ""); load(); }
+}
+
+function render(session) {
+  if (session) {
+    $("who").innerHTML = `${esc(session.user.email)} <button class="ghost" id="b-out">Sign out</button>`;
+    $("b-out").onclick = () => sb.auth.signOut();
+    show("s-app"); load();
+  } else {
+    $("who").textContent = ""; show("s-email");
+  }
+}
+sb.auth.onAuthStateChange((_event, session) => render(session));
+sb.auth.getSession().then(({data}) => render(data.session));
+</script>
+</body>
+</html>
