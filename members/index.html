@@ -46,6 +46,12 @@ li:last-child{border-bottom:0}
 li b{color:var(--ink);font-size:16px}
 li small{display:block;color:var(--muted);font-size:13px}
 .empty{padding:16px 14px;color:var(--muted);font-size:15px}
+.sugg-wrap{position:relative;flex:1;min-width:0}
+.sugg-wrap input{width:100%}
+.sugg{position:absolute;left:0;right:0;top:100%;z-index:5;list-style:none;margin:0;padding:0;background:var(--card);border:1px solid var(--line);border-top:0;max-height:280px;overflow-y:auto}
+.sugg li{display:block;padding:11px 12px;border-bottom:1px solid var(--hair);cursor:pointer;color:var(--ink);font-size:15px}
+.sugg li:last-child{border-bottom:0}
+.sugg li:hover,.sugg li:focus{background:var(--acc-soft)}
 li.acc{display:block}
 li.acc .hd{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:6px}
 .mv{padding:6px 0 0;font-size:14.5px;line-height:1.4}
@@ -105,10 +111,12 @@ footer{padding:28px 0 36px;font-size:13px;color:var(--muted)}
       <form id="f-add">
         <label for="company">Add a company</label>
         <div class="row" style="margin-top:0">
-          <input id="company" list="companies" autocomplete="off" required minlength="2" maxlength="120" placeholder="Start typing a company name">
+          <div class="sugg-wrap">
+            <input id="company" autocomplete="off" autocapitalize="words" required minlength="2" maxlength="120" placeholder="Start typing a company name">
+            <ul id="sugg" class="sugg hide" role="listbox"></ul>
+          </div>
           <button class="btn" id="b-add" type="submit">Add</button>
         </div>
-        <datalist id="companies"></datalist>
         <p class="msg" id="m-add"></p>
       </form>
       <ul id="list"></ul>
@@ -150,8 +158,48 @@ async function loadNames() {
   if (!names.length) return;
   namesLoaded = true;
   known = new Set(names.map(n => n.toLowerCase()));
-  $("companies").innerHTML = names.map(n => `<option value="${esc(n)}">`).join("");
+  NAMES = names.map(n => ({name: n, flat: flat(n), core: core(n)}));
 }
+
+// matching that forgives case, spaces and dots ("Teamlease" -> "TeamLease Services")
+let NAMES = [];
+const SUFFIX = /\b(private|pvt|limited|ltd|llp|inc|plc|co|company|corporation|corp|india|services|technologies|group)\b/g;
+const flat = s => s.toLowerCase().replace(/[^a-z0-9]/g, "");
+const core = s => s.toLowerCase().replace(/&/g, " and ").replace(/[^a-z0-9 ]/g, " ").replace(SUFFIX, " ").replace(/\s+/g, "");
+function matches(q) {
+  const f = flat(q);
+  if (f.length < 2) return [];
+  const starts = [], inside = [];
+  for (const x of NAMES) {
+    if (x.flat.startsWith(f)) starts.push(x.name);
+    else if (x.flat.includes(f)) inside.push(x.name);
+    if (starts.length >= 8) break;
+  }
+  return [...starts, ...inside].slice(0, 8);
+}
+// the known name a typed name means, or null when it is unclear or unknown
+function canonical(q) {
+  const f = flat(q), c = core(q);
+  const exact = NAMES.filter(x => x.flat === f);
+  if (exact.length === 1) return exact[0].name;
+  const same = NAMES.filter(x => c && x.core === c);
+  return same.length === 1 ? same[0].name : null;
+}
+function showSugg() {
+  const list = matches($("company").value);
+  $("sugg").innerHTML = list.map(n => `<li role="option" tabindex="-1">${esc(n)}</li>`).join("");
+  $("sugg").classList.toggle("hide", !list.length);
+}
+$("company").addEventListener("input", showSugg);
+$("company").addEventListener("focus", showSugg);
+$("sugg").addEventListener("mousedown", e => e.preventDefault());   // keep the input focused while tapping
+$("sugg").addEventListener("click", e => {
+  const li = e.target.closest("li");
+  if (!li) return;
+  $("company").value = li.textContent;
+  $("sugg").classList.add("hide");
+});
+document.addEventListener("click", e => { if (!e.target.closest(".sugg-wrap")) $("sugg").classList.add("hide"); });
 
 $("f-email").onsubmit = async e => {
   e.preventDefault();
@@ -214,8 +262,10 @@ async function load() {
 
 $("f-add").onsubmit = async e => {
   e.preventDefault();
-  const company = $("company").value.trim().replace(/\s+/g, " ");
-  if (company.length < 2) return;
+  const typed = $("company").value.trim().replace(/\s+/g, " ");
+  if (typed.length < 2) return;
+  const company = canonical(typed) || typed;
+  $("sugg").classList.add("hide");
   $("b-add").disabled = true;
   const {error} = await sb.from("my_accounts").insert({company});
   if (error) {
@@ -223,7 +273,8 @@ $("f-add").onsubmit = async e => {
     say("m-add", text, "err"); $("b-add").disabled = false; return;
   }
   $("company").value = "";
-  say("m-add", known.has(company.toLowerCase()) ? "Added." : "Added. We don't track this one yet; it shows here as soon as it moves.", "ok");
+  say("m-add", !known.has(company.toLowerCase()) ? "Added. We don't track this one yet; it shows here as soon as it moves."
+             : company !== typed ? `Added as ${company}.` : "Added.", "ok");
   load();
 };
 
