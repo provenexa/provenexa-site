@@ -119,7 +119,7 @@ h1.dh{font-size:clamp(24px,3vw,34px);line-height:1.1;letter-spacing:-.025em;marg
 .step a:hover{text-decoration:underline;color:var(--acc)}
 .more{margin:14px 0 0}
 .empty{padding:22px 16px;color:var(--muted)}
-.free{margin:14px 0 0;font-size:13px;color:var(--muted)}
+.free{margin:0 0 14px;font-size:13.5px;color:var(--ink);border-left:3px solid var(--acc);padding:4px 0 4px 10px}
 footer{width:100%;max-width:1360px;margin:auto auto 0;padding:10px 20px 34px;font-size:12.5px;color:var(--muted)}
 body:has(#s-app.hide) footer{text-align:center}   /* signed out: footer sits centred at the bottom */
 
@@ -237,6 +237,7 @@ body:has(#s-app.hide) footer{text-align:center}   /* signed out: footer sits cen
   <main>
     <h1 class="dh" id="dh"></h1>
     <p class="lede" id="lede"></p>
+    <p class="free hide" id="free">On the Free plan, each move shows a week after it happens. Paid plans show it the same day.</p>
     <div class="tiles" id="tiles"></div>
     <div class="panels">
       <div class="panel"><h4 id="ladh"></h4><div class="ladder" id="ladder"></div></div>
@@ -248,7 +249,6 @@ body:has(#s-app.hide) footer{text-align:center}   /* signed out: footer sits cen
       <div id="rows"></div>
     </div>
     <button class="ghost more hide" id="more">Show more</button>
-    <p class="free hide" id="free">On the Free plan, each move shows a week after it happens. Paid plans show it the same day.</p>
   </main>
 </div>
 
@@ -259,9 +259,12 @@ body:has(#s-app.hide) footer{text-align:center}   /* signed out: footer sits cen
 // Public values only (they are meant to be in the page; row-level security protects the data).
 const SUPABASE_URL = "https://kgkstbcrhpdxrrnswdju.supabase.co";
 const SUPABASE_KEY = "sb_publishable_wQZMIp77ig07CxrbHiGXlQ_jl1QlRYw";
-const LIMITS = {free: 3, individual: 10, plus: 25, team: 50, pilot: 25, staff: 1000};
-const PLAN_NAMES = {free: "Free plan", individual: "Individual plan", plus: "Plus plan", team: "Team plan", pilot: "Pilot", staff: "Provenexa staff"};
-const ALL_INDIA = ["plus", "team", "staff"];
+const LIMITS = {free: 3, trial: 25, individual: 10, plus: 25, team: 50, pilot: 25, staff: 1000};
+const PLAN_NAMES = {free: "Free plan", trial: "5-day free login", individual: "Individual plan", plus: "Plus plan", team: "Team plan", pilot: "Pilot", staff: "Provenexa staff"};
+const ALL_INDIA = ["trial", "plus", "team", "staff"];
+// a plan with an end date counts as Free from the day after it (India time); the database enforces the same rule
+const todayIST = () => new Date(Date.now() + 330 * 60000).toISOString().slice(0, 10);
+const nice = d => new Date(d + "T00:00:00").toLocaleDateString("en-IN", {weekday: "short", day: "numeric", month: "short"});
 const STATES = ["Maharashtra", "Gujarat", "Karnataka", "Tamil Nadu", "Telangana", "Delhi NCR", "Uttar Pradesh", "Haryana",
   "Andhra Pradesh", "West Bengal", "Odisha", "Rajasthan", "Madhya Pradesh", "Kerala", "Punjab"];
 const CATS = {
@@ -378,8 +381,13 @@ document.addEventListener("click", e => { if (!e.target.closest(".sugg-wrap")) $
 // ---------------------------------------------------------------- data
 async function loadAll() {
   await loadNames();
-  const {data: m} = await sb.from("members").select("plan, extra_accounts, category, state").maybeSingle();
-  member = Object.assign({plan: "free", extra_accounts: 0, category: "gcc", state: "Maharashtra"}, m || {});
+  const {data: m} = await sb.from("members").select("plan, plan_until, extra_accounts, category, state").maybeSingle();
+  member = Object.assign({plan: "free", plan_until: null, extra_accounts: 0, category: "gcc", state: "Maharashtra"}, m || {});
+  member.ended = null;
+  if (!["free", "staff"].includes(member.plan) && member.plan_until && member.plan_until < todayIST()) {
+    member.ended = {plan: member.plan, until: member.plan_until};
+    member.plan = "free";
+  }
   const {data: acc} = await sb.from("my_accounts").select("id, company, added_at").order("added_at", {ascending: false});
   mine = acc || [];
   // the database returns only what this member's plan allows (their category and state, Free a week late, plus their own accounts)
@@ -493,11 +501,15 @@ function render() {
     </div>`).join("") || `<p class="empty">Nothing here matches. Try another stage or city${member.plan === "free" ? ", or remember the Free plan shows moves a week late" : ""}.</p>`;
   $("more").classList.toggle("hide", sorted.length <= view.shown);
   $("free").classList.toggle("hide", member.plan !== "free");
+  $("free").textContent = member.ended
+    ? `Your ${PLAN_NAMES[member.ended.plan] || "plan"} ended on ${nice(member.ended.until)}, so you now see the Free plan: each move shows a week after it happens. To keep same-day moves, write to research@provenexa.com.`
+    : "On the Free plan, each move shows a week after it happens. Paid plans show it the same day.";
 
   // my accounts box
   const lim = (LIMITS[member.plan] ?? 3) + (member.extra_accounts || 0);
   $("chips").innerHTML = mine.map(a => `<span class="chip${known.has(a.company.toLowerCase()) ? "" : " nt"}" title="${known.has(a.company.toLowerCase()) ? "" : "Not tracked yet: it shows here as soon as it moves"}">${esc(a.company)}<button data-id="${a.id}" aria-label="Remove ${esc(a.company)}">×</button></span>`).join("");
-  $("plannote").textContent = `${PLAN_NAMES[member.plan] || "Your plan"}: ${mine.length} of ${lim} accounts used.`;
+  const ends = !member.ended && member.plan !== "free" && member.plan_until ? ` Ends after ${nice(member.plan_until)}.` : "";
+  $("plannote").textContent = `${PLAN_NAMES[member.plan] || "Your plan"}: ${mine.length} of ${lim} accounts used.${ends}`;
   $("b-mine").textContent = `My accounts (${mine.length} of ${lim})`;
   $("b-add").disabled = mine.length >= lim;
 }
