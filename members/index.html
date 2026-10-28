@@ -4,129 +4,225 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex">
-<title>My accounts · Provenexa</title>
+<title>Next Moves · Provenexa</title>
 <style>
-:root{--bg:#f2f1ed;--card:#fff;--ink:#111;--body:#2b2b2b;--muted:#6b6b6b;--hair:#d4d2ca;--line:#111;--acc:#1d5c45;--acc-soft:#e0ebe5;--on-acc:#fff;--warn:#8a3b12;
-  --sans:Inter,"Segoe UI",system-ui,-apple-system,Roboto,Helvetica,Arial,sans-serif}
-@media (prefers-color-scheme:dark){:root:not([data-theme=light]){--bg:#0e0f0e;--card:#171816;--ink:#f1f0ec;--body:#d6d4cd;--muted:#9b998f;--hair:#34352f;--line:#5a5b54;--acc:#5fb58d;--acc-soft:#18291f;--on-acc:#0e0f0e;--warn:#e39a6b}}
-:root[data-theme=dark]{--bg:#0e0f0e;--card:#171816;--ink:#f1f0ec;--body:#d6d4cd;--muted:#9b998f;--hair:#34352f;--line:#5a5b54;--acc:#5fb58d;--acc-soft:#18291f;--on-acc:#0e0f0e;--warn:#e39a6b}
+:root{--bg:#f2f1ed;--card:#fff;--ink:#111;--body:#2b2b2b;--muted:#6b6b6b;--hair:#d4d2ca;--line:#111;--acc:#1d5c45;--acc-soft:#e0ebe5;--on-acc:#fff;--warn:#8a3b12;--bar:#bdbaaf;--soft:#eceae4;
+  --sans:Inter,"Segoe UI",system-ui,-apple-system,Roboto,Helvetica,Arial,sans-serif;--mono:ui-monospace,"Cascadia Mono",Consolas,monospace}
+@media (prefers-color-scheme:dark){:root:not([data-theme=light]){--bg:#0e0f0e;--card:#171816;--ink:#f1f0ec;--body:#d6d4cd;--muted:#9b998f;--hair:#34352f;--line:#5a5b54;--acc:#5fb58d;--acc-soft:#18291f;--on-acc:#0e0f0e;--warn:#e39a6b;--bar:#4a4b45;--soft:#1f201d}}
+:root[data-theme=dark]{--bg:#0e0f0e;--card:#171816;--ink:#f1f0ec;--body:#d6d4cd;--muted:#9b998f;--hair:#34352f;--line:#5a5b54;--acc:#5fb58d;--acc-soft:#18291f;--on-acc:#0e0f0e;--warn:#e39a6b;--bar:#4a4b45;--soft:#1f201d}
 *{box-sizing:border-box}
 html{-webkit-text-size-adjust:100%}
-body{margin:0;background:var(--bg);color:var(--body);font-family:var(--sans);line-height:1.55;-webkit-font-smoothing:antialiased}
+body{margin:0;background:var(--bg);color:var(--body);font-family:var(--sans);line-height:1.5;-webkit-font-smoothing:antialiased}
 a{color:var(--acc)}
-.wrap{max-width:720px;margin:0 auto;padding:0 16px}
+button{font:700 14px var(--sans);cursor:pointer;border-radius:0}
+input,select{font:15px var(--sans);padding:10px 12px;border:1px solid var(--line);background:var(--card);color:var(--ink);border-radius:0;width:100%}
+input:focus,select:focus{outline:2px solid var(--acc);outline-offset:1px}
+.hide{display:none!important}
+
+/* top bar */
 .topbar{background:var(--card);border-bottom:1px solid var(--line)}
-.top{display:flex;align-items:center;justify-content:space-between;height:56px;gap:12px}
-.brand{display:flex;align-items:center;gap:10px;font-weight:800;font-size:17px;color:var(--ink);text-decoration:none}
-.logo{width:26px;height:26px;flex:none}
-.who{font-size:14px;color:var(--muted);text-align:right}
-.who button{margin-left:8px}
-h1{font-size:clamp(28px,6vw,40px);line-height:1.05;letter-spacing:-.03em;margin:28px 0 8px;color:var(--ink);font-weight:800}
-.lead{margin:0 0 22px;font-size:16.5px}
+.top{max-width:1360px;margin:0 auto;padding:10px 20px;display:flex;align-items:center;gap:18px;flex-wrap:wrap}
+.brand{display:flex;align-items:center;gap:10px;font-weight:800;font-size:18px;color:var(--ink);text-decoration:none;white-space:nowrap}
+.brand b{color:var(--acc)}
+.logo{width:24px;height:24px;flex:none}
+.tabs{display:flex;gap:8px;flex-wrap:wrap}
+.tabs button{background:var(--card);color:var(--ink);border:1px solid var(--line);padding:9px 14px;font-weight:600}
+.tabs button[aria-pressed=true]{background:var(--ink);color:var(--bg)}
+.right{margin-left:auto;display:flex;align-items:center;gap:10px;font-size:13px;color:var(--muted);text-align:right}
+.right select{width:auto;padding:7px 8px;font-size:13px}
+.ghost{background:transparent;color:var(--body);border:1px solid var(--hair);padding:6px 10px;font-weight:600;font-size:13px}
+
+/* sign-in */
+.narrow{max-width:560px;margin:0 auto;padding:0 16px}
+.narrow h1{font-size:clamp(28px,6vw,40px);line-height:1.05;letter-spacing:-.03em;margin:34px 0 8px;color:var(--ink);font-weight:800}
 .card{background:var(--card);border:1px solid var(--line);padding:20px}
 label{display:block;font-weight:700;color:var(--ink);margin:0 0 6px;font-size:15px}
-input{width:100%;font:16px var(--sans);padding:11px 12px;border:1px solid var(--line);background:var(--card);color:var(--ink);border-radius:0}
-input:focus{outline:2px solid var(--acc);outline-offset:1px}
-button{font:700 15px var(--sans);cursor:pointer;border-radius:0}
-.btn{background:var(--acc);color:var(--on-acc);border:0;padding:12px 18px}
+.btn{background:var(--acc);color:var(--on-acc);border:0;padding:11px 18px;font-size:15px}
 .btn[disabled]{opacity:.55;cursor:default}
-.ghost{background:transparent;color:var(--body);border:1px solid var(--hair);padding:6px 10px;font-weight:600;font-size:13px}
 .row{display:flex;gap:10px;margin-top:12px}
-.row input{flex:1}
-.note{font-size:14px;color:var(--muted);margin:10px 0 0}
-.msg{margin:12px 0 0;font-size:14.5px;font-weight:600}
+.msg{margin:10px 0 0;font-size:14px;font-weight:600}
 .msg.err{color:var(--warn)}
 .msg.ok{color:var(--acc)}
-.plan{display:flex;justify-content:space-between;align-items:baseline;gap:12px;border-bottom:3px solid var(--ink);padding:0 0 10px;margin:0 0 14px}
-.plan b{color:var(--ink);font-size:17px}
-.plan span{font-size:14px;color:var(--muted)}
-ul{list-style:none;margin:16px 0 0;padding:0;border:1px solid var(--line)}
-li{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:12px 14px;border-bottom:1px solid var(--hair);background:var(--card)}
-li:last-child{border-bottom:0}
-li b{color:var(--ink);font-size:16px}
-li small{display:block;color:var(--muted);font-size:13px}
-.empty{padding:16px 14px;color:var(--muted);font-size:15px}
+
+/* dashboard */
+.dash{max-width:1360px;margin:0 auto;padding:22px 20px 40px;display:grid;grid-template-columns:250px minmax(0,1fr);gap:26px}
+.side{align-self:start;position:sticky;top:12px}
+.side h3{font:800 11px var(--mono);letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin:20px 0 8px}
+.filters{display:flex;flex-direction:column}
+.filters button{all:unset;cursor:pointer;display:flex;justify-content:space-between;gap:10px;padding:9px 10px;font-size:14.5px;color:var(--ink)}
+.filters button span{color:var(--muted);font-size:13px}
+.filters button[aria-pressed=true]{background:var(--ink);color:var(--bg)}
+.filters button[aria-pressed=true] span{color:var(--bg)}
+.mine{margin-top:20px;background:var(--card);border:1px solid var(--line);padding:14px}
+.mine b{color:var(--ink);font-size:15px}
+.mine p{font-size:13px;color:var(--muted);margin:6px 0 10px}
+.mine .row{margin-top:0;gap:6px}
+.mine .row .btn{padding:8px 12px}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}
+.chip{background:var(--acc-soft);color:var(--acc);font-weight:700;font-size:13px;padding:4px 6px 4px 8px;display:inline-flex;align-items:center;gap:6px}
+.chip button{all:unset;cursor:pointer;color:var(--acc);font-size:15px;line-height:1}
+.chip.nt{background:var(--soft);color:var(--muted)}
+.plannote{font-size:12.5px;color:var(--muted);margin-top:8px}
 .sugg-wrap{position:relative;flex:1;min-width:0}
-.sugg-wrap input{width:100%}
-.sugg{position:absolute;left:0;right:0;top:100%;z-index:5;list-style:none;margin:0;padding:0;background:var(--card);border:1px solid var(--line);border-top:0;max-height:280px;overflow-y:auto}
-.sugg li{display:block;padding:11px 12px;border-bottom:1px solid var(--hair);cursor:pointer;color:var(--ink);font-size:15px}
-.sugg li:last-child{border-bottom:0}
-.sugg li:hover,.sugg li:focus{background:var(--acc-soft)}
-li.acc{display:block}
-li.acc .hd{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:6px}
-.mv{padding:6px 0 0;font-size:14.5px;line-height:1.4}
-.mv .d{color:var(--muted);font-size:13px;margin-right:8px;white-space:nowrap}
-.mv .k{font-size:11px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--ink);border:1px solid var(--hair);padding:1px 5px;margin-right:8px}
-.mv a{color:var(--body);text-decoration:none}
-.mv a:hover{text-decoration:underline;color:var(--acc)}
-.tag.now{background:var(--acc);color:var(--on-acc)}
-.tag{display:inline-block;background:var(--acc-soft);color:var(--acc);font-size:11px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;padding:2px 6px;margin-left:6px}
-.private{margin:18px 0 0;border:3px solid var(--ink);background:var(--card);padding:14px 16px;font-size:14.5px}
-.private b{color:var(--ink)}
-footer{padding:28px 0 36px;font-size:13px;color:var(--muted)}
-.hide{display:none}
+.sugg{position:absolute;left:0;right:0;top:100%;z-index:5;list-style:none;margin:0;padding:0;background:var(--card);border:1px solid var(--line);border-top:0;max-height:260px;overflow-y:auto}
+.sugg li{padding:9px 10px;border-bottom:1px solid var(--hair);cursor:pointer;color:var(--ink);font-size:14px}
+.sugg li:hover{background:var(--acc-soft)}
+
+h1.dh{font-size:clamp(24px,3vw,34px);line-height:1.1;letter-spacing:-.025em;margin:0 0 6px;color:var(--ink);font-weight:800}
+.lede{margin:0 0 18px;color:var(--muted);font-size:15.5px}
+.tiles{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin-bottom:12px}
+.tile{background:var(--card);border:1px solid var(--line);padding:14px 16px}
+.tile b{display:block;font-size:30px;line-height:1.1;font-weight:800;color:var(--ink);letter-spacing:-.02em}
+.tile span{font-size:13.5px;color:var(--muted)}
+.tile.hot{background:var(--acc);border-color:var(--acc)}
+.tile.hot b,.tile.hot span{color:var(--on-acc)}
+.panels{display:grid;grid-template-columns:minmax(0,1.55fr) minmax(0,1fr);gap:12px;margin-bottom:22px}
+.panel{background:var(--card);border:1px solid var(--line);padding:14px 16px}
+.panel h4{font:800 11px var(--mono);letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin:0 0 12px}
+.ladder{display:flex;align-items:flex-end;gap:8px;height:150px}
+.ladder button{all:unset;cursor:pointer;flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;height:100%;gap:6px}
+.ladder .n{font-weight:800;color:var(--ink);font-size:17px}
+.ladder .b{width:100%;background:var(--bar);min-height:3px}
+.ladder .l{font-size:12.5px;color:var(--muted);text-align:center;min-height:32px}
+.ladder button[aria-pressed=true] .b{background:var(--acc)}
+.cities button{all:unset;cursor:pointer;display:grid;grid-template-columns:110px 1fr 34px;gap:10px;align-items:center;width:100%;padding:4px 0;font-size:14px;color:var(--ink)}
+.cities .b{height:10px;background:var(--bar)}
+.cities .n{text-align:right;font-weight:700}
+.cities button[aria-pressed=true] .b{background:var(--acc)}
+.lh{display:flex;align-items:baseline;gap:10px;margin:0 0 8px}
+.lh h2{margin:0;font-size:20px;color:var(--ink)}
+.lh span{color:var(--muted);font-size:13.5px}
+.table{background:var(--card);border:1px solid var(--line)}
+.thead,.trow{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,2.1fr) 178px 70px 52px;gap:14px;align-items:center;padding:12px 16px}
+.thead{font:800 10.5px var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--muted);border-bottom:1px solid var(--line)}
+.item{border-bottom:1px solid var(--hair)}
+.item:last-child{border-bottom:0}
+.trow{cursor:pointer}
+.trow:hover{background:var(--soft)}
+.item.open .trow{background:var(--soft)}
+.co b{color:var(--ink);font-size:15px;display:block}
+.co small{display:block;color:var(--muted);font-size:12.5px}
+.yours{display:inline-block;background:var(--acc);color:var(--on-acc);font:800 10px var(--mono);letter-spacing:.08em;padding:2px 5px;margin:3px 0}
+.lm{font-size:14px;color:var(--body)}
+.st{font:800 10.5px var(--mono);letter-spacing:.06em;text-transform:uppercase;background:var(--soft);color:var(--ink);padding:4px 7px;justify-self:start;white-space:nowrap}
+.when{font:13px var(--mono);color:var(--muted)}
+.view{color:var(--acc);font-weight:700;font-size:14px}
+.detail{padding:4px 16px 16px;display:none}
+.item.open .detail{display:block}
+.detail h5{font:800 10.5px var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--acc);margin:10px 0 6px}
+.step{display:grid;grid-template-columns:110px minmax(0,1fr);gap:12px;padding:5px 0;font-size:14px;border-top:1px solid var(--hair)}
+.step:first-of-type{border-top:0}
+.step .d{font:12.5px var(--mono);color:var(--muted)}
+.step .k{font:800 10px var(--mono);letter-spacing:.06em;text-transform:uppercase;border:1px solid var(--hair);padding:1px 5px;margin-right:6px;color:var(--ink)}
+.step a{color:var(--body);text-decoration:none}
+.step a:hover{text-decoration:underline;color:var(--acc)}
+.more{margin:14px 0 0}
+.empty{padding:22px 16px;color:var(--muted)}
+.free{margin:14px 0 0;font-size:13px;color:var(--muted)}
+footer{max-width:1360px;margin:0 auto;padding:10px 20px 34px;font-size:12.5px;color:var(--muted)}
+
+@media (max-width:980px){
+  .dash{grid-template-columns:1fr}
+  .side{position:static}
+  .filters{flex-direction:row;flex-wrap:wrap;gap:6px}
+  .filters button{border:1px solid var(--hair);padding:7px 10px}
+  .tiles{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .panels{grid-template-columns:1fr}
+  .thead{display:none}
+  .trow{grid-template-columns:minmax(0,1fr) auto;gap:6px 12px}
+  .trow .lm{grid-column:1 / -1}
+  .trow .when{grid-column:1}
+  .trow .view{display:none}
+  .right{width:100%;margin-left:0;justify-content:space-between}
+}
 </style>
 </head>
 <body>
-<header class="topbar"><div class="wrap top">
+<header class="topbar"><div class="top">
   <a class="brand" href="https://provenexa.com/">
     <svg class="logo" viewBox="0 0 120 120" aria-hidden="true"><path d="M36 104 V24 H68 a26 26 0 0 1 0 52 H36" fill="none" stroke="currentColor" stroke-width="20" stroke-linecap="square" stroke-linejoin="miter"/><rect x="88" y="6" width="24" height="24" fill="var(--acc)"/></svg>
-    Provenexa
+    Next <b>Moves</b>
   </a>
-  <div class="who" id="who"></div>
+  <div class="tabs hide" id="tabs" role="tablist">
+    <button data-cat="gcc">GCC hiring</button>
+    <button data-cat="plant">Plant staffing</button>
+    <button data-cat="supplier">Industrial suppliers</button>
+  </div>
+  <div class="right">
+    <select id="state" class="hide" aria-label="State"></select>
+    <span id="who"></span>
+    <button class="ghost" id="theme">Dark</button>
+  </div>
 </div></header>
 
-<main class="wrap">
-  <!-- signed out: step 1, email -->
-  <section id="s-email" class="hide">
-    <h1>Sign in</h1>
-    <p class="lead">No password. We email you a one-time code.</p>
-    <form class="card" id="f-email">
-      <label for="email">Your work email</label>
-      <input id="email" type="email" autocomplete="email" required placeholder="you@company.com">
-      <div class="row"><button class="btn" id="b-email" type="submit">Send me a code</button></div>
-      <p class="msg" id="m-email"></p>
-    </form>
-  </section>
+<!-- signed out: step 1, email -->
+<section id="s-email" class="narrow hide">
+  <h1>Sign in</h1>
+  <p class="lede">No password. We email you a one-time code.</p>
+  <form class="card" id="f-email">
+    <label for="email">Your work email</label>
+    <input id="email" type="email" autocomplete="email" required placeholder="you@company.com">
+    <div class="row"><button class="btn" id="b-email" type="submit">Send me a code</button></div>
+    <p class="msg" id="m-email"></p>
+  </form>
+</section>
 
-  <!-- signed out: step 2, code -->
-  <section id="s-code" class="hide">
-    <h1>Check your email</h1>
-    <p class="lead">We sent a code to <b id="sent-to"></b>. It works for a few minutes. If the email has a button instead of a code, click it and you are signed in.</p>
-    <form class="card" id="f-code">
-      <label for="code">The code from the email</label>
-      <input id="code" inputmode="numeric" autocomplete="one-time-code" required pattern="[0-9]{6,8}" maxlength="8" placeholder="123456">
-      <div class="row"><button class="btn" id="b-code" type="submit">Sign in</button>
-        <button class="ghost" id="b-back" type="button">Use another email</button></div>
-      <p class="msg" id="m-code"></p>
-    </form>
-  </section>
+<!-- signed out: step 2, code -->
+<section id="s-code" class="narrow hide">
+  <h1>Check your email</h1>
+  <p class="lede">We sent a code to <b id="sent-to"></b>. It works for a few minutes. If the email has a button instead of a code, click it and you are signed in.</p>
+  <form class="card" id="f-code">
+    <label for="code">The code from the email</label>
+    <input id="code" inputmode="numeric" autocomplete="one-time-code" required pattern="[0-9]{6,8}" maxlength="8" placeholder="123456">
+    <div class="row"><button class="btn" id="b-code" type="submit">Sign in</button>
+      <button class="ghost" id="b-back" type="button">Use another email</button></div>
+    <p class="msg" id="m-code"></p>
+  </form>
+</section>
 
-  <!-- signed in -->
-  <section id="s-app" class="hide">
-    <h1>My accounts</h1>
-    <p class="lead">The companies you sell to, or want to. We tell you when they move.</p>
-    <div class="card">
-      <div class="plan"><b id="plan-name">Free plan</b><span id="plan-left"></span></div>
+<!-- signed in: the dashboard -->
+<div id="s-app" class="dash hide">
+  <aside class="side">
+    <input id="q" type="search" placeholder="Find a company or city" autocomplete="off">
+    <h3>Stage</h3><div class="filters" id="f-stage"></div>
+    <h3>Region</h3><div class="filters" id="f-city"></div>
+    <div class="mine">
+      <b>My accounts</b>
+      <p>Add the companies you sell to. We highlight them when they move. Only you can see your list.</p>
       <form id="f-add">
-        <label for="company">Add a company</label>
-        <div class="row" style="margin-top:0">
+        <div class="row">
           <div class="sugg-wrap">
-            <input id="company" autocomplete="off" autocapitalize="words" required minlength="2" maxlength="120" placeholder="Start typing a company name">
+            <input id="company" autocomplete="off" autocapitalize="words" required minlength="2" maxlength="120" placeholder="e.g. Zillow">
             <ul id="sugg" class="sugg hide" role="listbox"></ul>
           </div>
-          <button class="btn" id="b-add" type="submit">Add</button>
+          <button class="btn" id="b-add" type="submit" aria-label="Add">+</button>
         </div>
         <p class="msg" id="m-add"></p>
       </form>
-      <ul id="list"></ul>
-      <p class="note hide" id="free-note">The Free plan shows each move a week after it happens. Paid plans show it the same day.</p>
+      <div class="chips" id="chips"></div>
+      <div class="plannote" id="plannote"></div>
     </div>
-    <div class="private"><b>Only you can see your list.</b> It is kept under your sign-in. We never share it, and we delete it if you leave.</div>
-  </section>
-</main>
+  </aside>
 
-<footer><div class="wrap">Provenexa Research · research@provenexa.com</div></footer>
+  <main>
+    <h1 class="dh" id="dh"></h1>
+    <p class="lede" id="lede"></p>
+    <div class="tiles" id="tiles"></div>
+    <div class="panels">
+      <div class="panel"><h4 id="ladh"></h4><div class="ladder" id="ladder"></div></div>
+      <div class="panel"><h4>By city</h4><div class="cities" id="cities"></div></div>
+    </div>
+    <div class="lh"><h2>Moving now</h2><span id="count"></span></div>
+    <div class="table">
+      <div class="thead"><span>Company</span><span>Latest move</span><span>Stage</span><span>When</span><span></span></div>
+      <div id="rows"></div>
+    </div>
+    <button class="ghost more hide" id="more">Show more</button>
+    <p class="free hide" id="free">On the Free plan, each move shows a week after it happens. Paid plans show it the same day.</p>
+  </main>
+</div>
+
+<footer>Provenexa Research · research@provenexa.com · Moves are dated; news dates are when it was reported. Estimates are marked with a star (*).</footer>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
 <script>
@@ -135,17 +231,78 @@ const SUPABASE_URL = "https://kgkstbcrhpdxrrnswdju.supabase.co";
 const SUPABASE_KEY = "sb_publishable_wQZMIp77ig07CxrbHiGXlQ_jl1QlRYw";
 const LIMITS = {free: 3, individual: 10, plus: 25, team: 50, pilot: 25, staff: 1000};
 const PLAN_NAMES = {free: "Free plan", individual: "Individual plan", plus: "Plus plan", team: "Team plan", pilot: "Pilot", staff: "Provenexa staff"};
+const ALL_INDIA = ["plus", "team", "staff"];
+const STATES = ["Maharashtra", "Gujarat", "Karnataka", "Tamil Nadu", "Telangana", "Delhi NCR", "Uttar Pradesh", "Haryana",
+  "Andhra Pradesh", "West Bengal", "Odisha", "Rajasthan", "Madhya Pradesh", "Kerala", "Punjab"];
+const CATS = {
+  gcc: {h1: s => `New India centres in ${s}, before the news`, lede: "Global companies setting up teams in India (GCCs, global capability centres), from their first quiet steps. Newest moves first.",
+        ladh: "Where each centre stands", noun: "centres",
+        st: [["registered", "Set up, not hiring yet"], ["quiet", "Hiring quietly"], ["announced", "Announced"], ["opened", "Opened"], ["growing", "Growing"]],
+        tiles: L => [[L.filter(x => x.stage === "quiet").length, "hiring with no announcement in our news"],
+                     [L.filter(x => ["opened", "growing"].includes(x.stage)).length, "opened their centre"]]},
+  plant: {h1: s => `Plants in ${s}, from approval to start`, lede: "New and growing plants, and the contract workers and apprentices they are likely to need. Newest moves first.",
+          ladh: "Where each plant stands", noun: "plants",
+          st: [["clearance", "Applied for approval"], ["planned", "Planned"], ["building", "Being built"], ["started", "Started"]],
+          tiles: L => [[L.filter(x => x.stage === "started" && x.latest >= daysAgo(30)).length, "started in the last 30 days: hiring for shifts now"],
+                       [L.filter(x => x.stage === "clearance").length, "applied for approval: hiring 9-24 months away*"]]},
+  supplier: {h1: s => `Industrial suppliers in ${s}, winning work`, lede: "Suppliers winning orders and adding capacity: more shifts, contract workers and vendors follow. Newest moves first.",
+             ladh: "Where each supplier stands", noun: "suppliers",
+             st: [["orders", "Won an order"], ["capacity", "Adding capacity"]],
+             tiles: L => [[L.filter(x => x.stage === "orders" && x.latest >= daysAgo(30)).length, "won an order in the last 30 days"],
+                          [L.filter(x => x.stage === "capacity").length, "adding capacity"]]}
+};
 
 const sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 const $ = id => document.getElementById(id);
-let known = new Set(), member = null, email = "";
+const esc = s => String(s ?? "").replace(/[&<>"]/g, c => ({"&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;"}[c]));
+const daysAgo = n => new Date(Date.now() - n * 864e5).toISOString().slice(0, 10);
+const fmt = (d, y) => new Date(d + "T00:00:00").toLocaleDateString("en-IN", y ? {day: "numeric", month: "short", year: "numeric"} : {day: "numeric", month: "short"});
+let member = null, mine = [], COS = [], known = new Set(), email = "";
+let view = {stage: "", city: "", q: "", shown: 30, open: null, allIndiaState: ""};
 
-function show(id) { for (const s of ["s-email", "s-code", "s-app"]) $(s).classList.toggle("hide", s !== id); }
 function say(id, text, kind) { const m = $(id); m.textContent = text || ""; m.className = "msg" + (kind ? " " + kind : ""); }
-function esc(s) { return String(s).replace(/[&<>"]/g, c => ({"&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;"}[c])); }
+function show(id) {
+  for (const s of ["s-email", "s-code", "s-app"]) $(s).classList.toggle("hide", s !== id);
+  for (const s of ["tabs", "state"]) $(s).classList.toggle("hide", id !== "s-app");
+}
 
-// company names for the suggestions: members only (read from Supabase after sign-in, 1,000 rows per request)
-let namesLoaded = false;
+// ---------------------------------------------------------------- theme
+(function () {
+  const r = document.documentElement, b = $("theme");
+  try { const t = localStorage.getItem("nm-theme"); if (t) r.dataset.theme = t; } catch (e) {}
+  const dark = () => r.dataset.theme ? r.dataset.theme === "dark" : matchMedia("(prefers-color-scheme: dark)").matches;
+  const set = () => { b.textContent = dark() ? "Light" : "Dark"; };
+  set();
+  b.onclick = () => { r.dataset.theme = dark() ? "light" : "dark"; try { localStorage.setItem("nm-theme", r.dataset.theme); } catch (e) {} set(); };
+})();
+
+// ---------------------------------------------------------------- sign-in
+$("f-email").onsubmit = async e => {
+  e.preventDefault();
+  email = $("email").value.trim().toLowerCase();
+  $("b-email").disabled = true; say("m-email", "Sending…");
+  const {error} = await sb.auth.signInWithOtp({email, options: {shouldCreateUser: true}});
+  $("b-email").disabled = false;
+  if (error) { say("m-email", "We could not send the code: " + error.message, "err"); return; }
+  say("m-email", ""); $("sent-to").textContent = email; show("s-code"); $("code").focus();
+};
+$("f-code").onsubmit = async e => {
+  e.preventDefault();
+  $("b-code").disabled = true; say("m-code", "Checking…");
+  const token = $("code").value.trim();
+  let {error} = await sb.auth.verifyOtp({email, token, type: "email"});
+  if (error) ({error} = await sb.auth.verifyOtp({email, token, type: "signup"}));   // first sign-in: "Confirm signup" code
+  $("b-code").disabled = false;
+  if (error) { say("m-code", "That code did not work. Check it, or ask for a new one.", "err"); return; }
+  say("m-code", "");
+};
+$("b-back").onclick = () => { $("code").value = ""; say("m-code", ""); show("s-email"); };
+
+// ---------------------------------------------------------------- company names (members only) and forgiving matching
+let NAMES = [], namesLoaded = false;
+const SUFFIX = /\b(private|pvt|limited|ltd|llp|inc|plc|co|company|corporation|corp|india|services|technologies|group)\b/g;
+const flat = s => s.toLowerCase().replace(/[^a-z0-9]/g, "");
+const core = s => s.toLowerCase().replace(/&/g, " and ").replace(/[^a-z0-9 ]/g, " ").replace(SUFFIX, " ").replace(/\s+/g, "");
 async function loadNames() {
   if (namesLoaded) return;
   const names = [];
@@ -160,24 +317,16 @@ async function loadNames() {
   known = new Set(names.map(n => n.toLowerCase()));
   NAMES = names.map(n => ({name: n, flat: flat(n), core: core(n)}));
 }
-
-// matching that forgives case, spaces and dots ("Teamlease" -> "TeamLease Services")
-let NAMES = [];
-const SUFFIX = /\b(private|pvt|limited|ltd|llp|inc|plc|co|company|corporation|corp|india|services|technologies|group)\b/g;
-const flat = s => s.toLowerCase().replace(/[^a-z0-9]/g, "");
-const core = s => s.toLowerCase().replace(/&/g, " and ").replace(/[^a-z0-9 ]/g, " ").replace(SUFFIX, " ").replace(/\s+/g, "");
 function matches(q) {
   const f = flat(q);
   if (f.length < 2) return [];
   const starts = [], inside = [];
   for (const x of NAMES) {
-    if (x.flat.startsWith(f)) starts.push(x.name);
-    else if (x.flat.includes(f)) inside.push(x.name);
+    if (x.flat.startsWith(f)) starts.push(x.name); else if (x.flat.includes(f)) inside.push(x.name);
     if (starts.length >= 8) break;
   }
   return [...starts, ...inside].slice(0, 8);
 }
-// the known name a typed name means, or null when it is unclear or unknown
 function canonical(q) {
   const f = flat(q), c = core(q);
   const exact = NAMES.filter(x => x.flat === f);
@@ -187,79 +336,152 @@ function canonical(q) {
 }
 function showSugg() {
   const list = matches($("company").value);
-  $("sugg").innerHTML = list.map(n => `<li role="option" tabindex="-1">${esc(n)}</li>`).join("");
+  $("sugg").innerHTML = list.map(n => `<li role="option">${esc(n)}</li>`).join("");
   $("sugg").classList.toggle("hide", !list.length);
 }
 $("company").addEventListener("input", showSugg);
 $("company").addEventListener("focus", showSugg);
-$("sugg").addEventListener("mousedown", e => e.preventDefault());   // keep the input focused while tapping
-$("sugg").addEventListener("click", e => {
-  const li = e.target.closest("li");
-  if (!li) return;
-  $("company").value = li.textContent;
-  $("sugg").classList.add("hide");
-});
+$("sugg").addEventListener("mousedown", e => e.preventDefault());
+$("sugg").addEventListener("click", e => { const li = e.target.closest("li"); if (li) { $("company").value = li.textContent; $("sugg").classList.add("hide"); } });
 document.addEventListener("click", e => { if (!e.target.closest(".sugg-wrap")) $("sugg").classList.add("hide"); });
 
-$("f-email").onsubmit = async e => {
-  e.preventDefault();
-  email = $("email").value.trim().toLowerCase();
-  $("b-email").disabled = true; say("m-email", "Sending…");
-  const {error} = await sb.auth.signInWithOtp({email, options: {shouldCreateUser: true}});
-  $("b-email").disabled = false;
-  if (error) { say("m-email", "We could not send the code: " + error.message, "err"); return; }
-  say("m-email", ""); $("sent-to").textContent = email; show("s-code"); $("code").focus();
-};
-
-$("f-code").onsubmit = async e => {
-  e.preventDefault();
-  $("b-code").disabled = true; say("m-code", "Checking…");
-  const token = $("code").value.trim();
-  let {error} = await sb.auth.verifyOtp({email, token, type: "email"});
-  // a first-time sign-in comes from the "Confirm signup" email; its code checks as type "signup"
-  if (error) ({error} = await sb.auth.verifyOtp({email, token, type: "signup"}));
-  $("b-code").disabled = false;
-  if (error) { say("m-code", "That code did not work. Check it, or ask for a new one.", "err"); return; }
-  say("m-code", "");
-};
-$("b-back").onclick = () => { $("code").value = ""; say("m-code", ""); show("s-email"); };
-
-async function load() {
+// ---------------------------------------------------------------- data
+async function loadAll() {
   await loadNames();
-  const {data: m} = await sb.from("members").select("plan, extra_accounts").maybeSingle();
-  member = m || {plan: "free", extra_accounts: 0};
-  const {data: rows, error} = await sb.from("my_accounts").select("id, company, added_at").order("added_at", {ascending: false});
-  if (error) { say("m-add", "Could not load your list: " + error.message, "err"); return; }
-  const lim = (LIMITS[member.plan] ?? 3) + (member.extra_accounts || 0);
-  $("plan-name").textContent = PLAN_NAMES[member.plan] || "Your plan";
-  const left = Math.max(lim - rows.length, 0);
-  $("plan-left").textContent = `${rows.length} of ${lim} accounts used` + (left ? "" : " · list full");
-  $("b-add").disabled = !left;
-  if (!left) say("m-add", `Your ${PLAN_NAMES[member.plan] || "plan"} holds ${lim} accounts. Remove one to add another.`);
-  // moves: the table only returns rows for this member's own companies (and, on Free, only those 7+ days old)
-  const {data: mv} = await sb.from("moves").select("company, day, kind_label, headline, url").order("day", {ascending: false}).limit(1000);
-  const byCo = {};
-  for (const x of mv || []) (byCo[x.company.toLowerCase()] ||= []).push(x);
-  const fmt = d => new Date(d + "T00:00:00").toLocaleDateString("en-IN", {day: "numeric", month: "short", year: "numeric"});
-  const week = new Date(Date.now() - 7 * 864e5).toISOString().slice(0, 10);
-  // newest move first, so the account that just moved sits on top
-  rows.sort((a, b) => ((byCo[b.company.toLowerCase()] || [])[0]?.day || "").localeCompare((byCo[a.company.toLowerCase()] || [])[0]?.day || ""));
-  $("list").innerHTML = rows.length ? rows.map(r => {
-    const ms = byCo[r.company.toLowerCase()] || [];
-    const tracked = known.has(r.company.toLowerCase());
-    const fresh = ms[0] && ms[0].day >= week;
-    const items = ms.slice(0, 3).map(x => `<div class="mv"><span class="d">${fmt(x.day)}</span><span class="k">${esc(x.kind_label || "")}</span>
-        ${x.url ? `<a href="${esc(x.url)}" target="_blank" rel="noopener">${esc(x.headline)}</a>` : esc(x.headline)}</div>`).join("");
-    const more = ms.length > 3 ? `<small>${ms.length - 3} earlier move${ms.length - 3 > 1 ? "s" : ""} not shown</small>` : "";
-    const none = tracked ? `<small>No moves we can show yet${member.plan === "free" ? " (Free shows moves a week after they happen)" : ""}.</small>`
-                         : `<small>We don't track this one yet. It shows here as soon as it moves.</small>`;
-    return `<li class="acc"><div class="hd"><div><b>${esc(r.company)}</b>${tracked ? "" : '<span class="tag">not tracked yet</span>'}${fresh ? '<span class="tag now">moved this week</span>' : ""}</div>
-      <button class="ghost" data-id="${r.id}">Remove</button></div>${ms.length ? items + more : none}</li>`;
-  }).join("") : '<li class="empty">No companies yet. Add the first one above.</li>';
-  for (const b of $("list").querySelectorAll("button[data-id]")) b.onclick = () => remove(b.dataset.id);
-  $("free-note").classList.toggle("hide", member.plan !== "free");
+  const {data: m} = await sb.from("members").select("plan, extra_accounts, category, state").maybeSingle();
+  member = Object.assign({plan: "free", extra_accounts: 0, category: "gcc", state: "Maharashtra"}, m || {});
+  const {data: acc} = await sb.from("my_accounts").select("id, company, added_at").order("added_at", {ascending: false});
+  mine = acc || [];
+  // the database returns only what this member's plan allows (their category and state, Free a week late, plus their own accounts)
+  const rows = [];
+  for (let from = 0; from < 20000; from += 1000) {
+    const {data, error} = await sb.from("moves").select("company, day, kind_label, headline, url, category, stage, city, state")
+      .order("day", {ascending: false}).range(from, from + 999);
+    if (error || !data) break;
+    rows.push(...data);
+    if (data.length < 1000) break;
+  }
+  const by = new Map();
+  for (const r of rows) {
+    const k = r.company.toLowerCase();
+    if (!by.has(k)) by.set(k, {name: r.company, category: r.category, stage: r.stage, city: r.city, state: r.state, latest: r.day, moves: []});
+    by.get(k).moves.push(r);
+  }
+  const mineSet = new Set(mine.map(a => a.company.toLowerCase()));
+  COS = [...by.values()].map(c => Object.assign(c, {yours: mineSet.has(c.name.toLowerCase())}));
+  setupTop();
+  render();
 }
 
+function setupTop() {
+  for (const b of $("tabs").querySelectorAll("button")) b.setAttribute("aria-pressed", String(b.dataset.cat === member.category));
+  const allIndia = ALL_INDIA.includes(member.plan);
+  $("state").innerHTML = (allIndia ? [`<option value="">All India</option>`] : [])
+    .concat(STATES.map(s => `<option ${s === (allIndia ? view.allIndiaState : member.state) ? "selected" : ""}>${esc(s)}</option>`)).join("");
+}
+
+$("tabs").addEventListener("click", async e => {
+  const b = e.target.closest("button[data-cat]");
+  if (!b || b.dataset.cat === member.category) return;
+  // Free and Individual cover one category: switching changes it (saved under the member's own row)
+  const {error} = await sb.from("members").update({category: b.dataset.cat}).eq("id", (await sb.auth.getUser()).data.user.id);
+  if (error) { alert("Could not switch: " + error.message); return; }
+  view = {stage: "", city: "", q: "", shown: 30, open: null, allIndiaState: view.allIndiaState};
+  loadAll();
+});
+$("state").addEventListener("change", async e => {
+  if (ALL_INDIA.includes(member.plan)) { view.allIndiaState = e.target.value; view.city = ""; render(); return; }
+  const {error} = await sb.from("members").update({state: e.target.value}).eq("id", (await sb.auth.getUser()).data.user.id);
+  if (error) { alert("Could not change the state: " + error.message); return; }
+  view.city = ""; loadAll();
+});
+
+// ---------------------------------------------------------------- render
+function inView() {
+  const cat = member.category, allIndia = ALL_INDIA.includes(member.plan);
+  const st = allIndia ? view.allIndiaState : member.state;
+  return COS.filter(c => c.category === cat && (!st || c.state === st));
+}
+function render() {
+  const C = CATS[member.category] || CATS.gcc;
+  const allIndia = ALL_INDIA.includes(member.plan);
+  const place = allIndia ? (view.allIndiaState || "India") : member.state;
+  const base = inView();
+  const yoursAll = COS.filter(c => c.yours);
+  $("dh").textContent = C.h1(place);
+  $("lede").textContent = C.lede;
+  $("ladh").textContent = C.ladh;
+
+  // filters with counts
+  const q = view.q.toLowerCase();
+  const textHit = c => !q || c.name.toLowerCase().includes(q) || (c.city || "").toLowerCase().includes(q);
+  const stageCount = s => base.filter(c => (!s || c.stage === s) && (!view.city || (c.city || "Site not stated") === view.city)).length;
+  $("f-stage").innerHTML = [["", "All stages"], ...C.st].map(([k, l]) =>
+    `<button data-stage="${k}" aria-pressed="${view.stage === k}">${esc(l)}<span>${stageCount(k)}</span></button>`).join("");
+  const cityCounts = {};
+  for (const c of base.filter(c => !view.stage || c.stage === view.stage)) { const k = c.city || "Site not stated"; cityCounts[k] = (cityCounts[k] || 0) + 1; }
+  const cities = Object.entries(cityCounts).sort((a, b) => b[1] - a[1]);
+  const total = cities.reduce((s, x) => s + x[1], 0);
+  $("f-city").innerHTML = [`<button data-city="" aria-pressed="${!view.city}">All cities<span>${total}</span></button>`]
+    .concat(cities.slice(0, 12).map(([k, n]) => `<button data-city="${esc(k)}" aria-pressed="${view.city === k}">${esc(k)}<span>${n}</span></button>`)).join("");
+
+  // tiles
+  const movedWeek = yoursAll.filter(c => c.latest >= daysAgo(7)).length;
+  const t = [[base.length, `${C.noun} we are watching here`], ...C.tiles(base)];
+  $("tiles").innerHTML = t.map(([n, l]) => `<div class="tile"><b>${n}</b><span>${esc(l)}</span></div>`).join("")
+    + `<div class="tile hot"><b>${movedWeek} of ${mine.length}</b><span>of your accounts moved this week</span></div>`;
+
+  // ladder and city bars (they filter too)
+  const maxSt = Math.max(1, ...C.st.map(([k]) => base.filter(c => c.stage === k).length));
+  $("ladder").innerHTML = C.st.map(([k, l]) => { const n = base.filter(c => c.stage === k).length;
+    return `<button data-stage="${k}" aria-pressed="${view.stage === k}"><span class="n">${n}</span><span class="b" style="height:${Math.round(100 * n / maxSt)}px"></span><span class="l">${esc(l)}</span></button>`; }).join("");
+  const maxC = Math.max(1, ...cities.map(x => x[1]));
+  $("cities").innerHTML = cities.slice(0, 8).map(([k, n]) =>
+    `<button data-city="${esc(k)}" aria-pressed="${view.city === k}"><span>${esc(k)}</span><span class="b" style="width:${Math.round(100 * n / maxC)}%"></span><span class="n">${n}</span></button>`).join("")
+    || `<p class="empty">No ${C.noun} here yet.</p>`;
+
+  // rows: your accounts first (any category), then everything in view, newest move first
+  const list = base.filter(c => (!view.stage || c.stage === view.stage) && (!view.city || (c.city || "Site not stated") === view.city) && textHit(c));
+  const extra = yoursAll.filter(c => !list.includes(c) && textHit(c) && !view.stage && !view.city);
+  const sorted = [...extra, ...list].sort((a, b) => (b.yours - a.yours) || b.latest.localeCompare(a.latest));
+  $("count").textContent = `${sorted.length} compan${sorted.length === 1 ? "y" : "ies"}`;
+  const label = (c) => ((CATS[c.category] || {st: []}).st.find(s => s[0] === c.stage) || [, c.category ? "" : "Your account"])[1];
+  $("rows").innerHTML = sorted.slice(0, view.shown).map((c, i) => `
+    <div class="item${view.open === c.name ? " open" : ""}" data-name="${esc(c.name)}">
+      <div class="trow">
+        <div class="co"><b>${esc(c.name)}</b>${c.yours ? '<span class="yours">YOUR ACCOUNT</span>' : ""}<small>${esc(c.city || "Site not stated")}</small></div>
+        <div class="lm">${esc(c.moves[0].headline)}</div>
+        <div>${label(c) ? `<span class="st">${esc(label(c))}</span>` : ""}</div>
+        <div class="when">${fmt(c.latest)}</div>
+        <div class="view">${view.open === c.name ? "Close" : "View"}</div>
+      </div>
+      <div class="detail">
+        <h5>What happened</h5>
+        ${c.moves.slice(0, 8).map(m => `<div class="step"><span class="d">${fmt(m.day, true)}</span><span><span class="k">${esc(m.kind_label || "")}</span>${m.url ? `<a href="${esc(m.url)}" target="_blank" rel="noopener">${esc(m.headline)}</a>` : esc(m.headline)}</span></div>`).join("")}
+        ${c.moves.length > 8 ? `<p class="free">${c.moves.length - 8} earlier moves not shown.</p>` : ""}
+      </div>
+    </div>`).join("") || `<p class="empty">Nothing here matches. Try another stage or city${member.plan === "free" ? ", or remember the Free plan shows moves a week late" : ""}.</p>`;
+  $("more").classList.toggle("hide", sorted.length <= view.shown);
+  $("free").classList.toggle("hide", member.plan !== "free");
+
+  // my accounts box
+  const lim = (LIMITS[member.plan] ?? 3) + (member.extra_accounts || 0);
+  $("chips").innerHTML = mine.map(a => `<span class="chip${known.has(a.company.toLowerCase()) ? "" : " nt"}" title="${known.has(a.company.toLowerCase()) ? "" : "Not tracked yet: it shows here as soon as it moves"}">${esc(a.company)}<button data-id="${a.id}" aria-label="Remove ${esc(a.company)}">×</button></span>`).join("");
+  $("plannote").textContent = `${PLAN_NAMES[member.plan] || "Your plan"}: ${mine.length} of ${lim} accounts used.`;
+  $("b-add").disabled = mine.length >= lim;
+}
+
+// clicks: filters, bars, rows, chips
+document.addEventListener("click", e => {
+  const s = e.target.closest("[data-stage]"); if (s && s.closest("#f-stage,#ladder")) { view.stage = view.stage === s.dataset.stage ? "" : s.dataset.stage; view.shown = 30; render(); return; }
+  const c = e.target.closest("[data-city]"); if (c && c.closest("#f-city,#cities")) { view.city = view.city === c.dataset.city ? "" : c.dataset.city; view.shown = 30; render(); return; }
+  const r = e.target.closest(".trow"); if (r) { const n = r.parentElement.dataset.name; view.open = view.open === n ? null : n; render(); return; }
+  const x = e.target.closest(".chip button[data-id]"); if (x) { removeAcc(x.dataset.id); return; }
+});
+$("q").addEventListener("input", e => { view.q = e.target.value.trim(); view.shown = 30; render(); });
+$("more").onclick = () => { view.shown += 30; render(); };
+
+// ---------------------------------------------------------------- my accounts
 $("f-add").onsubmit = async e => {
   e.preventDefault();
   const typed = $("company").value.trim().replace(/\s+/g, " ");
@@ -268,32 +490,28 @@ $("f-add").onsubmit = async e => {
   $("sugg").classList.add("hide");
   $("b-add").disabled = true;
   const {error} = await sb.from("my_accounts").insert({company});
-  if (error) {
-    const text = error.code === "23505" ? "It is already on your list." : (error.message || "Could not add it.");
-    say("m-add", text, "err"); $("b-add").disabled = false; return;
-  }
+  if (error) { say("m-add", error.code === "23505" ? "It is already on your list." : (error.message || "Could not add it."), "err"); $("b-add").disabled = false; return; }
   $("company").value = "";
-  say("m-add", !known.has(company.toLowerCase()) ? "Added. We don't track this one yet; it shows here as soon as it moves."
-             : company !== typed ? `Added as ${company}.` : "Added.", "ok");
-  load();
+  say("m-add", !known.has(company.toLowerCase()) ? "Added. We don't track it yet; it shows as soon as it moves." : company !== typed ? `Added as ${company}.` : "Added.", "ok");
+  loadAll();
 };
-
-async function remove(id) {
+async function removeAcc(id) {
   const {error} = await sb.from("my_accounts").delete().eq("id", id);
-  if (error) say("m-add", "Could not remove it: " + error.message, "err"); else { say("m-add", ""); load(); }
+  if (error) say("m-add", "Could not remove it: " + error.message, "err"); else { say("m-add", ""); loadAll(); }
 }
 
-function render(session) {
+// ---------------------------------------------------------------- session
+function onSession(session) {
   if (session) {
     $("who").innerHTML = `${esc(session.user.email)} <button class="ghost" id="b-out">Sign out</button>`;
     $("b-out").onclick = () => sb.auth.signOut();
-    show("s-app"); load();
+    show("s-app"); loadAll();
   } else {
     $("who").textContent = ""; show("s-email");
   }
 }
-sb.auth.onAuthStateChange((_event, session) => render(session));
-sb.auth.getSession().then(({data}) => render(data.session));
+sb.auth.onAuthStateChange((_e, session) => onSession(session));
+sb.auth.getSession().then(({data}) => onSession(data.session));
 </script>
 </body>
 </html>
