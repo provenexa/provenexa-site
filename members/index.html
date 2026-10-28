@@ -121,19 +121,42 @@ h1.dh{font-size:clamp(24px,3vw,34px);line-height:1.1;letter-spacing:-.025em;marg
 .free{margin:14px 0 0;font-size:13px;color:var(--muted)}
 footer{max-width:1360px;margin:0 auto;padding:10px 20px 34px;font-size:12.5px;color:var(--muted)}
 
+.fxbtn{display:none}
 @media (max-width:980px){
-  .dash{grid-template-columns:1fr}
+  .top{padding:8px 14px;gap:8px 10px}
+  .brand{font-size:16px}
+  .right{margin-left:auto;gap:6px}
+  .right .em{display:none}
+  .tabs{order:3;width:100%;flex-wrap:nowrap;overflow-x:auto;gap:6px;scrollbar-width:none}
+  .tabs::-webkit-scrollbar{display:none}
+  .tabs button{flex:none;padding:7px 11px;font-size:13px}
+  .right select{max-width:130px}
+  .dash{grid-template-columns:1fr;padding:14px 14px 30px;gap:14px}
   .side{position:static}
+  .fxbtn{display:block;width:100%;margin-top:10px;text-align:left;padding:10px 12px;font-size:14px;color:var(--ink);border-color:var(--line)}
+  .fx{display:none}
+  .fx.open{display:block}
   .filters{flex-direction:row;flex-wrap:wrap;gap:6px}
-  .filters button{border:1px solid var(--hair);padding:7px 10px}
-  .tiles{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .filters button{border:1px solid var(--hair);padding:5px 8px;font-size:13px}
+  .side h3{margin:12px 0 6px}
+  .mine{margin-top:12px}
+  h1.dh{font-size:24px}
+  .lede{font-size:14px;margin-bottom:12px}
+  .tiles{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+  .tile{padding:10px 12px}
+  .tile b{font-size:24px}
+  .tile span{font-size:12.5px}
   .panels{grid-template-columns:1fr}
+  .ladder{height:120px}
   .thead{display:none}
-  .trow{grid-template-columns:minmax(0,1fr) auto;gap:6px 12px}
-  .trow .lm{grid-column:1 / -1}
-  .trow .when{grid-column:1}
+  .trow{grid-template-columns:minmax(0,1fr) auto;grid-template-areas:"co stc" "lm lm" "when when";gap:6px 10px;padding:12px 14px}
+  .trow .co{grid-area:co}
+  .trow .stc{grid-area:stc;justify-self:end}
+  .trow .lm{grid-area:lm;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;font-size:13.5px}
+  .trow .when{grid-area:when;font-size:12px}
   .trow .view{display:none}
-  .right{width:100%;margin-left:0;justify-content:space-between}
+  .st{font-size:9.5px;padding:3px 5px}
+  .step{grid-template-columns:1fr;gap:2px}
 }
 </style>
 </head>
@@ -184,8 +207,11 @@ footer{max-width:1360px;margin:0 auto;padding:10px 20px 34px;font-size:12.5px;co
 <div id="s-app" class="dash hide">
   <aside class="side">
     <input id="q" type="search" placeholder="Find a company or city" autocomplete="off">
-    <h3>Stage</h3><div class="filters" id="f-stage"></div>
-    <h3>Region</h3><div class="filters" id="f-city"></div>
+    <button class="ghost fxbtn" id="b-fx" type="button" aria-expanded="false">Filters: stage and city</button>
+    <div class="fx" id="fx">
+      <h3>Stage</h3><div class="filters" id="f-stage"></div>
+      <h3>Region</h3><div class="filters" id="f-city"></div>
+    </div>
     <div class="mine">
       <b>My accounts</b>
       <p>Add the companies you sell to. We highlight them when they move. Only you can see your list.</p>
@@ -451,7 +477,7 @@ function render() {
       <div class="trow">
         <div class="co"><b>${esc(c.name)}</b>${c.yours ? '<span class="yours">YOUR ACCOUNT</span>' : ""}<small>${esc(c.city || "Site not stated")}</small></div>
         <div class="lm">${esc(c.moves[0].headline)}</div>
-        <div>${label(c) ? `<span class="st">${esc(label(c))}</span>` : ""}</div>
+        <div class="stc">${label(c) ? `<span class="st">${esc(label(c))}</span>` : ""}</div>
         <div class="when">${fmt(c.latest)}</div>
         <div class="view">${view.open === c.name ? "Close" : "View"}</div>
       </div>
@@ -478,6 +504,7 @@ document.addEventListener("click", e => {
   const r = e.target.closest(".trow"); if (r) { const n = r.parentElement.dataset.name; view.open = view.open === n ? null : n; render(); return; }
   const x = e.target.closest(".chip button[data-id]"); if (x) { removeAcc(x.dataset.id); return; }
 });
+$("b-fx").onclick = () => { const o = $("fx").classList.toggle("open"); $("b-fx").setAttribute("aria-expanded", String(o)); };
 $("q").addEventListener("input", e => { view.q = e.target.value.trim(); view.shown = 30; render(); });
 $("more").onclick = () => { view.shown += 30; render(); };
 
@@ -503,7 +530,7 @@ async function removeAcc(id) {
 // ---------------------------------------------------------------- session
 function onSession(session) {
   if (session) {
-    $("who").innerHTML = `${esc(session.user.email)} <button class="ghost" id="b-out">Sign out</button>`;
+    $("who").innerHTML = `<span class="em">${esc(session.user.email)}</span> <button class="ghost" id="b-out">Sign out</button>`;
     $("b-out").onclick = () => sb.auth.signOut();
     show("s-app"); loadAll();
   } else {
