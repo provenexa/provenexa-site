@@ -76,6 +76,10 @@ a{color:var(--acc)}
 h1{font-size:clamp(36px,5vw,60px);line-height:1.03;font-weight:800;letter-spacing:-.04em;margin:18px 0 18px;color:var(--ink)}
 .lead{font-size:clamp(16px,1.5vw,19px);color:var(--body);margin:0 0 28px;max-width:52ch}
 .btns{display:flex;gap:12px;flex-wrap:wrap}
+.stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:20px;margin-top:30px;padding-top:18px;border-top:1px solid var(--line);max-width:620px}
+.stats b{display:block;font-size:clamp(24px,3vw,32px);line-height:1.1;font-weight:800;color:var(--ink);letter-spacing:-.02em}
+.stats span{display:block;font-size:13.5px;color:var(--muted);margin-top:4px;line-height:1.35}
+@media (max-width:520px){.stats{grid-template-columns:1fr;gap:12px}.stats div{display:flex;align-items:baseline;gap:10px}.stats span{margin:0}}
 .cta{display:inline-block;text-decoration:none;background:var(--ink);color:var(--bg);border:1px solid var(--ink);padding:13px 22px;font-weight:700;font-size:16px}
 .cta.acc{background:var(--acc);border-color:var(--acc);color:var(--on-acc)}
 .cta.ghost{background:transparent;color:var(--ink)}
@@ -199,6 +203,11 @@ footer a{color:var(--acc)}
       <h1>Know your customer's next move.</h1>
       <p class="lead">New plants, branch roll-outs, global centres, big orders and people changes. We follow what India's companies are about to do and tell your sales team who to call, why now and what to say, often months before the news.</p>
       <div class="btns"><a class="cta acc" href="mailto:research@provenexa.com?subject=Early%20access">Get early access</a><a class="cta ghost" href="pricing/">See pricing</a></div>
+      <div class="stats">
+        <div><b>6,000+</b><span>companies across India, watched every day</span></div>
+        <div><b>9 in 10</b><span>companies listed on the NSE are on our list</span></div>
+        <div><b>~2,000</b><span>made a move in the last 30 days</span></div>
+      </div>
     </div>
     <div class="ladder" aria-label="How a company moves, step by step">
       <div class="lh">Every move, step by step</div>
