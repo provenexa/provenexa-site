@@ -139,7 +139,8 @@ footer{max-width:1360px;margin:0 auto;padding:10px 20px 34px;font-size:12.5px;co
   .filters{flex-direction:row;flex-wrap:wrap;gap:6px}
   .filters button{border:1px solid var(--hair);padding:5px 8px;font-size:13px}
   .side h3{margin:12px 0 6px}
-  .mine{margin-top:12px}
+  .mine{margin-top:10px;display:none}
+  .mine.open{display:block}
   h1.dh{font-size:24px}
   .lede{font-size:14px;margin-bottom:12px}
   .tiles{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
@@ -212,7 +213,8 @@ footer{max-width:1360px;margin:0 auto;padding:10px 20px 34px;font-size:12.5px;co
       <h3>Stage</h3><div class="filters" id="f-stage"></div>
       <h3>Region</h3><div class="filters" id="f-city"></div>
     </div>
-    <div class="mine">
+    <button class="ghost fxbtn" id="b-mine" type="button" aria-expanded="false">My accounts</button>
+    <div class="mine" id="mine">
       <b>My accounts</b>
       <p>Add the companies you sell to. We highlight them when they move. Only you can see your list.</p>
       <form id="f-add">
@@ -494,6 +496,7 @@ function render() {
   const lim = (LIMITS[member.plan] ?? 3) + (member.extra_accounts || 0);
   $("chips").innerHTML = mine.map(a => `<span class="chip${known.has(a.company.toLowerCase()) ? "" : " nt"}" title="${known.has(a.company.toLowerCase()) ? "" : "Not tracked yet: it shows here as soon as it moves"}">${esc(a.company)}<button data-id="${a.id}" aria-label="Remove ${esc(a.company)}">×</button></span>`).join("");
   $("plannote").textContent = `${PLAN_NAMES[member.plan] || "Your plan"}: ${mine.length} of ${lim} accounts used.`;
+  $("b-mine").textContent = `My accounts (${mine.length} of ${lim})`;
   $("b-add").disabled = mine.length >= lim;
 }
 
@@ -504,6 +507,7 @@ document.addEventListener("click", e => {
   const r = e.target.closest(".trow"); if (r) { const n = r.parentElement.dataset.name; view.open = view.open === n ? null : n; render(); return; }
   const x = e.target.closest(".chip button[data-id]"); if (x) { removeAcc(x.dataset.id); return; }
 });
+$("b-mine").onclick = () => { const o = $("mine").classList.toggle("open"); $("b-mine").setAttribute("aria-expanded", String(o)); };
 $("b-fx").onclick = () => { const o = $("fx").classList.toggle("open"); $("b-fx").setAttribute("aria-expanded", String(o)); };
 $("q").addEventListener("input", e => { view.q = e.target.value.trim(); view.shown = 30; render(); });
 $("more").onclick = () => { view.shown += 30; render(); };
