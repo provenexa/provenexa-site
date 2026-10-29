@@ -120,6 +120,7 @@ h1.dh{font-size:clamp(24px,3vw,34px);line-height:1.1;letter-spacing:-.025em;marg
 .read .win{border-left:3px solid var(--acc);padding:2px 0 2px 10px}
 .read .meta{font-size:12px;color:var(--muted)}
 .read a{color:var(--acc)}
+.invite .ghost{margin-left:8px;font-size:12.5px;padding:3px 9px}
 .wt{display:inline-block;font:700 10.5px var(--mono);letter-spacing:.06em;text-transform:uppercase;color:var(--muted);border:1px dashed var(--hair);padding:2px 6px;margin-left:4px}
 .detail h5{font:800 10.5px var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--acc);margin:10px 0 6px}
 .step{display:grid;grid-template-columns:110px minmax(0,1fr);gap:12px;padding:5px 0;font-size:14px;border-top:1px solid var(--hair)}
@@ -250,6 +251,7 @@ body:has(#s-app.hide) footer{text-align:center}   /* signed out: footer sits cen
     <h1 class="dh" id="dh"></h1>
     <p class="lede" id="lede"></p>
     <p class="free hide" id="free">On the Free plan, each move shows a week after it happens. Paid plans show it the same day.</p>
+    <p class="free invite hide" id="invite"><b>Tell us which accounts you want to follow.</b> Add them under My accounts and we watch them for you: every move, and the full read when they move. If one is not in our data yet, tap "Ask us to track it". Only you can see your list. <button class="ghost" id="b-invite" type="button">Add accounts</button></p>
     <div class="tiles" id="tiles"></div>
     <div class="panels">
       <div class="panel"><h4 id="ladh"></h4><div class="ladder" id="ladder"></div></div>
@@ -544,6 +546,7 @@ function render() {
     </div>`).join("") || `<p class="empty">Nothing here matches. Try another stage or city${member.plan === "free" ? ", or remember the Free plan shows moves a week late" : ""}.</p>`;
   $("more").classList.toggle("hide", sorted.length <= view.shown);
   $("free").classList.toggle("hide", member.plan !== "free");
+  $("invite").classList.toggle("hide", mine.length >= 5);   // 29 Oct (Sumit): gently invite, never require
   $("free").textContent = member.ended
     ? `Your ${PLAN_NAMES[member.ended.plan] || "plan"} ended on ${nice(member.ended.until)}, so you now see the Free plan: each move shows a week after it happens. To keep same-day moves, write to research@provenexa.com.`
     : "On the Free plan, each move shows a week after it happens. Paid plans show it the same day.";
@@ -572,6 +575,7 @@ document.addEventListener("click", e => {
   const x = e.target.closest(".chip button[data-id]"); if (x) { removeAcc(x.dataset.id); return; }
   const k = e.target.closest(".chip button[data-ask]"); if (k) { askTrack(k); return; }
 });
+$("b-invite").onclick = () => { $("mine").classList.add("open"); $("b-mine").setAttribute("aria-expanded", "true"); $("company").focus(); };
 $("b-mine").onclick = () => { const o = $("mine").classList.toggle("open"); $("b-mine").setAttribute("aria-expanded", String(o)); };
 $("b-fx").onclick = () => { const o = $("fx").classList.toggle("open"); $("b-fx").setAttribute("aria-expanded", String(o)); };
 $("q").addEventListener("input", e => { view.q = e.target.value.trim(); view.shown = 30; render(); });
