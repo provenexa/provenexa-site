@@ -63,6 +63,9 @@ label{display:block;font-weight:700;color:var(--ink);margin:0 0 6px;font-size:15
 .chip{background:var(--acc-soft);color:var(--acc);font-weight:700;font-size:13px;padding:4px 6px 4px 8px;display:inline-flex;align-items:center;gap:6px}
 .chip button{all:unset;cursor:pointer;color:var(--acc);font-size:15px;line-height:1}
 .chip.nt{background:var(--soft);color:var(--muted)}
+.chip button.ask{font-size:11.5px;font-weight:700;color:var(--acc);border-bottom:1px solid var(--acc);margin-left:2px}
+.chip button.ask[disabled]{cursor:default;border-bottom:0;color:var(--muted)}
+.asknote{font-size:12.5px;color:var(--muted);margin-top:6px}
 .plannote{font-size:12.5px;color:var(--muted);margin-top:8px}
 .sugg-wrap{position:relative;flex:1;min-width:0}
 .sugg{position:absolute;left:0;right:0;top:100%;z-index:5;list-style:none;margin:0;padding:0;background:var(--card);border:1px solid var(--line);border-top:0;max-height:260px;overflow-y:auto}
@@ -231,6 +234,7 @@ body:has(#s-app.hide) footer{text-align:center}   /* signed out: footer sits cen
       </form>
       <div class="chips" id="chips"></div>
       <div class="plannote" id="plannote"></div>
+      <p class="asknote">Can't find a company? Add it anyway and tap "Ask us to track it". We will start watching it for you. We see only the company name, never your list.</p>
     </div>
   </aside>
 
@@ -507,7 +511,14 @@ function render() {
 
   // my accounts box
   const lim = (LIMITS[member.plan] ?? 3) + (member.extra_accounts || 0);
-  $("chips").innerHTML = mine.map(a => `<span class="chip${known.has(a.company.toLowerCase()) ? "" : " nt"}" title="${known.has(a.company.toLowerCase()) ? "" : "Not tracked yet: it shows here as soon as it moves"}">${esc(a.company)}<button data-id="${a.id}" aria-label="Remove ${esc(a.company)}">×</button></span>`).join("");
+  const asked = askedList();
+  $("chips").innerHTML = mine.map(a => {
+    const nt = !known.has(a.company.toLowerCase());
+    const ask = !nt ? "" : asked.includes(a.company.toLowerCase())
+      ? `<button class="ask" disabled>Asked ✓</button>`
+      : `<button class="ask" data-ask="${esc(a.company)}">Ask us to track it</button>`;
+    return `<span class="chip${nt ? " nt" : ""}" title="${nt ? "Not tracked yet: it shows here as soon as it moves" : ""}">${esc(a.company)}${ask}<button data-id="${a.id}" aria-label="Remove ${esc(a.company)}">×</button></span>`;
+  }).join("");
   const ends = !member.ended && member.plan !== "free" && member.plan_until ? ` Ends after ${nice(member.plan_until)}.` : "";
   $("plannote").textContent = `${PLAN_NAMES[member.plan] || "Your plan"}: ${mine.length} of ${lim} accounts used.${ends}`;
   $("b-mine").textContent = `My accounts (${mine.length} of ${lim})`;
@@ -520,6 +531,7 @@ document.addEventListener("click", e => {
   const c = e.target.closest("[data-city]"); if (c && c.closest("#f-city,#cities")) { view.city = view.city === c.dataset.city ? "" : c.dataset.city; view.shown = 30; render(); return; }
   const r = e.target.closest(".trow"); if (r) { const n = r.parentElement.dataset.name; view.open = view.open === n ? null : n; render(); return; }
   const x = e.target.closest(".chip button[data-id]"); if (x) { removeAcc(x.dataset.id); return; }
+  const k = e.target.closest(".chip button[data-ask]"); if (k) { askTrack(k); return; }
 });
 $("b-mine").onclick = () => { const o = $("mine").classList.toggle("open"); $("b-mine").setAttribute("aria-expanded", String(o)); };
 $("b-fx").onclick = () => { const o = $("fx").classList.toggle("open"); $("b-fx").setAttribute("aria-expanded", String(o)); };
@@ -537,9 +549,20 @@ $("f-add").onsubmit = async e => {
   const {error} = await sb.from("my_accounts").insert({company});
   if (error) { say("m-add", error.code === "23505" ? "It is already on your list." : (error.message || "Could not add it."), "err"); $("b-add").disabled = false; return; }
   $("company").value = "";
-  say("m-add", !known.has(company.toLowerCase()) ? "Added. We don't track it yet; it shows as soon as it moves." : company !== typed ? `Added as ${company}.` : "Added.", "ok");
+  say("m-add", !known.has(company.toLowerCase()) ? "Added. We don't track it yet: tap \"Ask us to track it\" and we will start watching it." : company !== typed ? `Added as ${company}.` : "Added.", "ok");
   loadAll();
 };
+// "Ask us to track it": only the company name goes to us, not who asked
+function askedList() { try { return JSON.parse(localStorage.getItem("nm-asked") || "[]"); } catch (e) { return []; } }
+async function askTrack(btn) {
+  const company = btn.dataset.ask;
+  btn.disabled = true; btn.textContent = "Sending…";
+  const {error} = await sb.from("track_requests").insert({company});
+  if (error) { btn.disabled = false; btn.textContent = "Ask us to track it"; say("m-add", "Could not send that just now. Please try again.", "err"); return; }
+  try { localStorage.setItem("nm-asked", JSON.stringify([...askedList(), company.toLowerCase()].slice(-200))); } catch (e) {}
+  btn.removeAttribute("data-ask"); btn.textContent = "Asked ✓";
+  say("m-add", `Thanks. We will start tracking ${company}; it shows here once it moves.`, "ok");
+}
 async function removeAcc(id) {
   const {error} = await sb.from("my_accounts").delete().eq("id", id);
   if (error) say("m-add", "Could not remove it: " + error.message, "err"); else { say("m-add", ""); loadAll(); }
