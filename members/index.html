@@ -261,7 +261,7 @@ const SUPABASE_URL = "https://kgkstbcrhpdxrrnswdju.supabase.co";
 const SUPABASE_KEY = "sb_publishable_wQZMIp77ig07CxrbHiGXlQ_jl1QlRYw";
 const LIMITS = {free: 3, trial: 25, individual: 10, plus: 25, team: 50, pilot: 25, staff: 1000};
 const PLAN_NAMES = {free: "Free plan", trial: "5-day free login", individual: "Individual plan", plus: "Plus plan", team: "Team plan", pilot: "Pilot", staff: "Provenexa staff"};
-const ALL_INDIA = ["trial", "plus", "team", "staff"];
+const ALL_INDIA = ["trial", "pilot", "plus", "team", "staff"];   // 29 Oct: pilots see all India (big firms see the best we have)
 // a plan with an end date counts as Free from the day after it (India time); the database enforces the same rule
 const todayIST = () => new Date(Date.now() + 330 * 60000).toISOString().slice(0, 10);
 const nice = d => new Date(d + "T00:00:00").toLocaleDateString("en-IN", {weekday: "short", day: "numeric", month: "short"});
