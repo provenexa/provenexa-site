@@ -120,6 +120,7 @@ h1.dh{font-size:clamp(24px,3vw,34px);line-height:1.1;letter-spacing:-.025em;marg
 .read .win{border-left:3px solid var(--acc);padding:2px 0 2px 10px}
 .read .meta{font-size:12px;color:var(--muted)}
 .read a{color:var(--acc)}
+.wt{display:inline-block;font:700 10.5px var(--mono);letter-spacing:.06em;text-transform:uppercase;color:var(--muted);border:1px dashed var(--hair);padding:2px 6px;margin-left:4px}
 .detail h5{font:800 10.5px var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--acc);margin:10px 0 6px}
 .step{display:grid;grid-template-columns:110px minmax(0,1fr);gap:12px;padding:5px 0;font-size:14px;border-top:1px solid var(--hair)}
 .step:first-of-type{border-top:0}
@@ -454,9 +455,15 @@ function inView() {
   const st = allIndia ? view.allIndiaState : member.state;
   return COS.filter(c => c.category === cat && (!st || c.state === st));
 }
+// 29 Oct (Sumit): fewer than 2 moves in the last 30 days = 'Watching' (we are watching, not missing it)
+function watching(c) {
+  const since = new Date(Date.now() - 30 * 864e5).toISOString().slice(0, 10);
+  return c.moves.filter(m => m.day >= since).length < 2;
+}
 // 29 Oct: the standard account read (same as the client pages), above the dated steps
 function readHtml(c) {
   const r = READS.get(c.name.toLowerCase());
+  if (!r && watching(c)) return '<p class="free"><b>Watching.</b> Limited movement so far: fewer than two moves in the last 30 days. We keep watching this company and write the full read once it moves.</p>';
   if (!r) return member.plan === "free" ? '<p class="free">The full account read (what it means, who to approach, and when) comes with the paid plans.</p>' : "";
   const mv = r.mv || [];
   const li = (a) => (a || []).filter(Boolean).map(x => `<li>${esc(x)}</li>`).join("");
@@ -524,7 +531,7 @@ function render() {
       <div class="trow">
         <div class="co"><b>${esc(c.name)}</b>${c.yours ? '<span class="yours">YOUR ACCOUNT</span>' : ""}<small>${esc(c.city || "Site not stated")}</small></div>
         <div class="lm">${esc(c.moves[0].headline)}</div>
-        <div class="stc">${label(c) ? `<span class="st">${esc(label(c))}</span>` : ""}</div>
+        <div class="stc">${label(c) ? `<span class="st">${esc(label(c))}</span>` : ""}${!READS.has(c.name.toLowerCase()) && watching(c) ? `<span class="wt">Watching</span>` : ""}</div>
         <div class="when">${fmt(c.latest)}</div>
         <div class="view">${view.open === c.name ? "Close" : "View"}</div>
       </div>
