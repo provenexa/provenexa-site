@@ -113,6 +113,13 @@ h1.dh{font-size:clamp(24px,3vw,34px);line-height:1.1;letter-spacing:-.025em;marg
 .view{color:var(--acc);font-weight:700;font-size:14px}
 .detail{padding:4px 16px 16px;display:none}
 .item.open .detail{display:block}
+.read{border-bottom:1px solid var(--line);padding-bottom:10px;margin-bottom:4px}
+.read .rh{font-weight:800;color:var(--ink);font-size:15.5px;margin:8px 0 6px;line-height:1.4}
+.read p{margin:0 0 8px;font-size:14px;line-height:1.55}
+.read ul{margin:0 0 8px;padding-left:18px;font-size:14px;line-height:1.5}
+.read .win{border-left:3px solid var(--acc);padding:2px 0 2px 10px}
+.read .meta{font-size:12px;color:var(--muted)}
+.read a{color:var(--acc)}
 .detail h5{font:800 10.5px var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--acc);margin:10px 0 6px}
 .step{display:grid;grid-template-columns:110px minmax(0,1fr);gap:12px;padding:5px 0;font-size:14px;border-top:1px solid var(--hair)}
 .step:first-of-type{border-top:0}
@@ -295,6 +302,7 @@ const esc = s => String(s ?? "").replace(/[&<>"]/g, c => ({"&": "&amp;", "<": "&
 const daysAgo = n => new Date(Date.now() - n * 864e5).toISOString().slice(0, 10);
 const fmt = (d, y) => new Date(d + "T00:00:00").toLocaleDateString("en-IN", y ? {day: "numeric", month: "short", year: "numeric"} : {day: "numeric", month: "short"});
 let member = null, mine = [], COS = [], known = new Set(), email = "";
+let READS = new Map();   // 29 Oct: the account read per company (paid plans; Free gets none from the database)
 let view = {stage: "", city: "", q: "", shown: 30, open: null, allIndiaState: ""};
 
 function say(id, text, kind) { const m = $(id); m.textContent = text || ""; m.className = "msg" + (kind ? " " + kind : ""); }
@@ -409,6 +417,8 @@ async function loadAll() {
     if (!by.has(k)) by.set(k, {name: r.company, category: r.category, stage: r.stage, city: r.city, state: r.state, latest: r.day, moves: []});
     by.get(k).moves.push(r);
   }
+  READS = new Map();
+  { const {data: rd} = await sb.from("account_reads").select("company, read"); for (const r of rd || []) READS.set(r.company.toLowerCase(), r.read); }
   const mineSet = new Set(mine.map(a => a.company.toLowerCase()));
   COS = [...by.values()].map(c => Object.assign(c, {yours: mineSet.has(c.name.toLowerCase())}));
   setupTop();
@@ -444,6 +454,27 @@ function inView() {
   const st = allIndia ? view.allIndiaState : member.state;
   return COS.filter(c => c.category === cat && (!st || c.state === st));
 }
+// 29 Oct: the standard account read (same as the client pages), above the dated steps
+function readHtml(c) {
+  const r = READS.get(c.name.toLowerCase());
+  if (!r) return member.plan === "free" ? '<p class="free">The full account read (what it means, who to approach, and when) comes with the paid plans.</p>' : "";
+  const mv = r.mv || [];
+  const li = (a) => (a || []).filter(Boolean).map(x => `<li>${esc(x)}</li>`).join("");
+  return `<div class="read">
+    <h5>Our read</h5>
+    ${r.h ? `<p class="rh">${esc(r.h)}</p>` : ""}
+    ${r.s ? `<p>${esc(r.s)}</p>` : ""}
+    ${mv[0] ? `<h5>Your move</h5><p><b>Who can move:</b> ${esc(mv[0])}</p>` : ""}
+    ${mv[1] ? `<p><b>Why now:</b> ${esc(mv[1])}</p>` : ""}
+    ${mv[2] ? `<p><b>Also:</b> ${esc(mv[2])}</p>` : ""}
+    ${r.w && r.w.to ? `<p class="win"><b>Window open until ${esc(r.w.to)}*</b> ${esc(r.w.why || "")}</p>` : ""}
+    ${(r.ck || []).length ? `<h5>Check before you call</h5><ul>${li(r.ck)}</ul>` : ""}
+    ${(r.pp || []).length ? `<h5>Likely person</h5><p>${r.pp.map(x => x.u ? `<a href="${esc(x.u)}" target="_blank" rel="noopener">${esc(x.n)}</a>` : esc(x.n)).join(", ")} <span class="meta">(might be the relevant person; check before calling)</span></p>` : ""}
+    ${(r.src || []).length ? `<p class="meta">Sources: ${r.src.map(x => x[1] ? `<a href="${esc(x[1])}" target="_blank" rel="noopener">${esc(x[0])}</a>` : esc(x[0])).join(" · ")}</p>` : ""}
+    <p class="meta">${r.up ? `Read updated ${esc(r.up)}. ` : ""}${r.w && r.w.to ? "* our estimate." : ""}</p>
+  </div>`;
+}
+
 function render() {
   const C = CATS[member.category] || CATS.gcc;
   const allIndia = ALL_INDIA.includes(member.plan);
@@ -498,6 +529,7 @@ function render() {
         <div class="view">${view.open === c.name ? "Close" : "View"}</div>
       </div>
       <div class="detail">
+        ${readHtml(c)}
         <h5>What happened</h5>
         ${c.moves.slice(0, 8).map(m => `<div class="step"><span class="d">${fmt(m.day, true)}</span><span><span class="k">${esc(m.kind_label || "")}</span>${m.url ? `<a href="${esc(m.url)}" target="_blank" rel="noopener">${esc(m.headline)}</a>` : esc(m.headline)}</span></div>`).join("")}
         ${c.moves.length > 8 ? `<p class="free">${c.moves.length - 8} earlier moves not shown.</p>` : ""}
