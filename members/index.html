@@ -569,11 +569,13 @@ async function removeAcc(id) {
 }
 
 // ---------------------------------------------------------------- session
+let touched = false;
 function onSession(session) {
   if (session) {
     $("who").innerHTML = `<span class="em">${esc(session.user.email)}</span> <button class="ghost" id="b-out">Sign out</button>`;
     $("b-out").onclick = () => sb.auth.signOut();
     show("s-app"); loadAll();
+    if (!touched) { touched = true; sb.rpc("touch_me").then(() => {}, () => {}); }   // note the visit (when, not what)
   } else {
     $("who").textContent = ""; show("s-email");
   }
