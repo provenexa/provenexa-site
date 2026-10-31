@@ -71,6 +71,14 @@ label{display:block;font-weight:700;color:var(--ink);margin:0 0 6px;font-size:15
 .sugg{position:absolute;left:0;right:0;top:100%;z-index:5;list-style:none;margin:0;padding:0;background:var(--card);border:1px solid var(--line);border-top:0;max-height:260px;overflow-y:auto}
 .sugg li{padding:9px 10px;border-bottom:1px solid var(--hair);cursor:pointer;color:var(--ink);font-size:14px}
 .sugg li:hover{background:var(--acc-soft)}
+.sugg li{display:flex;justify-content:space-between;align-items:baseline;gap:8px;flex-wrap:wrap}
+.rgnote{color:var(--muted);font-size:11.5px;font-weight:400;text-align:right;margin-left:auto}
+.chip.rg{background:var(--soft);color:var(--ink)}
+.chip.rg .rgnote{font-size:11px}
+.regs{border-top:1px solid var(--hair)}
+.regs h5{font:800 11px var(--mono);letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin:0;padding:12px 16px 4px}
+.regrow{display:flex;justify-content:space-between;align-items:baseline;gap:6px 14px;flex-wrap:wrap;padding:10px 16px;border-top:1px solid var(--hair)}
+.regrow b{color:var(--ink);font-size:14.5px}
 
 h1.dh{font-size:clamp(24px,3vw,34px);line-height:1.1;letter-spacing:-.025em;margin:0 0 6px;color:var(--ink);font-weight:800}
 .lede{margin:0 0 18px;color:var(--muted);font-size:15.5px}
@@ -348,22 +356,30 @@ $("b-back").onclick = () => { $("code").value = ""; say("m-code", ""); show("s-e
 
 // ---------------------------------------------------------------- company names (members only) and forgiving matching
 let NAMES = [], namesLoaded = false;
+// 31 Oct (Sumit): companies that have only registered in India so far (no credible move yet) are searchable too, with a
+// note, so members see the database is current. They are in the list but have no moves.
+let REG = new Map();   // lower-case name -> {on, place}
+const MON = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+const regText = r => `Registered${r.on ? " " + MON[+r.on.slice(5, 7) - 1] + " " + r.on.slice(0, 4) : ""} · no credible move tracked yet`;
 const SUFFIX = /\b(private|pvt|limited|ltd|llp|inc|plc|co|company|corporation|corp|india|services|technologies|group)\b/g;
 const flat = s => s.toLowerCase().replace(/[^a-z0-9]/g, "");
 const core = s => s.toLowerCase().replace(/&/g, " and ").replace(/[^a-z0-9 ]/g, " ").replace(SUFFIX, " ").replace(/\s+/g, "");
 async function loadNames() {
   if (namesLoaded) return;
   const names = [];
+  let cols = "name, status, registered_on, place";
   for (let from = 0; ; from += 1000) {
-    const {data, error} = await sb.from("companies").select("name").order("name").range(from, from + 999);
+    let {data, error} = await sb.from("companies").select(cols).order("name").range(from, from + 999);
+    if (error && cols !== "name") { cols = "name"; from -= 1000; continue; }   // before the 015 columns exist
     if (error || !data) break;
-    names.push(...data.map(r => r.name));
+    names.push(...data);
     if (data.length < 1000) break;
   }
   if (!names.length) return;
   namesLoaded = true;
-  known = new Set(names.map(n => n.toLowerCase()));
-  NAMES = names.map(n => ({name: n, flat: flat(n), core: core(n)}));
+  known = new Set(names.map(r => r.name.toLowerCase()));
+  REG = new Map(names.filter(r => r.status === "registered").map(r => [r.name.toLowerCase(), {on: r.registered_on || "", place: r.place || ""}]));
+  NAMES = names.map(r => ({name: r.name, flat: flat(r.name), core: core(r.name), reg: r.status === "registered"}));
 }
 function matches(q) {
   const f = flat(q);
@@ -384,13 +400,14 @@ function canonical(q) {
 }
 function showSugg() {
   const list = matches($("company").value);
-  $("sugg").innerHTML = list.map(n => `<li role="option">${esc(n)}</li>`).join("");
+  $("sugg").innerHTML = list.map(n => { const r = REG.get(n.toLowerCase());
+    return `<li role="option" data-name="${esc(n)}"><span>${esc(n)}</span>${r ? `<span class="rgnote">${esc(regText(r))}</span>` : ""}</li>`; }).join("");
   $("sugg").classList.toggle("hide", !list.length);
 }
 $("company").addEventListener("input", showSugg);
 $("company").addEventListener("focus", showSugg);
 $("sugg").addEventListener("mousedown", e => e.preventDefault());
-$("sugg").addEventListener("click", e => { const li = e.target.closest("li"); if (li) { $("company").value = li.textContent; $("sugg").classList.add("hide"); } });
+$("sugg").addEventListener("click", e => { const li = e.target.closest("li"); if (li) { $("company").value = li.dataset.name; $("sugg").classList.add("hide"); } });
 document.addEventListener("click", e => { if (!e.target.closest(".sugg-wrap")) $("sugg").classList.add("hide"); });
 
 // ---------------------------------------------------------------- data
@@ -544,6 +561,14 @@ function render() {
         ${c.moves.length > 8 ? `<p class="free">${c.moves.length - 8} earlier moves not shown.</p>` : ""}
       </div>
     </div>`).join("") || `<p class="empty">Nothing here matches. Try another stage or city${member.plan === "free" ? ", or remember the Free plan shows moves a week late" : ""}.</p>`;
+  // 31 Oct (Sumit): companies that have only registered so far (no credible move yet) still answer a search, with a note
+  const fq = flat(view.q);
+  const regHits = fq.length >= 2 ? NAMES.filter(x => x.reg && x.flat.includes(fq) && !COS.some(c => c.name.toLowerCase() === x.name.toLowerCase())).slice(0, 6) : [];
+  if (regHits.length) {
+    const block = `<div class="regs"><h5>Also in our records</h5>${regHits.map(x => { const r = REG.get(x.name.toLowerCase());
+      return `<div class="regrow"><b>${esc(x.name)}</b><span class="rgnote">${esc(regText(r) + (r.place ? " · " + r.place : ""))}</span></div>`; }).join("")}</div>`;
+    $("rows").innerHTML = (sorted.length ? $("rows").innerHTML : "") + block;
+  }
   $("more").classList.toggle("hide", sorted.length <= view.shown);
   $("free").classList.toggle("hide", member.plan !== "free");
   $("invite").classList.toggle("hide", mine.length >= 5);   // 29 Oct (Sumit): gently invite, never require
@@ -556,10 +581,12 @@ function render() {
   const asked = askedList();
   $("chips").innerHTML = mine.map(a => {
     const nt = !known.has(a.company.toLowerCase());
+    const rg = REG.get(a.company.toLowerCase());
     const ask = !nt ? "" : asked.includes(a.company.toLowerCase())
       ? `<button class="ask" disabled>Asked ✓</button>`
       : `<button class="ask" data-ask="${esc(a.company)}">Ask us to track it</button>`;
-    return `<span class="chip${nt ? " nt" : ""}" title="${nt ? "Not tracked yet: it shows here as soon as it moves" : ""}">${esc(a.company)}${ask}<button data-id="${a.id}" aria-label="Remove ${esc(a.company)}">×</button></span>`;
+    const title = nt ? "Not tracked yet: it shows here as soon as it moves" : rg ? regText(rg) + ". We watch it: it shows here as soon as it moves." : "";
+    return `<span class="chip${nt ? " nt" : rg ? " rg" : ""}" title="${esc(title)}">${esc(a.company)}${rg ? `<span class="rgnote">no move yet</span>` : ""}${ask}<button data-id="${a.id}" aria-label="Remove ${esc(a.company)}">×</button></span>`;
   }).join("");
   const ends = !member.ended && member.plan !== "free" && member.plan_until ? ` Ends after ${nice(member.plan_until)}.` : "";
   $("plannote").textContent = `${PLAN_NAMES[member.plan] || "Your plan"}: ${mine.length} of ${lim} accounts used.${ends}`;
@@ -592,7 +619,10 @@ $("f-add").onsubmit = async e => {
   const {error} = await sb.from("my_accounts").insert({company});
   if (error) { say("m-add", error.code === "23505" ? "It is already on your list." : (error.message || "Could not add it."), "err"); $("b-add").disabled = false; return; }
   $("company").value = "";
-  say("m-add", !known.has(company.toLowerCase()) ? "Added. We don't track it yet: tap \"Ask us to track it\" and we will start watching it." : company !== typed ? `Added as ${company}.` : "Added.", "ok");
+  const rg = REG.get(company.toLowerCase());
+  say("m-add", !known.has(company.toLowerCase()) ? "Added. We don't track it yet: tap \"Ask us to track it\" and we will start watching it."
+    : rg ? `Added${company !== typed ? " as " + company : ""}. ${regText(rg)}: it shows here as soon as it moves.`
+    : company !== typed ? `Added as ${company}.` : "Added.", "ok");
   loadAll();
 };
 // "Ask us to track it": only the company name goes to us, not who asked
