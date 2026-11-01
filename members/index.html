@@ -75,6 +75,12 @@ label{display:block;font-weight:700;color:var(--ink);margin:0 0 6px;font-size:15
 .rgnote{color:var(--muted);font-size:11.5px;font-weight:400;text-align:right;margin-left:auto}
 .chip.rg{background:var(--soft);color:var(--ink)}
 .chip.rg .rgnote{font-size:11px;white-space:nowrap}
+.grp{font:800 11px var(--mono);letter-spacing:.14em;text-transform:uppercase;color:var(--ink);padding:16px 16px 6px;border-bottom:1px solid var(--line)}
+.grp span{color:var(--muted);font-weight:600;margin-left:6px}
+.alsow{padding:12px 16px;border-top:1px solid var(--line);font-size:14px;line-height:1.7}
+.alsow p{margin:0 0 6px;color:var(--muted)}
+.alsow button{all:unset;cursor:pointer;color:var(--ink);text-decoration:underline;text-decoration-color:var(--hair);text-underline-offset:3px}
+.alsow button:hover{text-decoration-color:var(--ink)}
 .regs{border-top:1px solid var(--hair)}
 .regs h5{font:800 11px var(--mono);letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin:0;padding:12px 16px 4px}
 .regrow{display:flex;justify-content:space-between;align-items:baseline;gap:6px 14px;flex-wrap:wrap;padding:10px 16px;border-top:1px solid var(--hair)}
@@ -232,6 +238,7 @@ body:has(#s-app.hide) footer{text-align:center}   /* signed out: footer sits cen
     <input id="q" type="search" placeholder="Find a company or city" autocomplete="off">
     <button class="ghost fxbtn" id="b-fx" type="button" aria-expanded="false">Filters: stage and city</button>
     <div class="fx" id="fx">
+      <h3 id="h-tier" class="hide">Size and pace</h3><div class="filters" id="f-tier"></div>
       <h3>Stage</h3><div class="filters" id="f-stage"></div>
       <h3>Region</h3><div class="filters" id="f-city"></div>
     </div>
@@ -314,7 +321,9 @@ const daysAgo = n => new Date(Date.now() - n * 864e5).toISOString().slice(0, 10)
 const fmt = (d, y) => new Date(d + "T00:00:00").toLocaleDateString("en-IN", y ? {day: "numeric", month: "short", year: "numeric"} : {day: "numeric", month: "short"});
 let member = null, mine = [], COS = [], known = new Set(), email = "";
 let READS = new Map();   // 29 Oct: the account read per company (paid plans; Free gets none from the database)
-let view = {stage: "", city: "", q: "", shown: 30, open: null, allIndiaState: ""};
+let view = {tier: "", stage: "", city: "", q: "", shown: 30, open: null, allIndiaState: ""};
+// 1 Nov 2026 (Sumit): four groups by size and pace (set nightly by the loader); group 4 folded but every name shown
+const TIERS = [["1", "Big companies moving fast"], ["2", "Big companies, slower"], ["3", "Smaller companies, big moves"], ["4", "Also watching"]];
 
 function say(id, text, kind) { const m = $(id); m.textContent = text || ""; m.className = "msg" + (kind ? " " + kind : ""); }
 function show(id) {
@@ -424,9 +433,11 @@ async function loadAll() {
   mine = acc || [];
   // the database returns only what this member's plan allows (their category and state, Free a week late, plus their own accounts)
   const rows = [];
+  let cols = "company, day, kind_label, headline, url, category, stage, city, state, tier";
   for (let from = 0; from < 20000; from += 1000) {
-    const {data, error} = await sb.from("moves").select("company, day, kind_label, headline, url, category, stage, city, state")
+    const {data, error} = await sb.from("moves").select(cols)
       .order("day", {ascending: false}).range(from, from + 999);
+    if (error && cols.endsWith(", tier")) { cols = cols.slice(0, -6); from -= 1000; continue; }   // before SQL 016: no groups yet
     if (error || !data) break;
     rows.push(...data);
     if (data.length < 1000) break;
@@ -434,7 +445,7 @@ async function loadAll() {
   const by = new Map();
   for (const r of rows) {
     const k = r.company.toLowerCase();
-    if (!by.has(k)) by.set(k, {name: r.company, category: r.category, stage: r.stage, city: r.city, state: r.state, latest: r.day, moves: []});
+    if (!by.has(k)) by.set(k, {name: r.company, category: r.category, stage: r.stage, city: r.city, state: r.state, tier: r.tier ? String(r.tier) : "", latest: r.day, moves: []});
     by.get(k).moves.push(r);
   }
   READS = new Map();
@@ -458,7 +469,7 @@ $("tabs").addEventListener("click", async e => {
   // Free and Individual cover one category: switching changes it (saved under the member's own row)
   const {error} = await sb.from("members").update({category: b.dataset.cat}).eq("id", (await sb.auth.getUser()).data.user.id);
   if (error) { alert("Could not switch: " + error.message); return; }
-  view = {stage: "", city: "", q: "", shown: 30, open: null, allIndiaState: view.allIndiaState};
+  view = {tier: "", stage: "", city: "", q: "", shown: 30, open: null, allIndiaState: view.allIndiaState};
   loadAll();
 });
 $("state").addEventListener("change", async e => {
@@ -521,6 +532,11 @@ function render() {
   for (const c of base.filter(c => !view.stage || c.stage === view.stage)) { const k = c.city || "Site not stated"; cityCounts[k] = (cityCounts[k] || 0) + 1; }
   const cities = Object.entries(cityCounts).sort((a, b) => b[1] - a[1]);
   const total = cities.reduce((s, x) => s + x[1], 0);
+  const hasTier = base.some(c => c.tier);
+  $("h-tier").classList.toggle("hide", !hasTier);
+  const tierCount = t => base.filter(c => (!t || c.tier === t) && (!view.stage || c.stage === view.stage) && (!view.city || (c.city || "Site not stated") === view.city)).length;
+  $("f-tier").innerHTML = hasTier ? [["", "All companies"], ...TIERS].map(([k, l]) =>
+    `<button data-tier="${k}" aria-pressed="${view.tier === k}">${esc(l)}<span>${tierCount(k)}</span></button>`).join("") : "";
   $("f-city").innerHTML = [`<button data-city="" aria-pressed="${!view.city}">All cities<span>${total}</span></button>`]
     .concat(cities.slice(0, 12).map(([k, n]) => `<button data-city="${esc(k)}" aria-pressed="${view.city === k}">${esc(k)}<span>${n}</span></button>`)).join("");
 
@@ -540,12 +556,21 @@ function render() {
     || `<p class="empty">No ${C.noun} here yet.</p>`;
 
   // rows: your accounts first (any category), then everything in view, newest move first
-  const list = base.filter(c => (!view.stage || c.stage === view.stage) && (!view.city || (c.city || "Site not stated") === view.city) && textHit(c));
-  const extra = yoursAll.filter(c => !list.includes(c) && textHit(c) && !view.stage && !view.city);
-  const sorted = [...extra, ...list].sort((a, b) => (b.yours - a.yours) || b.latest.localeCompare(a.latest));
-  $("count").textContent = `${sorted.length} compan${sorted.length === 1 ? "y" : "ies"}`;
+  const list = base.filter(c => (!view.tier || c.tier === view.tier) && (!view.stage || c.stage === view.stage) && (!view.city || (c.city || "Site not stated") === view.city) && textHit(c));
+  const extra = yoursAll.filter(c => !list.includes(c) && textHit(c) && !view.tier && !view.stage && !view.city);
+  const tn = c => Number(c.tier) || 9;
+  const all = [...extra, ...list].sort((a, b) => (b.yours - a.yours) || (tn(a) - tn(b)) || b.latest.localeCompare(a.latest));
+  // groups 1-3 as rows; 'Also watching' folded into a list of names below (unless searched, chosen, or your account)
+  const fold = hasTier && !view.tier && !q;
+  const folded = fold ? all.filter(c => c.tier === "4" && !c.yours) : [];
+  const sorted = fold ? all.filter(c => !folded.includes(c)) : all;
+  $("count").textContent = `${all.length} compan${all.length === 1 ? "y" : "ies"}`;
   const label = (c) => ((CATS[c.category] || {st: []}).st.find(s => s[0] === c.stage) || [, c.category ? "" : "Your account"])[1];
-  $("rows").innerHTML = sorted.slice(0, view.shown).map((c, i) => `
+  const heads = hasTier && !view.tier;
+  const tierSize = t => sorted.filter(c => c.tier === t && !c.yours).length;
+  $("rows").innerHTML = sorted.slice(0, view.shown).map((c, i, arr) => `
+    ${heads && !c.yours && (i === 0 || arr[i - 1].yours || arr[i - 1].tier !== c.tier) && c.tier
+      ? `<div class="grp">${esc((TIERS.find(t => t[0] === c.tier) || [, ""])[1])}<span>${tierSize(c.tier)}</span></div>` : ""}
     <div class="item${view.open === c.name ? " open" : ""}" data-name="${esc(c.name)}">
       <div class="trow">
         <div class="co"><b>${esc(c.name)}</b>${c.yours ? '<span class="yours">YOUR ACCOUNT</span>' : ""}<small>${esc(c.city || "Site not stated")}</small></div>
@@ -560,7 +585,12 @@ function render() {
         ${c.moves.slice(0, 8).map(m => `<div class="step"><span class="d">${fmt(m.day, true)}</span><span><span class="k">${esc(m.kind_label || "")}</span>${m.url ? `<a href="${esc(m.url)}" target="_blank" rel="noopener">${esc(m.headline)}</a>` : esc(m.headline)}</span></div>`).join("")}
         ${c.moves.length > 8 ? `<p class="free">${c.moves.length - 8} earlier moves not shown.</p>` : ""}
       </div>
-    </div>`).join("") || `<p class="empty">Nothing here matches. Try another stage or city${member.plan === "free" ? ", or remember the Free plan shows moves a week late" : ""}.</p>`;
+    </div>`).join("") || (folded.length ? "" : `<p class="empty">Nothing here matches. Try another stage or city${member.plan === "free" ? ", or remember the Free plan shows moves a week late" : ""}.</p>`);
+  if (folded.length && sorted.length <= view.shown) {
+    $("rows").innerHTML += `<div class="alsow"><div class="grp" style="padding:4px 0 8px;border:0">Also watching<span>${folded.length}</span></div>
+      <p>Companies with a single step so far. We keep watching them; tap a name to see its step.</p>
+      ${folded.sort((a, b) => a.name.localeCompare(b.name)).map(c => `<button data-also="${esc(c.name)}">${esc(c.name)}</button>`).join(", ")}</div>`;
+  }
   // 31 Oct (Sumit): companies that have only registered so far (no credible move yet) still answer a search, with a note
   const fq = flat(view.q);
   const regHits = fq.length >= 2 ? NAMES.filter(x => x.reg && x.flat.includes(fq) && !COS.some(c => c.name.toLowerCase() === x.name.toLowerCase())).slice(0, 6) : [];
@@ -596,6 +626,8 @@ function render() {
 
 // clicks: filters, bars, rows, chips
 document.addEventListener("click", e => {
+  const t = e.target.closest("[data-tier]"); if (t && t.closest("#f-tier")) { view.tier = view.tier === t.dataset.tier ? "" : t.dataset.tier; view.shown = 30; render(); return; }
+  const a = e.target.closest("[data-also]"); if (a) { view.tier = "4"; view.open = a.dataset.also; view.q = a.dataset.also; $("q").value = view.q; view.shown = 30; render(); return; }
   const s = e.target.closest("[data-stage]"); if (s && s.closest("#f-stage,#ladder")) { view.stage = view.stage === s.dataset.stage ? "" : s.dataset.stage; view.shown = 30; render(); return; }
   const c = e.target.closest("[data-city]"); if (c && c.closest("#f-city,#cities")) { view.city = view.city === c.dataset.city ? "" : c.dataset.city; view.shown = 30; render(); return; }
   const r = e.target.closest(".trow"); if (r) { const n = r.parentElement.dataset.name; view.open = view.open === n ? null : n; render(); return; }
