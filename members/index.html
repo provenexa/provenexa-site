@@ -127,7 +127,12 @@ h1.dh{font-size:clamp(24px,3vw,34px);line-height:1.1;letter-spacing:-.025em;marg
 .when{font:13px var(--mono);color:var(--muted)}
 .view{color:var(--acc);font-weight:700;font-size:14px}
 .detail{padding:4px 16px 16px;display:none}
-.item.open .detail{display:block}
+/* 4 Nov (Sumit): each company opens in a side panel, like the ledger page, leaving room for more detail as moves grow */
+.item.open .detail{display:block;position:fixed;top:0;right:0;bottom:0;width:min(680px,100vw);overflow-y:auto;background:var(--card);border-left:1px solid var(--line);z-index:60;padding:0 22px 28px;box-shadow:-12px 0 32px rgba(0,0,0,.18)}
+.dhead{position:sticky;top:0;background:var(--card);display:flex;justify-content:space-between;align-items:flex-start;gap:12px;padding:16px 0 10px;border-bottom:2px solid var(--line);margin-bottom:8px;z-index:1}
+.dhead b{font-size:19px;color:var(--ink);display:block}.dhead small{color:var(--muted);font-size:13px}
+#veil{position:fixed;inset:0;background:rgba(0,0,0,.28);z-index:55}
+.read .pp{font-size:14px}
 .read{border-bottom:1px solid var(--line);padding-bottom:10px;margin-bottom:4px}
 .read .rh{font-weight:800;color:var(--ink);font-size:15.5px;margin:8px 0 6px;line-height:1.4}
 .read p{margin:0 0 8px;font-size:14px;line-height:1.55}
@@ -501,6 +506,7 @@ $("tabs").addEventListener("click", async e => {
   view = {tier: "", stage: "", city: "", q: "", shown: 30, open: null, allIndiaState: view.allIndiaState};
   loadAll();
 });
+document.addEventListener("keydown", e => { if (e.key === "Escape" && view.open) { view.open = null; render(); } });
 document.addEventListener("click", e => { const f = e.target.closest("button[data-find]"); if (f) { view = Object.assign(view, {tier: "", stage: "", city: "", q: f.dataset.find, open: f.dataset.find, shown: 30}); $("q").value = view.q; render(); return; } });
 document.addEventListener("click", e => { const g = e.target.closest("button[data-go]"); if (g) { const b = $("tabs").querySelector(`button[data-cat="${g.dataset.go}"]`); if (b) b.click(); } });
 $("state").addEventListener("change", async e => {
@@ -522,6 +528,18 @@ function watching(c) {
   return c.moves.filter(m => m.day >= since).length < 2;
 }
 // 29 Oct: the standard account read (same as the client pages), above the dated steps
+// 4 Nov (Sumit): compact sources: dates dropped (each step below carries its own), each kind of source once
+function srcLine(src) {
+  const seen = new Map();
+  for (const [lab, url] of src) {
+    const full = String(lab || "").replace(/,?\s*(reported\s*)?\d{4}-\d{2}-\d{2}/g, "").replace(/,?\s*reported\s*$/i, "").trim();
+    const base = full.split(" (")[0].trim();
+    const key = base.toLowerCase() === "web check" ? full.toLowerCase() : base.toLowerCase();
+    const show = base.toLowerCase() === "web check" ? full : base;
+    if (!seen.has(key)) seen.set(key, {show, url: url || ""}); else if (url && !seen.get(key).url) seen.get(key).url = url;
+  }
+  return [...seen.values()].map(s => s.url ? `<a href="${esc(s.url)}" target="_blank" rel="noopener">${esc(s.show)}</a>` : esc(s.show)).join(" · ");
+}
 function readHtml(c) {
   const r = READS.get(c.name.toLowerCase());
   if (!r && watching(c)) return '<p class="free"><b>Watching.</b> Limited movement so far: fewer than two moves in the last 30 days. We keep watching this company and write the full read once it moves.</p>';
@@ -537,8 +555,8 @@ function readHtml(c) {
     ${mv[2] ? `<p><b>Also:</b> ${esc(mv[2])}</p>` : ""}
     ${r.w && r.w.to ? `<p class="win"><b>Window open until ${esc(r.w.to)}*</b> ${esc(r.w.why || "")}</p>` : ""}
     ${(r.ck || []).length ? `<h5>Check before you call</h5><ul>${li(r.ck)}</ul>` : ""}
-    ${(r.pp || []).length ? `<h5>Likely person</h5><p>${r.pp.map(x => x.u ? `<a href="${esc(x.u)}" target="_blank" rel="noopener">${esc(x.n)}</a>` : esc(x.n)).join(", ")} <span class="meta">(might be the relevant person; check before calling)</span></p>` : ""}
-    ${(r.src || []).length ? `<p class="meta">Sources: ${r.src.map(x => x[1] ? `<a href="${esc(x[1])}" target="_blank" rel="noopener">${esc(x[0])}</a>` : esc(x[0])).join(" · ")}</p>` : ""}
+    <h5>Likely person</h5>${(r.pp || []).length ? `<p class="pp">${r.pp.map(x => x.u ? `<a href="${esc(x.u)}" target="_blank" rel="noopener">${esc(x.n)}</a>` : esc(x.n)).join(", ")} <span class="meta">(might be the relevant person; check before calling)</span></p>` : `<p class="pp"><b>Unknown</b> <span class="meta">so far. We add a name once public sources show one.</span></p>`}
+    ${(r.src || []).length ? `<p class="meta">Sources: ${srcLine(r.src)}</p>` : ""}
     <p class="meta">${r.up ? `Read updated ${esc(r.up)}. ` : ""}${r.w && r.w.to ? "* our estimate." : ""}</p>
   </div>`;
 }
@@ -627,7 +645,8 @@ function render() {
         <div class="when">${fmt(c.latest)}</div>
         <div class="view">${view.open === c.name ? "Close" : "View"}</div>
       </div>
-      <div class="detail">
+      <div class="detail" role="dialog" aria-label="${esc(c.name)}">
+        <div class="dhead"><div><b>${esc(c.name)}</b><small>${esc([c.city || "Site not stated", label(c)].filter(Boolean).join(" · "))}</small></div><button class="ghost dclose" type="button">Close</button></div>
         ${readHtml(c)}
         <h5>What happened</h5>
         ${c.moves.slice(0, 8).map(m => `<div class="step"><span class="d">${fmt(m.day, true)}</span><span>${m.isNew ? '<span class="nw" style="margin-left:0">NEW</span> ' : ""}<span class="k">${esc(m.kind_label || "")}</span>${m.url ? `<a href="${esc(m.url)}" target="_blank" rel="noopener">${esc(m.headline)}</a>` : esc(m.headline)}</span></div>`).join("")}
@@ -666,6 +685,8 @@ function render() {
       nl.classList.remove("hide");
     } else nl.classList.add("hide");
   }
+  { let v = $("veil"); if (view.open && !v) { v = document.createElement("div"); v.id = "veil"; document.body.appendChild(v); }
+    if (v) v.classList.toggle("hide", !view.open || !document.querySelector(".item.open")); }
   $("more").classList.toggle("hide", sorted.length <= view.shown);
   $("free").classList.toggle("hide", member.plan !== "free");
   $("invite").classList.toggle("hide", mine.length >= 5);   // 29 Oct (Sumit): gently invite, never require
@@ -697,6 +718,7 @@ document.addEventListener("click", e => {
   const a = e.target.closest("[data-also]"); if (a) { view.tier = "4"; view.open = a.dataset.also; view.q = a.dataset.also; $("q").value = view.q; view.shown = 30; render(); return; }
   const s = e.target.closest("[data-stage]"); if (s && s.closest("#f-stage,#ladder")) { view.stage = view.stage === s.dataset.stage ? "" : s.dataset.stage; view.shown = 30; render(); return; }
   const c = e.target.closest("[data-city]"); if (c && c.closest("#f-city,#cities")) { view.city = view.city === c.dataset.city ? "" : c.dataset.city; view.shown = 30; render(); return; }
+  if (e.target.closest(".dclose") || e.target.id === "veil") { view.open = null; render(); return; }
   const r = e.target.closest(".trow"); if (r) { const n = r.parentElement.dataset.name; view.open = view.open === n ? null : n; render(); return; }
   const x = e.target.closest(".chip button[data-id]"); if (x) { removeAcc(x.dataset.id); return; }
   const k = e.target.closest(".chip button[data-ask]"); if (k) { askTrack(k); return; }
