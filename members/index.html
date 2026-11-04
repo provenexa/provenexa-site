@@ -136,6 +136,8 @@ h1.dh{font-size:clamp(24px,3vw,34px);line-height:1.1;letter-spacing:-.025em;marg
 .read .meta{font-size:12px;color:var(--muted)}
 .read a{color:var(--acc)}
 .invite .ghost{margin-left:8px;font-size:12.5px;padding:3px 9px}
+.nw{display:inline-block;font:800 10px var(--mono);letter-spacing:.08em;padding:1px 5px;margin:3px 0 3px 4px;border:1px solid var(--acc);color:var(--acc)}
+.newline{margin:0 0 12px;padding:9px 12px;border-left:3px solid var(--acc);background:var(--card);color:var(--ink)}
 .wt{display:inline-block;font:700 10.5px var(--mono);letter-spacing:.06em;text-transform:uppercase;color:var(--muted);border:1px dashed var(--hair);padding:2px 6px;margin-left:4px}
 .detail h5{font:800 10.5px var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--acc);margin:10px 0 6px}
 .step{display:grid;grid-template-columns:110px minmax(0,1fr);gap:12px;padding:5px 0;font-size:14px;border-top:1px solid var(--hair)}
@@ -273,6 +275,7 @@ body:has(#s-app.hide) footer{text-align:center}   /* signed out: footer sits cen
       <div class="panel"><h4 id="ladh"></h4><div class="ladder" id="ladder"></div></div>
       <div class="panel"><h4>By city</h4><div class="cities" id="cities"></div></div>
     </div>
+    <p class="newline hide" id="newline"></p>
     <div class="lh"><h2>Moving now</h2><span id="count"></span></div>
     <div class="table">
       <div class="thead"><span>Company</span><span>Latest move</span><span>Stage</span><span>When</span><span></span></div>
@@ -321,6 +324,7 @@ const esc = s => String(s ?? "").replace(/[&<>"]/g, c => ({"&": "&amp;", "<": "&
 const daysAgo = n => new Date(Date.now() - n * 864e5).toISOString().slice(0, 10);
 const fmt = (d, y) => new Date(d + "T00:00:00").toLocaleDateString("en-IN", y ? {day: "numeric", month: "short", year: "numeric"} : {day: "numeric", month: "short"});
 let member = null, mine = [], COS = [], known = new Set(), email = "";
+let PREV, SINCE = null;   // 4 Nov (Sumit): last visit before this one, and the time after which a move counts as NEW
 let READS = new Map();   // 29 Oct: the account read per company (paid plans; Free gets none from the database)
 let view = {tier: "", stage: "", city: "", q: "", shown: 30, open: null, allIndiaState: ""};
 // 1 Nov 2026 (Sumit): four groups by size and pace (set nightly by the loader); group 4 folded but every name shown
@@ -427,8 +431,12 @@ document.addEventListener("click", e => { if (!e.target.closest(".sugg-wrap")) $
 
 // ---------------------------------------------------------------- data
 async function loadAll() {
+  // 4 Nov: read the previous visit BEFORE noting this one, so 'new since your last visit' is right
+  let {data: m, error: me} = await sb.from("members").select("plan, plan_until, extra_accounts, category, state, last_seen").maybeSingle();
+  if (me) ({data: m} = await sb.from("members").select("plan, plan_until, extra_accounts, category, state").maybeSingle());
+  if (PREV === undefined) PREV = (m && m.last_seen) || null;
+  if (!touched) { touched = true; sb.rpc("touch_me").then(() => {}, () => {}); }   // note the visit (when, not what)
   await loadNames();
-  const {data: m} = await sb.from("members").select("plan, plan_until, extra_accounts, category, state").maybeSingle();
   member = Object.assign({plan: "free", plan_until: null, extra_accounts: 0, category: "gcc", state: "Maharashtra"}, m || {});
   member.ended = null;
   if (!["free", "staff"].includes(member.plan) && member.plan_until && member.plan_until < todayIST()) {
@@ -439,7 +447,7 @@ async function loadAll() {
   mine = acc || [];
   // the database returns only what this member's plan allows (their category and state, Free a week late, plus their own accounts)
   const rows = [];
-  let cols = "company, day, kind_label, headline, url, category, stage, city, state, tier";
+  let cols = "company, day, kind_label, headline, url, category, stage, city, state, loaded_at, tier";
   for (let from = 0; from < 20000; from += 1000) {
     const {data, error} = await sb.from("moves").select(cols)
       .order("day", {ascending: false}).range(from, from + 999);
@@ -458,6 +466,18 @@ async function loadAll() {
   { const {data: rd} = await sb.from("account_reads").select("company, read"); for (const r of rd || []) READS.set(r.company.toLowerCase(), r.read); }
   const mineSet = new Set(mine.map(a => a.company.toLowerCase()));
   COS = [...by.values()].map(c => Object.assign(c, {yours: mineSet.has(c.name.toLowerCase())}));
+  // 4 Nov (Sumit): NEW = caught after the last visit before today (so a second look the same day still shows today's moves).
+  // loaded_at is the night we first caught the move; on the Free plan a move only appears a week after its date.
+  const startToday = new Date(todayIST() + "T00:00:00+05:30");
+  SINCE = PREV ? new Date(Math.min(new Date(PREV).getTime(), startToday.getTime())) : null;
+  for (const c of COS) {
+    for (const mv of c.moves) {
+      let at = mv.loaded_at ? new Date(mv.loaded_at) : null;
+      if (at && member.plan === "free") { const vis = new Date(mv.day + "T00:00:00+05:30"); vis.setDate(vis.getDate() + 7); if (vis > at) at = vis; }
+      mv.isNew = !!(SINCE && at && at > SINCE);
+    }
+    c.isNew = c.moves.some(mv => mv.isNew);
+  }
   setupTop();
   render();
 }
@@ -571,7 +591,8 @@ function render() {
   const list = base.filter(c => (!view.tier || c.tier === view.tier) && (!view.stage || c.stage === view.stage) && (!view.city || (c.city || "Site not stated") === view.city) && textHit(c));
   const extra = yoursAll.filter(c => !list.includes(c) && textHit(c) && !view.tier && !view.stage && !view.city);
   const tn = c => Number(c.tier) || 9;
-  const all = [...extra, ...list].sort((a, b) => (b.yours - a.yours) || (tn(a) - tn(b)) || b.latest.localeCompare(a.latest));
+  const all = [...extra, ...list].sort((a, b) => (b.yours - a.yours)
+    || (a.yours ? ((b.isNew - a.isNew) || b.latest.localeCompare(a.latest)) : ((tn(a) - tn(b)) || b.latest.localeCompare(a.latest))));   // 4 Nov: yours newest first
   // groups 1-3 as rows; 'Also watching' folded into a list of names below (unless searched, chosen, or your account)
   const fold = hasTier && !view.tier && !q;
   const folded = fold ? all.filter(c => c.tier === "4" && !c.yours) : [];
@@ -585,7 +606,7 @@ function render() {
       ? `<div class="grp">${esc((TIERS.find(t => t[0] === c.tier) || [, ""])[1])}<span>${tierSize(c.tier)}</span></div>` : ""}
     <div class="item${view.open === c.name ? " open" : ""}" data-name="${esc(c.name)}">
       <div class="trow">
-        <div class="co"><b>${esc(c.name)}</b>${c.yours ? '<span class="yours">YOUR ACCOUNT</span>' : ""}<small>${esc(c.city || "Site not stated")}</small></div>
+        <div class="co"><b>${esc(c.name)}</b>${c.yours ? '<span class="yours">YOUR ACCOUNT</span>' : ""}${c.isNew ? '<span class="nw">NEW</span>' : ""}<small>${esc(c.city || "Site not stated")}</small></div>
         <div class="lm">${esc(c.moves[0].headline)}</div>
         <div class="stc">${label(c) ? `<span class="st">${esc(label(c))}</span>` : ""}${!READS.has(c.name.toLowerCase()) && watching(c) ? `<span class="wt">Watching</span>` : ""}</div>
         <div class="when">${fmt(c.latest)}</div>
@@ -594,7 +615,7 @@ function render() {
       <div class="detail">
         ${readHtml(c)}
         <h5>What happened</h5>
-        ${c.moves.slice(0, 8).map(m => `<div class="step"><span class="d">${fmt(m.day, true)}</span><span><span class="k">${esc(m.kind_label || "")}</span>${m.url ? `<a href="${esc(m.url)}" target="_blank" rel="noopener">${esc(m.headline)}</a>` : esc(m.headline)}</span></div>`).join("")}
+        ${c.moves.slice(0, 8).map(m => `<div class="step"><span class="d">${fmt(m.day, true)}</span><span>${m.isNew ? '<span class="nw" style="margin-left:0">NEW</span> ' : ""}<span class="k">${esc(m.kind_label || "")}</span>${m.url ? `<a href="${esc(m.url)}" target="_blank" rel="noopener">${esc(m.headline)}</a>` : esc(m.headline)}</span></div>`).join("")}
         ${c.moves.length > 8 ? `<p class="free">${c.moves.length - 8} earlier moves not shown.</p>` : ""}
       </div>
     </div>`).join("") || (folded.length ? "" : `<p class="empty">Nothing here matches. Try another stage or city${member.plan === "free" ? ", or remember the Free plan shows moves a week late" : ""}.</p>`);
@@ -618,6 +639,17 @@ function render() {
     const block = `<div class="regs"><h5>Also in our records</h5>${regHits.map(x => { const r = REG.get(x.name.toLowerCase()) || EST.get(x.name.toLowerCase());
       return `<div class="regrow"><b>${esc(x.name)}</b><span class="rgnote">${esc(noteText(x.name) + (r.place ? " · " + r.place : ""))}</span></div>`; }).join("")}</div>`;
     $("rows").innerHTML = (sorted.length ? $("rows").innerHTML : "") + block;
+  }
+  { // 4 Nov (Sumit): one line on what moved since the last visit
+    const nl = $("newline");
+    if (SINCE && mine.length) {
+      const yN = COS.filter(c => c.yours && c.isNew).length, oN = COS.filter(c => !c.yours && c.isNew).length;
+      const lastDay = new Date(PREV).toLocaleDateString("en-CA", {timeZone: "Asia/Kolkata"});
+      const when = lastDay < todayIST() ? `since your last visit on ${nice(lastDay)}` : "today";
+      nl.innerHTML = (yN ? `<b>${yN} of your accounts moved ${when}.</b>` : `No new moves on your accounts ${when}.`)
+        + (oN ? ` ${oN} other compan${oN === 1 ? "y" : "ies"} in your view moved too.` : "") + (yN || oN ? " They are marked NEW." : "");
+      nl.classList.remove("hide");
+    } else nl.classList.add("hide");
   }
   $("more").classList.toggle("hide", sorted.length <= view.shown);
   $("free").classList.toggle("hide", member.plan !== "free");
@@ -700,7 +732,6 @@ function onSession(session) {
     $("who").innerHTML = `<span class="em">${esc(session.user.email)}</span> <button class="ghost" id="b-out">Sign out</button>`;
     $("b-out").onclick = () => sb.auth.signOut();
     show("s-app"); loadAll();
-    if (!touched) { touched = true; sb.rpc("touch_me").then(() => {}, () => {}); }   // note the visit (when, not what)
   } else {
     $("who").textContent = ""; show("s-email");
   }
