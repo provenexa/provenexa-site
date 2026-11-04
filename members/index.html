@@ -156,6 +156,8 @@ h1.dh{font-size:clamp(24px,3vw,34px);line-height:1.1;letter-spacing:-.025em;marg
 .step .k{font:800 10px var(--mono);letter-spacing:.06em;text-transform:uppercase;border:1px solid var(--hair);padding:1px 5px;margin-right:6px;color:var(--ink)}
 .step a{color:var(--body);text-decoration:none}
 .step a:hover{text-decoration:underline;color:var(--acc)}
+.step .sw{color:var(--muted);font-size:12.5px;white-space:nowrap}
+.asksrc{margin-top:10px}.asksrc a{color:var(--acc)}
 .more{margin:14px 0 0}
 .empty{padding:22px 16px;color:var(--muted)}
 .free{margin:0 0 14px;font-size:13.5px;color:var(--ink);border-left:3px solid var(--acc);padding:4px 0 4px 10px}
@@ -550,7 +552,8 @@ function srcLine(src) {
     const show = base.toLowerCase() === "web check" ? full : base;
     if (!seen.has(key)) seen.set(key, {show, url: url || ""}); else if (url && !seen.get(key).url) seen.get(key).url = url;
   }
-  return [...seen.values()].map(s => s.url ? `<a href="${esc(s.url)}" target="_blank" rel="noopener">${esc(s.show)}</a>` : esc(s.show)).join(" · ");
+  // 4 Nov (Sumit): general labels only, never links to the original pages (the loader sends no links any more)
+  return [...seen.values()].map(s => esc(s.show)).join(" · ");
 }
 // 4 Nov (Sumit: a panel with only steps "looks like it has been left alone"): a standard read for every company without a
 // written one, built only from its own dated steps plus what that stage usually means. No new facts, no names.
@@ -701,8 +704,9 @@ function render() {
         <div class="dhead"><div><b>${esc(c.name)}</b><small>${esc([c.city || "Site not stated", label(c)].filter(Boolean).join(" · "))}</small></div><button class="ghost dclose" type="button">Close</button></div>
         ${readHtml(c)}
         <h5>What happened</h5>
-        ${c.moves.slice(0, 8).map(m => `<div class="step"><span class="d">${fmt(m.day, true)}</span><span>${m.isNew ? mk("M", "m", "Moved since your last visit") + " " : ""}<span class="k">${esc(m.kind_label || "")}</span>${m.url ? `<a href="${esc(m.url)}" target="_blank" rel="noopener">${esc(m.headline)}</a>` : esc(m.headline)}</span></div>`).join("")}
+        ${c.moves.slice(0, 8).map(m => `<div class="step"><span class="d">${fmt(m.day, true)}</span><span>${m.isNew ? mk("M", "m", "Moved since your last visit") + " " : ""}<span class="k">${esc(m.kind_label || "")}</span>${esc(m.headline)}${String(m.url || "").startsWith("src:") ? ` <span class="sw">· ${esc(m.url.slice(4))}</span>` : ""}</span></div>`).join("")}
         ${c.moves.length > 8 ? `<p class="free">${c.moves.length - 8} earlier moves not shown.</p>` : ""}
+        <p class="meta asksrc">Need the original source for a step? <a href="mailto:research@provenexa.com?subject=${encodeURIComponent("Source request: " + c.name)}">Ask us</a> and we will send it.</p>
       </div>
     </div>`).join("") || (folded.length ? "" : `<p class="empty">Nothing here matches. Try another stage or city${member.plan === "free" ? ", or remember the Free plan shows moves a week late" : ""}.</p>`);
   if (folded.length && sorted.length <= view.shown) {
