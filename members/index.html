@@ -551,10 +551,41 @@ function srcLine(src) {
   }
   return [...seen.values()].map(s => s.url ? `<a href="${esc(s.url)}" target="_blank" rel="noopener">${esc(s.show)}</a>` : esc(s.show)).join(" · ");
 }
+// 4 Nov (Sumit: a panel with only steps "looks like it has been left alone"): a standard read for every company without a
+// written one, built only from its own dated steps plus what that stage usually means. No new facts, no names.
+const STAGE_READ = {
+  gcc: {registered: ["Set up in India; no hiring seen yet.", "It is early: get known to the India team before hiring starts.", "RPO firms, IT recruiters, and office and facility vendors"],
+        quiet: ["Hiring in India before any public announcement.", "Roles are open now, and the first hiring partners are being picked.", "RPO firms, and IT and finance recruiters"],
+        announced: ["Has announced its India centre.", "Set-up vendors and the first hiring partners are usually chosen in the months after the news.", "RPO firms, recruiters, and office set-up vendors"],
+        opened: ["The centre is open and running.", "Batch hiring and support services follow as it fills its seats.", "RPO firms, recruiters, and facility and security vendors"],
+        growing: ["Adding people or space.", "Expansion means more hiring rounds and more seats to service.", "RPO firms, recruiters, and facility vendors"]},
+  plant: {clearance: ["Has applied for approval for a plant or an expansion.", "Hiring is likely 9-24 months away*: the time to get on the vendor list is before it closes.", "Staffing firms, apprenticeship partners, and local manpower vendors"],
+          planned: ["A plant or expansion is planned.", "Construction comes first; shop-floor vendors are picked closer to the start.", "Staffing firms and local manpower vendors"],
+          building: ["The plant is being built.", "Construction workers are needed now, and the shop-floor vendor panel is being set.", "Staffing firms, contract-labour vendors, and apprenticeship partners"],
+          started: ["Production has started.", "Shift hiring, mostly through local vendors, and apprentices.", "Staffing firms, contract-labour vendors, and apprenticeship partners"]},
+  supplier: {orders: ["Has won an order.", "Delivering it usually means more shifts and contract workers.", "Staffing firms and contract-labour vendors"],
+             capacity: ["Is adding capacity.", "New lines need workers, trainees and vendors.", "Staffing firms, apprenticeship partners, and vendors"]}};
+function quickHtml(c) {
+  const ms = c.moves || [];
+  if (!ms.length) return "";
+  const first = ms[ms.length - 1], last = ms[0];
+  const sr = (STAGE_READ[c.category] || {})[c.stage];
+  const facts = ms.length > 1
+    ? `First seen ${fmt(first.day, true)} (${esc(first.kind_label || "a step")}). Latest ${fmt(last.day, true)}: ${esc(last.headline)}. ${ms.length} dated steps so far.`
+    : `Seen ${fmt(last.day, true)}: ${esc(last.headline)}.`;
+  return `<div class="read">
+    <h5>Quick read</h5>
+    <p>${facts}</p>
+    ${sr ? `<p><b>What this stage usually means:</b> ${esc(sr[0])} ${esc(sr[1])}</p><p><b>Who can move:</b> ${esc(sr[2])}.</p>` : ""}
+    <h5>Likely person</h5><p class="pp"><b>Unknown</b> <span class="meta">so far. We add a name once public sources show one.</span></p>
+    <p class="meta">Our standard read for this stage, from the dated steps below. The full written read (why now, the window, what to check) comes once we write it.${sr && sr[1].includes("*") ? " * our estimate." : ""}</p>
+  </div>`;
+}
 function readHtml(c) {
   const r = READS.get(c.name.toLowerCase());
-  if (!r && watching(c)) return '<p class="free"><b>Watching.</b> Limited movement so far: fewer than two moves in the last 30 days. We keep watching this company and write the full read once it moves.</p>';
-  if (!r) return member.plan === "free" ? '<p class="free">The full account read (what it means, who to approach, and when) comes with the paid plans.</p>' : "";
+  if (!r && member.plan === "free") return watching(c) ? '<p class="free"><b>Watching.</b> Limited movement so far: fewer than two moves in the last 30 days. We keep watching this company.</p>' : '<p class="free">The full account read (what it means, who to approach, and when) comes with the paid plans.</p>';
+  if (!r && watching(c)) return '<p class="free"><b>Watching.</b> Limited movement so far: fewer than two moves in the last 30 days. We keep watching this company and write the full read once it moves.</p>' + quickHtml(c);
+  if (!r) return quickHtml(c);
   const mv = r.mv || [];
   const li = (a) => (a || []).filter(Boolean).map(x => `<li>${esc(x)}</li>`).join("");
   return `<div class="read">
