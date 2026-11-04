@@ -141,6 +141,10 @@ h1.dh{font-size:clamp(24px,3vw,34px);line-height:1.1;letter-spacing:-.025em;marg
 .read .meta{font-size:12px;color:var(--muted)}
 .read a{color:var(--acc)}
 .invite .ghost{margin-left:8px;font-size:12.5px;padding:3px 9px}
+/* 4 Nov (Sumit): one-letter marks in coloured boxes, with a one-line legend, to declutter the list */
+.mk{display:inline-flex;align-items:center;justify-content:center;width:20px;height:20px;font:800 11px var(--mono);margin:0 3px 3px 0;border:1px solid var(--line);color:var(--ink);background:transparent;vertical-align:middle;cursor:help}
+.mk.s{background:#b3261e;border-color:#b3261e;color:#fff}.mk.m{background:#1f5fa8;border-color:#1f5fa8;color:#fff}.mk.q{background:#f2c94c;border-color:#c9a227;color:#111}.mk.p{background:var(--acc);border-color:var(--acc);color:var(--on-acc)}.mk.g{border-color:var(--acc);color:var(--acc)}.mk.w{border:1px dashed var(--muted);color:var(--muted)}
+.legend{display:flex;flex-wrap:wrap;gap:4px 14px;font-size:12.5px;color:var(--muted);margin:0 0 8px}.legend span{white-space:nowrap}.legend .mk{cursor:default}
 .nw{display:inline-block;font:800 10px var(--mono);letter-spacing:.08em;padding:1px 5px;margin:3px 0 3px 4px;border:1px solid var(--acc);color:var(--acc)}
 .othertabs{margin:-4px 0 12px;font-size:14px;color:var(--muted)}.othertabs .gotab{padding:3px 8px;margin-left:4px;font-size:13px}
 .newline{margin:0 0 12px;padding:9px 12px;border-left:3px solid var(--acc);background:var(--card);color:var(--ink)}
@@ -284,6 +288,7 @@ body:has(#s-app.hide) footer{text-align:center}   /* signed out: footer sits cen
     <p class="newline hide" id="newline"></p>
     <p class="othertabs hide" id="othertabs"></p>
     <div class="lh"><h2>Moving now</h2><span id="count"></span></div>
+    <div class="legend" id="legend"></div>
     <div class="table">
       <div class="thead"><span>Company</span><span>Latest move</span><span>Stage</span><span>When</span><span></span></div>
       <div id="rows"></div>
@@ -307,6 +312,12 @@ const todayIST = () => new Date(Date.now() + 330 * 60000).toISOString().slice(0,
 const nice = d => new Date(d + "T00:00:00").toLocaleDateString("en-IN", {weekday: "short", day: "numeric", month: "short"});
 const STATES = ["Maharashtra", "Gujarat", "Karnataka", "Tamil Nadu", "Telangana", "Delhi NCR", "Uttar Pradesh", "Haryana",
   "Andhra Pradesh", "West Bengal", "Odisha", "Rajasthan", "Madhya Pradesh", "Kerala", "Punjab"];
+// 4 Nov (Sumit): stage marks (letter, colour class) and the status marks shared by every tab
+const MARKS = {gcc: {registered: ["R", ""], quiet: ["Q", "q"], announced: ["A", ""], opened: ["P", "p"], growing: ["G", "g"]},
+  plant: {clearance: ["A", ""], planned: ["N", ""], building: ["B", ""], started: ["P", "p"]},
+  supplier: {orders: ["O", ""], capacity: ["C", ""]}};
+const STATUS = [["S", "s", "Story: our full read is ready"], ["M", "m", "Moved since your last visit"], ["W", "w", "Watching: fewer than two moves in 30 days"]];
+const mk = (l, cls, title) => `<span class="mk ${cls}" title="${esc(title)}" aria-label="${esc(title)}">${esc(l)}</span>`;
 const CATS = {
   gcc: {h1: s => `New India centres in ${s}, before the news`, lede: "Global companies setting up teams in India (GCCs, global capability centres), from their first quiet steps. Newest moves first.",
         ladh: "Where each centre stands", noun: "centres",
@@ -632,6 +643,15 @@ function render() {
   const sorted = fold ? all.filter(c => !folded.includes(c)) : all;
   $("count").textContent = `${all.length} compan${all.length === 1 ? "y" : "ies"}`;
   const label = (c) => ((CATS[c.category] || {st: []}).st.find(s => s[0] === c.stage) || [, c.category ? "" : "Your account"])[1];
+  const marksFor = (c) => {
+    const st = (MARKS[c.category] || {})[c.stage];
+    const read = READS.has(c.name.toLowerCase());
+    return (c.isNew ? mk("M", "m", STATUS[1][2]) : "") + (read ? mk("S", "s", STATUS[0][2]) : "")
+      + (st ? mk(st[0], st[1], label(c)) : "") + (!read && watching(c) ? mk("W", "w", STATUS[2][2]) : "");
+  };
+  { const M = MARKS[member.category] || MARKS.gcc;
+    $("legend").innerHTML = [...STATUS.map(([l, cl, w]) => [l, cl, w]),
+      ...C.st.filter(([k]) => M[k]).map(([k, w]) => [M[k][0], M[k][1], w])].map(([l, cl, w]) => `<span>${mk(l, cl, w)} ${esc(w)}</span>`).join(""); }
   const heads = hasTier && !view.tier;
   const tierSize = t => sorted.filter(c => c.tier === t && !c.yours).length;
   $("rows").innerHTML = sorted.slice(0, view.shown).map((c, i, arr) => `
@@ -639,9 +659,9 @@ function render() {
       ? `<div class="grp">${esc((TIERS.find(t => t[0] === c.tier) || [, ""])[1])}<span>${tierSize(c.tier)}</span></div>` : ""}
     <div class="item${view.open === c.name ? " open" : ""}" data-name="${esc(c.name)}">
       <div class="trow">
-        <div class="co"><b>${esc(c.name)}</b>${c.yours ? '<span class="yours">YOUR ACCOUNT</span>' : ""}${c.isNew ? '<span class="nw">NEW</span>' : ""}<small>${esc(c.city || "Site not stated")}</small></div>
+        <div class="co"><b>${esc(c.name)}</b>${c.yours ? '<span class="yours">YOUR ACCOUNT</span>' : ""}<small>${esc(c.city || "Site not stated")}</small></div>
         <div class="lm">${esc(c.moves[0].headline)}</div>
-        <div class="stc">${label(c) ? `<span class="st">${esc(label(c))}</span>` : ""}${!READS.has(c.name.toLowerCase()) && watching(c) ? `<span class="wt">Watching</span>` : ""}</div>
+        <div class="stc">${marksFor(c)}</div>
         <div class="when">${fmt(c.latest)}</div>
         <div class="view">${view.open === c.name ? "Close" : "View"}</div>
       </div>
@@ -649,7 +669,7 @@ function render() {
         <div class="dhead"><div><b>${esc(c.name)}</b><small>${esc([c.city || "Site not stated", label(c)].filter(Boolean).join(" · "))}</small></div><button class="ghost dclose" type="button">Close</button></div>
         ${readHtml(c)}
         <h5>What happened</h5>
-        ${c.moves.slice(0, 8).map(m => `<div class="step"><span class="d">${fmt(m.day, true)}</span><span>${m.isNew ? '<span class="nw" style="margin-left:0">NEW</span> ' : ""}<span class="k">${esc(m.kind_label || "")}</span>${m.url ? `<a href="${esc(m.url)}" target="_blank" rel="noopener">${esc(m.headline)}</a>` : esc(m.headline)}</span></div>`).join("")}
+        ${c.moves.slice(0, 8).map(m => `<div class="step"><span class="d">${fmt(m.day, true)}</span><span>${m.isNew ? mk("M", "m", "Moved since your last visit") + " " : ""}<span class="k">${esc(m.kind_label || "")}</span>${m.url ? `<a href="${esc(m.url)}" target="_blank" rel="noopener">${esc(m.headline)}</a>` : esc(m.headline)}</span></div>`).join("")}
         ${c.moves.length > 8 ? `<p class="free">${c.moves.length - 8} earlier moves not shown.</p>` : ""}
       </div>
     </div>`).join("") || (folded.length ? "" : `<p class="empty">Nothing here matches. Try another stage or city${member.plan === "free" ? ", or remember the Free plan shows moves a week late" : ""}.</p>`);
@@ -681,7 +701,7 @@ function render() {
       const lastDay = new Date(PREV).toLocaleDateString("en-CA", {timeZone: "Asia/Kolkata"});
       const when = lastDay < todayIST() ? `since your last visit on ${nice(lastDay)}` : "today";
       nl.innerHTML = (yN ? `<b>${yN} of your accounts moved ${when}.</b>` : `No new moves on your accounts ${when}.`)
-        + (oN ? ` ${oN} other compan${oN === 1 ? "y" : "ies"} in your view moved too.` : "") + (yN || oN ? " They are marked NEW." : "");
+        + (oN ? ` ${oN} other compan${oN === 1 ? "y" : "ies"} in your view moved too.` : "") + (yN || oN ? " They carry the blue M." : "");
       nl.classList.remove("hide");
     } else nl.classList.add("hide");
   }
