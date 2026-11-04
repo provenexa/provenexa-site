@@ -79,6 +79,7 @@ label{display:block;font-weight:700;color:var(--ink);margin:0 0 6px;font-size:15
 .grp span{color:var(--muted);font-weight:600;margin-left:6px}
 .alsow{padding:12px 16px;border-top:1px solid var(--line);font-size:14px;line-height:1.7}
 .alsow p{margin:0 0 6px;color:var(--muted)}
+.estn b{font-weight:600}.estn small{color:var(--muted);font-size:12.5px}
 .alsow button{all:unset;cursor:pointer;color:var(--ink);text-decoration:underline;text-decoration-color:var(--hair);text-underline-offset:3px}
 .alsow button:hover{text-decoration-color:var(--ink)}
 .regs{border-top:1px solid var(--hair)}
@@ -370,6 +371,10 @@ let NAMES = [], namesLoaded = false;
 let REG = new Map();   // lower-case name -> {on, place}
 const MON = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
 const regText = r => `Registered${r.on ? " " + MON[+r.on.slice(5, 7) - 1] + " " + r.on.slice(0, 4) : ""} · no credible move tracked yet`;
+// 4 Nov (Sumit): foreign companies' own centres already running in India, with a clear label (no move is invented for them)
+let EST = new Map();   // lower-case name -> {name, on, place}
+const estText = r => `Established GCC · running in India${r.on ? " since " + r.on.slice(0, 4) : ""} · no new move tracked yet`;
+const noteText = n => { const k = n.toLowerCase(); return REG.has(k) ? regText(REG.get(k)) : EST.has(k) ? estText(EST.get(k)) : ""; };
 const SUFFIX = /\b(private|pvt|limited|ltd|llp|inc|plc|co|company|corporation|corp|india|services|technologies|group)\b/g;
 const flat = s => s.toLowerCase().replace(/[^a-z0-9]/g, "");
 const core = s => s.toLowerCase().replace(/&/g, " and ").replace(/[^a-z0-9 ]/g, " ").replace(SUFFIX, " ").replace(/\s+/g, "");
@@ -388,7 +393,8 @@ async function loadNames() {
   namesLoaded = true;
   known = new Set(names.map(r => r.name.toLowerCase()));
   REG = new Map(names.filter(r => r.status === "registered").map(r => [r.name.toLowerCase(), {on: r.registered_on || "", place: r.place || ""}]));
-  NAMES = names.map(r => ({name: r.name, flat: flat(r.name), core: core(r.name), reg: r.status === "registered"}));
+  EST = new Map(names.filter(r => r.status === "established").map(r => [r.name.toLowerCase(), {name: r.name, on: r.registered_on || "", place: r.place || ""}]));
+  NAMES = names.map(r => ({name: r.name, flat: flat(r.name), core: core(r.name), reg: r.status === "registered", est: r.status === "established"}));
 }
 function matches(q) {
   const f = flat(q);
@@ -409,8 +415,8 @@ function canonical(q) {
 }
 function showSugg() {
   const list = matches($("company").value);
-  $("sugg").innerHTML = list.map(n => { const r = REG.get(n.toLowerCase());
-    return `<li role="option" data-name="${esc(n)}"><span>${esc(n)}</span>${r ? `<span class="rgnote">${esc(regText(r))}</span>` : ""}</li>`; }).join("");
+  $("sugg").innerHTML = list.map(n => { const note = noteText(n);
+    return `<li role="option" data-name="${esc(n)}"><span>${esc(n)}</span>${note ? `<span class="rgnote">${esc(note)}</span>` : ""}</li>`; }).join("");
   $("sugg").classList.toggle("hide", !list.length);
 }
 $("company").addEventListener("input", showSugg);
@@ -540,9 +546,15 @@ function render() {
   $("f-city").innerHTML = [`<button data-city="" aria-pressed="${!view.city}">All cities<span>${total}</span></button>`]
     .concat(cities.slice(0, 12).map(([k, n]) => `<button data-city="${esc(k)}" aria-pressed="${view.city === k}">${esc(k)}<span>${n}</span></button>`)).join("");
 
+  // 4 Nov (Sumit): established GCCs in this view (GCC tab only; a name that has moves here is not listed twice)
+  const stv = allIndia ? view.allIndiaState : member.state;
+  const est = member.category !== "gcc" ? [] : [...EST.values()]
+    .filter(r => (!stv || r.place === stv) && !base.some(c => c.name.toLowerCase() === r.name.toLowerCase()))
+    .sort((a, b) => a.name.localeCompare(b.name));
+
   // tiles
   const movedWeek = yoursAll.filter(c => c.latest >= daysAgo(7)).length;
-  const t = [[base.length, `${C.noun} we are watching here`], ...C.tiles(base)];
+  const t = [[base.length + est.length, est.length ? `${C.noun} we are watching here: ${base.length} with moves, ${est.length} established` : `${C.noun} we are watching here`], ...C.tiles(base)];
   $("tiles").innerHTML = t.map(([n, l]) => `<div class="tile"><b>${n}</b><span>${esc(l)}</span></div>`).join("")
     + `<div class="tile hot"><b>${movedWeek} of ${mine.length}</b><span>of your accounts moved this week</span></div>`;
 
@@ -591,12 +603,20 @@ function render() {
       <p>Companies with a single step so far. We keep watching them; tap a name to see its step.</p>
       ${folded.sort((a, b) => a.name.localeCompare(b.name)).map(c => `<button data-also="${esc(c.name)}">${esc(c.name)}</button>`).join(", ")}</div>`;
   }
+  // 4 Nov (Sumit): established GCCs listed under the moving ones, with their label (no filters set, or a search that hits them)
+  const estShown = (view.stage || view.city || view.tier) ? [] : est.filter(r => !q || r.name.toLowerCase().includes(q));
+  if (estShown.length) {
+    $("rows").innerHTML += `<div class="alsow"><div class="grp" style="padding:4px 0 8px;border:0">Established GCCs we watch<span>${estShown.length}</span></div>
+      <p>Global companies' own centres already running in India. No new move tracked yet; when one moves, it joins the list above.</p>
+      ${estShown.map(r => `<span class="estn"><b>${esc(r.name)}</b>${r.on ? ` <small>since ${esc(r.on.slice(0, 4))}</small>` : ""}</span>`).join(", ")}</div>`;
+  }
   // 31 Oct (Sumit): companies that have only registered so far (no credible move yet) still answer a search, with a note
   const fq = flat(view.q);
-  const regHits = fq.length >= 2 ? NAMES.filter(x => x.reg && x.flat.includes(fq) && !COS.some(c => c.name.toLowerCase() === x.name.toLowerCase())).slice(0, 6) : [];
+  const regHits = fq.length >= 2 ? NAMES.filter(x => (x.reg || x.est) && x.flat.includes(fq) && !COS.some(c => c.name.toLowerCase() === x.name.toLowerCase())
+    && !estShown.some(r => r.name === x.name)).slice(0, 6) : [];
   if (regHits.length) {
-    const block = `<div class="regs"><h5>Also in our records</h5>${regHits.map(x => { const r = REG.get(x.name.toLowerCase());
-      return `<div class="regrow"><b>${esc(x.name)}</b><span class="rgnote">${esc(regText(r) + (r.place ? " · " + r.place : ""))}</span></div>`; }).join("")}</div>`;
+    const block = `<div class="regs"><h5>Also in our records</h5>${regHits.map(x => { const r = REG.get(x.name.toLowerCase()) || EST.get(x.name.toLowerCase());
+      return `<div class="regrow"><b>${esc(x.name)}</b><span class="rgnote">${esc(noteText(x.name) + (r.place ? " · " + r.place : ""))}</span></div>`; }).join("")}</div>`;
     $("rows").innerHTML = (sorted.length ? $("rows").innerHTML : "") + block;
   }
   $("more").classList.toggle("hide", sorted.length <= view.shown);
