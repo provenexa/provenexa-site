@@ -137,6 +137,7 @@ h1.dh{font-size:clamp(24px,3vw,34px);line-height:1.1;letter-spacing:-.025em;marg
 .read a{color:var(--acc)}
 .invite .ghost{margin-left:8px;font-size:12.5px;padding:3px 9px}
 .nw{display:inline-block;font:800 10px var(--mono);letter-spacing:.08em;padding:1px 5px;margin:3px 0 3px 4px;border:1px solid var(--acc);color:var(--acc)}
+.othertabs{margin:-4px 0 12px;font-size:14px;color:var(--muted)}.othertabs .gotab{padding:3px 8px;margin-left:4px;font-size:13px}
 .newline{margin:0 0 12px;padding:9px 12px;border-left:3px solid var(--acc);background:var(--card);color:var(--ink)}
 .wt{display:inline-block;font:700 10.5px var(--mono);letter-spacing:.06em;text-transform:uppercase;color:var(--muted);border:1px dashed var(--hair);padding:2px 6px;margin-left:4px}
 .detail h5{font:800 10.5px var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--acc);margin:10px 0 6px}
@@ -276,6 +277,7 @@ body:has(#s-app.hide) footer{text-align:center}   /* signed out: footer sits cen
       <div class="panel"><h4>By city</h4><div class="cities" id="cities"></div></div>
     </div>
     <p class="newline hide" id="newline"></p>
+    <p class="othertabs hide" id="othertabs"></p>
     <div class="lh"><h2>Moving now</h2><span id="count"></span></div>
     <div class="table">
       <div class="thead"><span>Company</span><span>Latest move</span><span>Stage</span><span>When</span><span></span></div>
@@ -322,7 +324,8 @@ const sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 const $ = id => document.getElementById(id);
 const esc = s => String(s ?? "").replace(/[&<>"]/g, c => ({"&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;"}[c]));
 const daysAgo = n => new Date(Date.now() - n * 864e5).toISOString().slice(0, 10);
-const fmt = (d, y) => new Date(d + "T00:00:00").toLocaleDateString("en-IN", y ? {day: "numeric", month: "short", year: "numeric"} : {day: "numeric", month: "short"});
+// 4 Nov: show the year when it is not this year (a "3 Dec" from 2025 read like next month)
+const fmt = (d, y) => new Date(d + "T00:00:00").toLocaleDateString("en-IN", (y || String(d).slice(0, 4) !== todayIST().slice(0, 4)) ? {day: "numeric", month: "short", year: "numeric"} : {day: "numeric", month: "short"});
 let member = null, mine = [], COS = [], known = new Set(), email = "";
 let PREV, SINCE = null;   // 4 Nov (Sumit): last visit before this one, and the time after which a move counts as NEW
 let READS = new Map();   // 29 Oct: the account read per company (paid plans; Free gets none from the database)
@@ -498,6 +501,7 @@ $("tabs").addEventListener("click", async e => {
   view = {tier: "", stage: "", city: "", q: "", shown: 30, open: null, allIndiaState: view.allIndiaState};
   loadAll();
 });
+document.addEventListener("click", e => { const g = e.target.closest("button[data-go]"); if (g) { const b = $("tabs").querySelector(`button[data-cat="${g.dataset.go}"]`); if (b) b.click(); } });
 $("state").addEventListener("change", async e => {
   if (ALL_INDIA.includes(member.plan)) { view.allIndiaState = e.target.value; view.city = ""; render(); return; }
   const {error} = await sb.from("members").update({state: e.target.value}).eq("id", (await sb.auth.getUser()).data.user.id);
@@ -558,7 +562,8 @@ function render() {
   for (const c of base.filter(c => !view.stage || c.stage === view.stage)) { const k = c.city || "Site not stated"; cityCounts[k] = (cityCounts[k] || 0) + 1; }
   const cities = Object.entries(cityCounts).sort((a, b) => b[1] - a[1]);
   const total = cities.reduce((s, x) => s + x[1], 0);
-  const hasTier = base.some(c => c.tier);
+  // 4 Nov (Sumit): the size-and-pace groups are our internal classification: kept on the Ask page, not shown to members
+  const hasTier = false;
   $("h-tier").classList.toggle("hide", !hasTier);
   const tierCount = t => base.filter(c => (!t || c.tier === t) && (!view.stage || c.stage === view.stage) && (!view.city || (c.city || "Site not stated") === view.city)).length;
   $("f-tier").innerHTML = hasTier ? [["", "All companies"], ...TIERS].map(([k, l]) =>
@@ -587,12 +592,19 @@ function render() {
     `<button data-city="${esc(k)}" aria-pressed="${view.city === k}"><span>${esc(k)}</span><span class="b" style="width:${Math.round(100 * n / maxC)}%"></span><span class="n">${n}</span></button>`).join("")
     || `<p class="empty">No ${C.noun} here yet.</p>`;
 
-  // rows: your accounts first (any category), then everything in view, newest move first
+  // rows: your accounts in THIS tab first (4 Nov, Sumit: plant accounts were crowding the GCC tab), then everything in view.
+  // Your accounts from other tabs show only when searched; a line above the list points to them.
+  const TABN = {gcc: "GCC hiring", plant: "Plant staffing", supplier: "Industrial suppliers"};
   const list = base.filter(c => (!view.tier || c.tier === view.tier) && (!view.stage || c.stage === view.stage) && (!view.city || (c.city || "Site not stated") === view.city) && textHit(c));
-  const extra = yoursAll.filter(c => !list.includes(c) && textHit(c) && !view.tier && !view.stage && !view.city);
+  const extra = yoursAll.filter(c => !list.includes(c) && textHit(c) && !view.tier && !view.stage && !view.city
+    && (view.q || !TABN[c.category] || c.category === member.category));
+  { const other = {}; for (const c of yoursAll) if (TABN[c.category] && c.category !== member.category) other[c.category] = (other[c.category] || 0) + 1;
+    const parts = Object.entries(other).map(([k, n]) => `<button class="ghost gotab" data-go="${k}">${n} under ${esc(TABN[k])}</button>`);
+    $("othertabs").innerHTML = parts.length ? `Your other accounts: ${parts.join(" ")}` : "";
+    $("othertabs").classList.toggle("hide", !parts.length); }
   const tn = c => Number(c.tier) || 9;
   const all = [...extra, ...list].sort((a, b) => (b.yours - a.yours)
-    || (a.yours ? ((b.isNew - a.isNew) || b.latest.localeCompare(a.latest)) : ((tn(a) - tn(b)) || b.latest.localeCompare(a.latest))));   // 4 Nov: yours newest first
+    || (a.yours ? ((b.isNew - a.isNew) || b.latest.localeCompare(a.latest)) : b.latest.localeCompare(a.latest)));   // 4 Nov: yours newest first; the rest newest first (no internal groups)
   // groups 1-3 as rows; 'Also watching' folded into a list of names below (unless searched, chosen, or your account)
   const fold = hasTier && !view.tier && !q;
   const folded = fold ? all.filter(c => c.tier === "4" && !c.yours) : [];
