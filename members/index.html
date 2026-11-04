@@ -211,7 +211,7 @@ body:has(#s-app.hide) footer{text-align:center}   /* signed out: footer sits cen
   <div class="tabs hide" id="tabs" role="tablist">
     <button data-cat="gcc">GCC hiring</button>
     <button data-cat="plant">Plant staffing</button>
-    <button data-cat="supplier">Industrial suppliers</button>
+    <!-- 4 Nov (Sumit): Industrial suppliers tab hidden until that data is corrected -->
   </div>
   <div class="right">
     <select id="state" class="hide" aria-label="State"></select>
@@ -457,6 +457,7 @@ async function loadAll() {
   if (!touched) { touched = true; sb.rpc("touch_me").then(() => {}, () => {}); }   // note the visit (when, not what)
   await loadNames();
   member = Object.assign({plan: "free", plan_until: null, extra_accounts: 0, category: "gcc", state: "Maharashtra"}, m || {});
+  if (member.category === "supplier") member.category = "gcc";   // 4 Nov (Sumit): suppliers tab hidden for now
   member.ended = null;
   if (!["free", "staff"].includes(member.plan) && member.plan_until && member.plan_until < todayIST()) {
     member.ended = {plan: member.plan, until: member.plan_until};
@@ -655,7 +656,7 @@ function render() {
 
   // rows: your accounts in THIS tab first (4 Nov, Sumit: plant accounts were crowding the GCC tab), then everything in view.
   // Your accounts from other tabs show only when searched; a line above the list points to them.
-  const TABN = {gcc: "GCC hiring", plant: "Plant staffing", supplier: "Industrial suppliers"};
+  const TABN = {gcc: "GCC hiring", plant: "Plant staffing"};   // 4 Nov: suppliers tab hidden; its accounts show under "outside these tabs"
   const list = base.filter(c => (!view.tier || c.tier === view.tier) && (!view.stage || c.stage === view.stage) && (!view.city || (c.city || "Site not stated") === view.city) && textHit(c));
   const extra = yoursAll.filter(c => !list.includes(c) && textHit(c) && !view.tier && !view.stage && !view.city
     && (view.q || c.category === member.category));   // accounts with moves outside the tabs: named in the line above, shown when tapped
