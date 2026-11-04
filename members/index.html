@@ -501,6 +501,7 @@ $("tabs").addEventListener("click", async e => {
   view = {tier: "", stage: "", city: "", q: "", shown: 30, open: null, allIndiaState: view.allIndiaState};
   loadAll();
 });
+document.addEventListener("click", e => { const f = e.target.closest("button[data-find]"); if (f) { view = Object.assign(view, {tier: "", stage: "", city: "", q: f.dataset.find, open: f.dataset.find, shown: 30}); $("q").value = view.q; render(); return; } });
 document.addEventListener("click", e => { const g = e.target.closest("button[data-go]"); if (g) { const b = $("tabs").querySelector(`button[data-cat="${g.dataset.go}"]`); if (b) b.click(); } });
 $("state").addEventListener("change", async e => {
   if (ALL_INDIA.includes(member.plan)) { view.allIndiaState = e.target.value; view.city = ""; render(); return; }
@@ -597,11 +598,13 @@ function render() {
   const TABN = {gcc: "GCC hiring", plant: "Plant staffing", supplier: "Industrial suppliers"};
   const list = base.filter(c => (!view.tier || c.tier === view.tier) && (!view.stage || c.stage === view.stage) && (!view.city || (c.city || "Site not stated") === view.city) && textHit(c));
   const extra = yoursAll.filter(c => !list.includes(c) && textHit(c) && !view.tier && !view.stage && !view.city
-    && (view.q || !TABN[c.category] || c.category === member.category));
+    && (view.q || c.category === member.category));   // accounts with moves outside the tabs: named in the line above, shown when tapped
   { const other = {}; for (const c of yoursAll) if (TABN[c.category] && c.category !== member.category) other[c.category] = (other[c.category] || 0) + 1;
     const parts = Object.entries(other).map(([k, n]) => `<button class="ghost gotab" data-go="${k}">${n} under ${esc(TABN[k])}</button>`);
-    $("othertabs").innerHTML = parts.length ? `Your other accounts: ${parts.join(" ")}` : "";
-    $("othertabs").classList.toggle("hide", !parts.length); }
+    const outside = yoursAll.filter(c => !TABN[c.category]).sort((a, b) => b.latest.localeCompare(a.latest));
+    const out = outside.length ? `${parts.length ? " · " : ""}Moves outside these tabs: ${outside.map(c => `<button class="ghost gotab" data-find="${esc(c.name)}">${esc(c.name)}</button>`).join(" ")}` : "";
+    $("othertabs").innerHTML = parts.length || out ? `Your other accounts: ${parts.join(" ")}${out}` : "";
+    $("othertabs").classList.toggle("hide", !(parts.length || out)); }
   const tn = c => Number(c.tier) || 9;
   const all = [...extra, ...list].sort((a, b) => (b.yours - a.yours)
     || (a.yours ? ((b.isNew - a.isNew) || b.latest.localeCompare(a.latest)) : b.latest.localeCompare(a.latest)));   // 4 Nov: yours newest first; the rest newest first (no internal groups)
