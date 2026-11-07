@@ -321,7 +321,7 @@ const MARKS = {gcc: {registered: ["R", ""], quiet: ["Q", "q"], announced: ["A", 
 const STATUS = [["S", "s", "Story: our full read is ready"], ["M", "m", "Moved since your last visit"], ["W", "w", "Watching: fewer than two moves in 30 days"]];
 const mk = (l, cls, title) => `<span class="mk ${cls}" title="${esc(title)}" aria-label="${esc(title)}">${esc(l)}</span>`;
 const CATS = {
-  gcc: {h1: s => `New India centres in ${s}, before the news`, lede: "Global companies setting up teams in India (GCCs, global capability centres), from their first quiet steps. Newest moves first.",
+  gcc: {h1: s => `New India centres in ${s}`, lede: "Global companies setting up teams in India (GCCs, global capability centres), from their first quiet steps. Newest moves first.",
         ladh: "Where each centre stands", noun: "centres",
         st: [["registered", "Set up, not hiring yet"], ["quiet", "Hiring quietly"], ["announced", "Announced"], ["opened", "Opened"], ["growing", "Growing"]],
         tiles: L => [[L.filter(x => x.stage === "quiet").length, "hiring with no announcement in our news"],
