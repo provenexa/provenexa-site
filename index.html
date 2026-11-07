@@ -173,7 +173,7 @@ footer a{color:var(--acc)}
 .themebtn{border:1px solid var(--hair);background:transparent;color:var(--body);padding:5px 10px;font:600 13px var(--sans);cursor:pointer;margin-left:8px}
 
 @media (max-width:900px){
-  .links a:not(.pill){display:none}
+  .links > a:not(.pill){display:none}
   .herogrid{grid-template-columns:1fr;padding:40px 0 36px;gap:32px}
   section{padding:56px 0}
   .steps,.appgrid,.rules,.tiles,.tiles.five{grid-template-columns:1fr}
@@ -183,6 +183,45 @@ footer a{color:var(--acc)}
   .plansmini{grid-template-columns:repeat(2,auto)}
 }
 @media (max-width:520px){.wrap{padding:0 16px}.founderhead{flex-direction:column;align-items:flex-start}}
+
+/* 7 Nov 2026: design direction (US study + Sumit): fixed bar, phone menu, a real move, recent moves, see inside, moves we follow */
+.topbar{position:sticky;top:0;z-index:50}
+.menu{display:none;position:relative}
+.menu summary{list-style:none;cursor:pointer;border:1px solid var(--line);padding:9px 14px;font-weight:700;color:var(--ink);font-size:15px}
+.menu summary::-webkit-details-marker{display:none}
+.menu .mpanel{position:absolute;right:0;top:calc(100% + 10px);background:var(--card);border:1px solid var(--line);min-width:230px;display:flex;flex-direction:column}
+.menu .mpanel a{padding:13px 16px;border-bottom:1px solid var(--hair);color:var(--ink);text-decoration:none;font-size:15px}
+.menu .mpanel a:last-child{border-bottom:0}
+.rec{border:1px solid var(--line);background:var(--card)}
+.rec .rh{display:flex;justify-content:space-between;gap:12px;padding:12px 16px;border-bottom:1px solid var(--line);font-size:12px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--acc)}
+.rec .rh span{color:var(--muted);letter-spacing:0;text-transform:none;font-weight:600;font-size:13px}
+.rec .co{padding:16px 16px 10px}.rec .co b{display:block;font-size:24px;line-height:1.15;color:var(--ink);font-weight:800}.rec .co span{font-size:14px;color:var(--muted)}
+.rec ol{list-style:none;margin:0;padding:0}
+.rec li{display:grid;grid-template-columns:92px 1fr;gap:12px;padding:11px 16px;border-top:1px solid var(--hair);font-size:15px;line-height:1.45}
+.rec li b{color:var(--ink)}
+.rec li.you{background:var(--acc-soft)}.rec li.you span{color:var(--acc);font-weight:700}
+.rec li.next span{color:var(--muted)}
+.rec .rf{display:flex;justify-content:space-between;gap:10px;padding:10px 16px;border-top:1px solid var(--line);font-size:13px;color:var(--muted)}
+.asof{font-size:12.5px;color:var(--muted);margin:10px 0 0}
+.recent{width:100%;border-collapse:collapse;background:var(--card);border:1px solid var(--line);margin-top:28px;font-size:15px}
+.recent th{text-align:left;padding:12px 16px;border-bottom:1px solid var(--line);font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);font-weight:800}
+.recent td{padding:13px 16px;border-bottom:1px solid var(--hair);vertical-align:top;color:var(--body)}
+.recent tr:last-child td{border-bottom:0}
+.recent td.d{white-space:nowrap;color:var(--muted)}.recent td.c{font-weight:700;color:var(--ink)}
+.recent td.s{font-size:12px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--acc);white-space:nowrap}
+.fine{font-size:13.5px;color:var(--muted);margin:12px 0 0}
+.inside{display:grid;grid-template-columns:1.65fr 1fr;gap:36px;margin-top:32px;align-items:start}
+.shot{border:1px solid var(--line);background:var(--card)}
+.shot .bar{padding:8px 12px;border-bottom:1px solid var(--line);font-size:12.5px;color:var(--muted)}
+.shot img{display:block;width:100%;height:auto}
+.calls{display:flex;flex-direction:column;gap:18px}
+.callx{display:grid;grid-template-columns:30px 1fr;gap:14px;font-size:15.5px;line-height:1.5}
+.callx .n{width:30px;height:30px;background:var(--acc);color:var(--on-acc);font-weight:800;display:flex;align-items:center;justify-content:center}
+.callx b{color:var(--ink)}
+@media (max-width:900px){.menu{display:block}.inside{grid-template-columns:1fr}}
+@media (max-width:520px){.brand{font-size:16px;gap:8px}.brand .bw{display:none}.top{gap:12px}.links{gap:10px}.links .pill{padding:9px 10px;font-size:14px}.menu summary{padding:8px 10px;font-size:14px}}
+@media (max-width:760px){.recent thead{display:none}.recent tr{display:block;padding:12px 14px;border-bottom:1px solid var(--hair)}.recent tr:last-child{border-bottom:0}
+  .recent td{display:block;border:0;padding:0}.recent td.d{display:inline;font-size:13px}.recent td.c{display:inline;margin-left:8px}.recent td.p{color:var(--muted);font-size:14px}.recent td.s{margin-top:4px}}
 </style>
 </head>
 <body>
@@ -191,13 +230,17 @@ footer a{color:var(--acc)}
     <div class="top">
       <a class="brand" href="#top" aria-label="Provenexa Research">
         <svg class="logo" viewBox="0 0 120 120" aria-hidden="true"><path d="M36 104 V24 H68 a26 26 0 0 1 0 52 H36" fill="none" stroke="currentColor" stroke-width="20" stroke-linecap="square" stroke-linejoin="miter"/><rect x="88" y="6" width="24" height="24" fill="var(--acc)"/></svg>
-        Provenexa Research
+        Provenexa<span class="bw"> Research</span>
       </a>
       <nav class="links">
-        <a href="#get">Next Moves</a>
+        <a href="#moves">Moves we follow</a>
+        <a href="#inside">See inside</a>
         <a href="use-cases/">Use cases</a>
         <a href="pricing/">Pricing</a>
         <a href="#founder">Founder</a>
+        <details class="menu"><summary>Menu</summary><div class="mpanel">
+          <a href="#recent">Recent moves</a><a href="#inside">See inside</a><a href="#moves">Moves we follow</a><a href="use-cases/">Use cases</a><a href="pricing/">Pricing</a><a href="#founder">Founder</a>
+        </div></details>
         <a class="pill" href="mailto:research@provenexa.com?subject=Early%20access">Get early access</a>
       </nav>
     </div>
@@ -209,27 +252,65 @@ footer a{color:var(--acc)}
       <span class="kicker">Next Moves</span>
       <h1 class="pitch"><span class="g">Pitch first.</span>Timing is everything in sales.<br>Catch company growth early.</h1>
       <p class="lead">New plants, branch roll-outs, global centres, big orders and people changes. We follow what India's companies are about to do and tell your sales team who to call, why now and what to say, often months before the news.</p>
-      <div class="btns"><a class="cta acc" href="mailto:research@provenexa.com?subject=Early%20access">Get early access</a><a class="cta ghost" href="pricing/">See pricing</a></div>
+      <div class="btns"><a class="cta acc" href="mailto:research@provenexa.com?subject=Early%20access">Get early access</a><a class="cta ghost" href="#inside">See inside</a></div>
       <div class="stats">
         <div><b>6,000+</b><span>companies across India, watched every day</span></div>
         <div><b>9 in 10</b><span>companies listed on the NSE are on our list</span></div>
-        <div><b>~2,000</b><span>made a move in the last 30 days</span></div>
+        <div><b>400+</b><span>companies made a new plant or office move in the last 30 days</span></div>
       </div>
+      <p class="asof">Counted 7 Nov 2026.</p>
     </div>
-    <div class="ladder" aria-label="How a company moves, step by step">
-      <div class="lh">Every move, step by step</div>
+    <div class="rec" aria-label="One real move from our record, step by step">
+      <div class="rh">From our record<span>one real move, step by step</span></div>
+      <div class="co"><b>Walgreens</b><span>New India centre · Chennai</span></div>
       <ol>
-        <li><b>Set up in India</b><span>months before the news</span></li>
-        <li><b>Hiring quietly</b><span>first roles appear</span></li>
-        <li class="you"><b>You call here</b><span>before your competitors</span></li>
-        <li><b>Announced</b><span>everyone knows</span></li>
-        <li><b>Opened and growing</b><span>the crowd arrives</span></li>
+        <li><b>May 2026</b><span>Sets up its India company</span></li>
+        <li class="you"><b>4 months</b><span>The window to call, before any news</span></li>
+        <li><b>Sep 2026</b><span>Centre announced with the state government: 250+ jobs in year one</span></li>
+        <li class="next"><b>Next</b><span>Office, first hires and vendors picked*</span></li>
       </ol>
+      <div class="rf"><span>Based on official sources.</span><span>* our estimate</span></div>
     </div>
   </div>
 </div></div>
 
 <main>
+
+  <section class="apps" id="recent">
+    <div class="wrap">
+      <span class="eyebrow">Recent moves</span>
+      <h2>What moved in Maharashtra, 23 to 30 October</h2>
+      <p class="sub">From our record. Free members see moves a week late. Paid members see them the same day, with the full read: what it means, your move and who to approach.</p>
+      <table class="recent">
+        <thead><tr><th>Date</th><th>Company</th><th>Place</th><th>What moved</th><th>Stage</th></tr></thead>
+        <tbody>
+          <tr><td class="d">30 Oct</td><td class="c">Midwest Energy</td><td class="p">Butibori, Nagpur</td><td class="w">Accepted industrial land for a 5,000-tonne magnet plant</td><td class="s">Land taken</td></tr>
+          <tr><td class="d">30 Oct</td><td class="c">Skoda Auto Volkswagen India</td><td class="p">Chakan, Pune</td><td class="w">A crash-test facility to be set up with ARAI (the auto testing body)</td><td class="s">Announced</td></tr>
+          <tr><td class="d">30 Oct</td><td class="c">Flomic Global Logistics</td><td class="p">Bhiwandi, Thane</td><td class="w">Expanded its warehouse with multi-tier storage</td><td class="s">Expanding</td></tr>
+          <tr><td class="d">28 Oct</td><td class="c">Mahindra &amp; Mahindra</td><td class="p">Butibori, Nagpur</td><td class="w">Took possession of 800 acres for a Rs 15,000-crore manufacturing hub</td><td class="s">Land taken</td></tr>
+          <tr><td class="d">23 Oct</td><td class="c">Jupiter Life Line Hospitals</td><td class="p">Pune</td><td class="w">Agreed to buy about 11,450 sq m of land for Rs 150 crore</td><td class="s">Land taken</td></tr>
+        </tbody>
+      </table>
+      <p class="fine">Dates are when the move was first made public. Based on official sources.</p>
+    </div>
+  </section>
+
+  <section class="story" id="inside">
+    <div class="wrap">
+      <span class="eyebrow">See inside</span>
+      <h2>What members see every morning</h2>
+      <div class="inside">
+        <div class="shot"><div class="bar">The members page today · sample companies</div><img src="assets/members-sample.png" alt="The members page: filters on the left, number tiles, and a list of companies that moved, each with its latest move and stage" loading="lazy" width="1200" height="958"></div>
+        <div class="calls">
+          <div class="callx"><span class="n">1</span><div><b>Filters on the left.</b> Stage and city, each with a count.</div></div>
+          <div class="callx"><span class="n">2</span><div><b>Moving now.</b> One line per company: what moved and when. Moves since your last visit are marked.</div></div>
+          <div class="callx"><span class="n">3</span><div><b>The read.</b> What happened, with dates. What it means, your move, why now and who to approach: the role on the free plan, the likely person's public profile on paid plans.</div></div>
+          <div class="callx"><span class="n">4</span><div><b>Your accounts.</b> Add the companies you sell to. We highlight them when they move. Only you see your list.</div></div>
+          <div><a class="cta acc" href="mailto:research@provenexa.com?subject=Early%20access">Get early access</a></div>
+        </div>
+      </div>
+    </div>
+  </section>
   <section class="story" id="engine">
     <div class="wrap">
       <span class="eyebrow">The engine</span>
@@ -269,13 +350,29 @@ footer a{color:var(--acc)}
     </div>
   </section>
 
+  <section class="story" id="moves">
+    <div class="wrap">
+      <span class="eyebrow">Moves we follow</span>
+      <h2>Each move is a selling moment</h2>
+      <p class="sub">What each step means for someone who sells to companies. * our estimate</p>
+      <div class="tiles five">
+        <div class="tile"><b>Sets up in India</b><span>A foreign company opens its India arm. The first team and the first vendors come months later.*</span></div>
+        <div class="tile"><b>Land taken</b><span>A plant has a site. Building, contractors and the plant team come next.</span></div>
+        <div class="tile"><b>Approval applied for</b><span>A new or bigger unit is on its way. An application is not an approval, and an approval is not a plant.</span></div>
+        <div class="tile"><b>Hiring quietly</b><span>First roles appear before any news. The first hiring partners are picked now.</span></div>
+        <div class="tile"><b>Being built</b><span>Construction is under way. Most shop-floor hiring comes later, through local vendors.</span></div>
+        <div class="tile"><b>Opened and growing</b><span>Everyone knows now. Late for first contracts, but expansions and backfills still come.</span></div>
+      </div>
+    </div>
+  </section>
+
   <section class="story" id="before">
     <div class="wrap">
       <span class="eyebrow">Where we fit</span>
       <h2>We come before your contact tool, not after it</h2>
       <p class="sub">Contact tools give you names, emails and phone numbers for almost anyone. They can't tell you which company is about to need you, or why this week. That is the part we do.</p>
       <div class="flow">
-        <div class="fstep"><span class="k">1 · Provenexa</span><b>Which account is moving</b><span>A new plant, office, order or hire, with dated steps and the source.</span></div>
+        <div class="fstep"><span class="k">1 · Provenexa</span><b>Which account is moving</b><span>A new plant, office, order or hire, with dated steps and the kind of source.</span></div>
         <div class="fstep"><span class="k">2 · Provenexa</span><b>Why now, and who to approach</b><span>Our read of what they will need, the role to call and, on paid plans, the likely person's public profile.</span></div>
         <div class="fstep"><span class="k">3 · Your contact tool</span><b>The email and phone number</b><span>Open the profile link in the contact tool you already use. We never sell contact details.</span></div>
       </div>
@@ -351,7 +448,7 @@ footer a{color:var(--acc)}
       <span class="eyebrow">How we work</span>
       <h2>The rules we work by</h2>
       <div class="rules">
-        <div class="rule"><span class="sq"></span><div><b>Sources and dates on every claim</b><span>You can always see where a signal came from and when.</span></div></div>
+        <div class="rule"><span class="sq"></span><div><b>Dates and the kind of source on every step</b><span>Every move shows when it happened and the kind of source behind it, such as a company filing or a news report. Ask us, and we send you the original.</span></div></div>
         <div class="rule"><span class="sq"></span><div><b>Unknown stays unknown</b><span>We do not fill gaps with guesses. Uncertainty is shown, not hidden.</span></div></div>
         <div class="rule"><span class="sq"></span><div><b>Public information only</b><span>Built on open, verifiable sources.</span></div></div>
         <div class="rule"><span class="sq"></span><div><b>Information, not advice</b><span>Our signals describe what happened. They are not investment advice.</span></div></div>
