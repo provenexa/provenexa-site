@@ -22,9 +22,12 @@ input:focus,select:focus{outline:2px solid var(--acc);outline-offset:1px}
 /* top bar */
 .topbar{background:var(--card);border-bottom:1px solid var(--line)}
 .top{max-width:1360px;margin:0 auto;padding:10px 20px;display:flex;align-items:center;gap:18px;flex-wrap:wrap}
-.brand{display:flex;align-items:center;gap:10px;font-weight:800;font-size:18px;color:var(--ink);text-decoration:none;white-space:nowrap}
+.brand{display:flex;align-items:center;gap:12px;font-weight:800;font-size:24px;letter-spacing:-.01em;color:var(--ink);text-decoration:none;white-space:nowrap;line-height:1.05}
+.brand{flex-basis:100%}
+.brand .bt{display:flex;flex-wrap:wrap;align-items:baseline;gap:4px 14px}
+.brand .by{font:700 10.5px var(--mono);letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
 .brand b{color:var(--acc)}
-.logo{width:24px;height:24px;flex:none}
+.logo{width:36px;height:36px;flex:none}
 .tabs{display:flex;gap:8px;flex-wrap:wrap}
 .tabs button{background:var(--card);color:var(--ink);border:1px solid var(--line);padding:9px 14px;font-weight:600}
 .tabs button[aria-pressed=true]{background:var(--ink);color:var(--bg)}
@@ -128,20 +131,35 @@ button.tile{font:inherit;font-weight:400;text-align:left;cursor:pointer;color:in
 .st{font:800 10.5px var(--mono);letter-spacing:.06em;text-transform:uppercase;background:var(--soft);color:var(--ink);padding:4px 7px;justify-self:start;white-space:nowrap}
 .when{font:13px var(--mono);color:var(--muted)}
 .view{color:var(--acc);font-weight:700;font-size:14px}
-.detail{padding:4px 16px 16px;display:none}
-/* 4 Nov (Sumit): each company opens in a side panel, like the ledger page, leaving room for more detail as moves grow */
-.item.open .detail{display:block;position:fixed;top:0;right:0;bottom:0;width:min(680px,100vw);overflow-y:auto;background:var(--card);border-left:1px solid var(--line);z-index:60;padding:0 22px 28px;box-shadow:-12px 0 32px rgba(0,0,0,.18)}
-.dhead{position:sticky;top:0;background:var(--card);display:flex;justify-content:space-between;align-items:flex-start;gap:12px;padding:16px 0 10px;border-bottom:2px solid var(--line);margin-bottom:8px;z-index:1}
-.dhead b{font-size:19px;color:var(--ink);display:block}.dhead small{color:var(--muted);font-size:13px}
-#veil{position:fixed;inset:0;background:rgba(0,0,0,.28);z-index:55}
-.read .pp{font-size:14px}
-.read{border-top:1px solid var(--line);padding-top:2px;margin-top:12px}   /* 12 Nov: the view comes after 'What happened' */
-.read .rh{font-weight:800;color:var(--ink);font-size:15.5px;margin:8px 0 6px;line-height:1.4}
-.read p{margin:0 0 8px;font-size:14px;line-height:1.55}
-.read ul{margin:0 0 8px;padding-left:18px;font-size:14px;line-height:1.5}
-.read .win{border-left:3px solid var(--acc);padding:2px 0 2px 10px}
-.read .meta{font-size:12px;color:var(--muted)}
-.read a{color:var(--acc)}
+/* 12 Nov 2026 DRAFT (Sumit's drawing): each company opens as its own page; the side panel of 4 Nov is gone */
+.cpage{flex:1 0 auto;width:100%;max-width:1180px;margin:0 auto;padding:18px 20px 30px}
+.cpage .back{background:transparent;color:var(--ink);border:1px solid var(--line);padding:7px 12px;font:700 13.5px var(--sans)}
+.chead{display:flex;justify-content:space-between;align-items:flex-end;gap:14px 24px;flex-wrap:wrap;border-bottom:3px solid var(--ink);padding:16px 0 14px;margin-top:6px}
+.chead h1{font-size:clamp(28px,3.4vw,38px);line-height:1.05;letter-spacing:-.03em;margin:0 0 8px;color:var(--ink);font-weight:800}
+.cmeta{font-size:15px;color:var(--body);display:flex;flex-wrap:wrap;align-items:center;gap:4px 0}
+.cmeta .sep{color:var(--hair);margin:0 12px}
+.cmeta .stw{font-size:11.5px}
+.chead .follow{margin:0}
+.ccols{display:grid;grid-template-columns:minmax(0,1.65fr) minmax(0,1fr);gap:40px;margin-top:24px;align-items:start}
+.cpage h5{font:800 11px var(--mono);letter-spacing:.14em;text-transform:uppercase;color:var(--acc);margin:0 0 10px}
+.csec{margin-bottom:28px}
+.cmain p{font-size:17px;line-height:1.6;margin:0 0 10px;max-width:38em}
+.cmain p.hl{font-size:clamp(21px,2.2vw,26px);line-height:1.25;font-weight:800;color:var(--ink);letter-spacing:-.015em;max-width:26em}
+.cmain b{color:var(--ink)}
+.cmeans{border-left:4px solid var(--acc);padding:2px 0 2px 16px}
+.cmain ul{margin:0 0 10px;padding-left:20px;font-size:16.5px;line-height:1.6;max-width:38em}
+.cmain p.small,.cbox p.small{font-size:13px;color:var(--muted)}
+.cmain a,.cbox a{color:var(--acc)}
+.cwait{background:var(--card);border:1px dashed var(--muted);padding:12px 14px;font-size:15.5px;max-width:38em}
+.askrow{display:flex;flex-wrap:wrap;align-items:center;gap:8px 12px;margin-top:12px;font-size:13px;color:var(--muted)}
+.askb{background:var(--acc);color:var(--on-acc);border:0;padding:8px 14px;font:700 14px var(--sans)}
+.askb[disabled]{opacity:.55;cursor:default}
+.cbox{background:var(--card);border:1px solid var(--line);padding:16px 18px;margin-bottom:16px}
+.cbox p{margin:0 0 6px;font-size:15px;line-height:1.5}
+.cbox .step{grid-template-columns:1fr;gap:2px;padding:8px 0}
+.cbox .step .d{color:var(--ink);font-weight:700}
+.cfoot{display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px 20px;border-top:1px solid var(--line);margin-top:10px;padding-top:12px;font-size:13px;color:var(--muted)}
+.cfoot a{color:var(--acc);font-weight:700}
 .invite .ghost{margin-left:8px;font-size:12.5px;padding:3px 9px}
 .upg .ghost{margin:4px 8px 0 0;font-size:12.5px;padding:3px 9px}
 .upg a.pay{font-weight:700;color:var(--acc);border-bottom:1px solid var(--acc);text-decoration:none}
@@ -170,7 +188,6 @@ button.tile{font:inherit;font-weight:400;text-align:left;cursor:pointer;color:in
 .othertabs{margin:-4px 0 12px;font-size:14px;color:var(--muted)}.othertabs .gotab{padding:3px 8px;margin-left:4px;font-size:13px}
 .newline{margin:0 0 12px;padding:9px 12px;border-left:3px solid var(--acc);background:var(--card);color:var(--ink)}
 .wt{display:inline-block;font:700 10.5px var(--mono);letter-spacing:.06em;text-transform:uppercase;color:var(--muted);border:1px dashed var(--hair);padding:2px 6px;margin-left:4px}
-.detail h5{font:800 10.5px var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--acc);margin:10px 0 6px}
 .step{display:grid;grid-template-columns:110px minmax(0,1fr);gap:12px;padding:5px 0;font-size:14px;border-top:1px solid var(--hair)}
 .step:first-of-type{border-top:0}
 .step .d{font:12.5px var(--mono);color:var(--muted)}
@@ -184,12 +201,12 @@ button.tile{font:inherit;font-weight:400;text-align:left;cursor:pointer;color:in
 footer{width:100%;max-width:1360px;margin:auto auto 0;padding:10px 20px 34px;font-size:12.5px;color:var(--muted)}
 footer .fco{color:var(--ink);font-weight:700;font-size:13px}
 footer .cbtn{display:inline-block;text-decoration:none;margin:6px 0 8px;color:var(--ink);border-color:var(--line);font-size:12.5px;padding:4px 10px}   /* 12 Nov (Sumit): short company line + Contact us; the full company details stay on the home page */
-body:has(#s-app.hide) footer{text-align:center}   /* signed out: footer sits centred at the bottom */
+body:has(#s-email:not(.hide)) footer,body:has(#s-code:not(.hide)) footer{text-align:center}   /* signed out: footer sits centred at the bottom */
 
 .fxbtn{display:none}
 @media (max-width:980px){
   .top{padding:8px 14px;gap:8px 10px}
-  .brand{font-size:16px}
+  .brand{font-size:20px;gap:10px}.logo{width:30px;height:30px}.brand .by{font-size:9.5px;letter-spacing:.12em}
   .right{margin-left:auto;gap:6px}
   .right .em{display:none}
   .tabs{order:3;width:100%;flex-wrap:nowrap;overflow-x:auto;gap:6px;scrollbar-width:none}
@@ -224,6 +241,14 @@ body:has(#s-app.hide) footer{text-align:center}   /* signed out: footer sits cen
   .st{font-size:9.5px;padding:3px 5px}
   .stw{font-size:9.5px;text-align:right;display:block;max-width:150px}
   .showing .sp{display:none}
+  .cpage{padding:12px 14px 24px}
+  .ccols{display:flex;flex-direction:column;align-items:stretch;gap:0;margin-top:18px}
+  .cmain,.cside{display:contents}
+  .o1{order:1}.o2{order:2}.o3{order:3}.o4{order:4}.o5{order:5}.o6{order:6}
+  .csec,.cbox{margin-bottom:20px}
+  .cmain p{font-size:16px}
+  .cmeta{display:block}.cmeta .sep{display:none}.cmeta span{display:block;margin-top:3px}
+  .cmeta .stw{text-align:left;max-width:none;font-size:11px}.cmeta .yours{display:inline-block}
   .step{grid-template-columns:1fr;gap:2px}
 }
 </style>
@@ -232,7 +257,7 @@ body:has(#s-app.hide) footer{text-align:center}   /* signed out: footer sits cen
 <header class="topbar"><div class="top">
   <a class="brand" href="https://provenexa.com/">
     <svg class="logo" viewBox="0 0 120 120" aria-hidden="true"><path d="M36 104 V24 H68 a26 26 0 0 1 0 52 H36" fill="none" stroke="currentColor" stroke-width="20" stroke-linecap="square" stroke-linejoin="miter"/><rect x="88" y="6" width="24" height="24" fill="var(--acc)"/></svg>
-    Next <b>Moves</b>
+    <span class="bt"><span>Next <b>Moves</b></span><span class="by">by Provenexa Research</span></span>
   </a>
   <div class="tabs hide" id="tabs" role="tablist">
     <button data-cat="gcc">GCC hiring</button>
@@ -325,6 +350,9 @@ body:has(#s-app.hide) footer{text-align:center}   /* signed out: footer sits cen
     <button class="ghost more hide" id="more">Show more</button>
   </main>
 </div>
+
+<!-- signed in: one company, as its own page (12 Nov 2026) -->
+<div id="s-co" class="cpage hide"></div>
 
 <footer><b class="fco">Provenexa Research Private Limited</b><br><a class="ghost cbtn" href="mailto:research@provenexa.com?subject=Members%20page" title="Write to research@provenexa.com">Contact us</a><br>Moves are dated; news dates are when it was reported. Estimates are marked with a star (*).<p class="madein" style="margin:16px 0 0;text-align:center;font-size:12.5px;opacity:.8">Rooted in Una. Made with <span style="color:var(--acc)" aria-label="love">&hearts;</span> in Mumbai <svg width="18" height="12" viewBox="0 0 18 12" role="img" aria-label="India" style="vertical-align:-1px;margin-left:2px;border:1px solid rgba(128,128,128,.45)"><rect width="18" height="4" fill="#FF9933"/><rect y="4" width="18" height="4" fill="#FFFFFF"/><rect y="8" width="18" height="4" fill="#138808"/><circle cx="9" cy="6" r="1.5" fill="none" stroke="#000080" stroke-width=".5"/></svg></p>
 </footer>
@@ -530,9 +558,11 @@ async function loadAll() {
     }
     c.isNew = c.moves.some(mv => mv.isNew);
   }
+  if (!hashRead) { hashRead = true; if (!view.open) view.open = hashCo(); }   // a link that opens one company directly
   setupTop();
   render();
 }
+let hashRead = false;
 
 function setupTop() {
   for (const b of $("tabs").querySelectorAll("button")) b.setAttribute("aria-pressed", String(b.dataset.cat === member.category));
@@ -543,15 +573,17 @@ function setupTop() {
 
 $("tabs").addEventListener("click", async e => {
   const b = e.target.closest("button[data-cat]");
-  if (!b || b.dataset.cat === member.category) return;
+  if (!b) return;
+  if (b.dataset.cat === member.category) { if (view.open) setOpen(null); return; }   // on a company page: the tab takes you back to its list
+  if (location.hash) history.replaceState(null, "", location.pathname + location.search);
   // Free and Individual cover one category: switching changes it (saved under the member's own row)
   const {error} = await sb.from("members").update({category: b.dataset.cat}).eq("id", (await sb.auth.getUser()).data.user.id);
   if (error) { alert("Could not switch: " + error.message); return; }
   view = {tier: "", stage: "", city: "", q: "", shown: 30, open: null, allIndiaState: view.allIndiaState};
   loadAll();
 });
-document.addEventListener("keydown", e => { if (e.key === "Escape" && view.open) { view.open = null; render(); } });
-document.addEventListener("click", e => { const f = e.target.closest("button[data-find]"); if (f) { view = Object.assign(view, {tier: "", stage: "", city: "", pick: "", onlyMine: false, onlyNew: false, q: f.dataset.find, open: f.dataset.find, shown: 30}); $("q").value = view.q; render(); return; } });
+document.addEventListener("keydown", e => { if (e.key === "Escape" && view.open) goBack(); });
+document.addEventListener("click", e => { const f = e.target.closest("button[data-find]"); if (f) { setOpen(f.dataset.find); return; } });
 document.addEventListener("click", e => { const g = e.target.closest("button[data-go]"); if (g) { const b = $("tabs").querySelector(`button[data-cat="${g.dataset.go}"]`); if (b) b.click(); } });
 $("state").addEventListener("change", async e => {
   if (ALL_INDIA.includes(member.plan)) { view.allIndiaState = e.target.value; view.city = ""; render(); return; }
@@ -599,22 +631,6 @@ const STAGE_READ = {
           started: ["Production has started.", "Shift hiring, mostly through local vendors, and apprentices.", "Staffing firms, contract-labour vendors, and apprenticeship partners"]},
   supplier: {orders: ["Has won an order.", "Delivering it usually means more shifts and contract workers.", "Staffing firms and contract-labour vendors"],
              capacity: ["Is adding capacity.", "New lines need workers, trainees and vendors.", "Staffing firms, apprenticeship partners, and vendors"]}};
-function quickHtml(c) {
-  const ms = c.moves || [];
-  if (!ms.length) return "";
-  const first = ms[ms.length - 1], last = ms[0];
-  const sr = (STAGE_READ[c.category] || {})[c.stage];
-  const facts = ms.length > 1
-    ? `First seen ${fmt(first.day, true)} (${esc(first.kind_label || "a step")}). Latest ${fmt(last.day, true)}: ${esc(last.headline)}. ${ms.length} dated steps so far.`
-    : `Seen ${fmt(last.day, true)}: ${esc(last.headline)}.`;
-  return `<div class="read">
-    <h5>Quick view</h5>
-    <p>${facts}</p>
-    ${sr ? `<p><b>What this stage usually means:</b> ${esc(sr[0])} ${esc(sr[1])}</p><p><b>Who can move:</b> ${esc(sr[2])}.</p>` : ""}
-    <h5>Likely person</h5><p class="pp"><b>Unknown</b> <span class="meta">so far. We add a name once public sources show one.</span></p>
-    <p class="meta">Our standard view for this stage, from the dated steps above. The full written brief (why now, the window, what to check) comes once we write it.${sr && sr[1].includes("*") ? " * our estimate." : ""}</p>
-  </div>`;
-}
 // 12 Nov 2026 DRAFT: follow a company from its own panel; the line shows how many accounts the plan has left
 function followHtml(c) {
   const lim = (LIMITS[member.plan] ?? 3) + (member.extra_accounts || 0);
@@ -632,27 +648,96 @@ async function followAcc(btn) {
   if (error && error.code !== "23505") { btn.disabled = false; btn.textContent = "+ Follow"; btn.nextElementSibling.textContent = error.message || "Could not add it. Please try again."; return; }
   loadAll();
 }
-function readHtml(c) {
-  const r = READS.get(c.name.toLowerCase());
-  if (!r && member.plan === "free") return watching(c) ? '<p class="free"><b>Watching.</b> Limited movement so far: fewer than two moves in the last 30 days. We keep watching this company.</p>' : '<p class="free">The full account brief (what it means, who to approach, and when) comes with the paid plans.</p>';
-  if (!r && watching(c)) return '<p class="free"><b>Watching.</b> Limited movement so far: fewer than two moves in the last 30 days. We keep watching this company and write the full brief once it moves.</p>' + quickHtml(c);
-  if (!r) return quickHtml(c);
-  const mv = r.mv || [];
-  const li = (a) => (a || []).filter(Boolean).map(x => `<li>${esc(x)}</li>`).join("");
-  return `<div class="read">
-    <h5>Our view</h5>
-    ${r.h ? `<p class="rh">${esc(r.h)}</p>` : ""}
-    ${r.s ? `<p>${esc(r.s)}</p>` : ""}
-    ${mv[0] ? `<h5>Your move</h5><p><b>Who can move:</b> ${esc(mv[0])}</p>` : ""}
-    ${mv[1] ? `<p><b>Why now:</b> ${esc(mv[1])}</p>` : ""}
-    ${mv[2] ? `<p><b>Also:</b> ${esc(mv[2])}</p>` : ""}
-    ${r.w && r.w.to ? `<p class="win"><b>Window open until ${esc(r.w.to)}*</b> ${esc(r.w.why || "")}</p>` : ""}
-    ${(r.ck || []).length ? `<h5>Check before you call</h5><ul>${li(r.ck)}</ul>` : ""}
-    <h5>Likely person</h5>${(r.pp || []).length ? `<p class="pp">${r.pp.map(x => x.u ? `<a href="${esc(x.u)}" target="_blank" rel="noopener">${esc(x.n)}</a>` : esc(x.n)).join(", ")} <span class="meta">(might be the relevant person; check before calling)</span></p>` : `<p class="pp"><b>Unknown</b> <span class="meta">so far. We add a name once public sources show one.</span></p>`}
-    ${(r.src || []).length ? `<p class="meta">Sources: ${srcLine(r.src)}</p>` : ""}
-    <p class="meta">${r.up ? `Brief updated ${esc(r.up)}. ` : ""}${r.w && r.w.to ? "* our estimate." : ""}</p>
-  </div>`;
+// ---------------------------------------------------------------- the company page (12 Nov 2026, from Sumit's drawing)
+const stageLabel = c => ((CATS[c.category] || {st: []}).st.find(s => s[0] === c.stage) || [, ""])[1];
+const stepHtml = m => `<div class="step"><span class="d">${fmt(m.day, true)}</span><span>${m.isNew ? '<span class="tg new">NEW</span>' : ""}<span class="k">${esc(m.kind_label || "")}</span>${esc(m.headline)}${String(m.url || "").startsWith("src:") ? ` <span class="sw">· ${esc(m.url.slice(4))}</span>` : ""}</span></div>`;
+// "Ask us for a brief": only the company name reaches us, never who asked (same promise as 'Ask us to track it').
+// The brief_requests table exists since 12 Nov 2026 (SQL 019, run by Sumit, checked from outside). Only plans that carry briefs see the button.
+const BRIEF_ASK = true;
+function briefAsks() { try { return JSON.parse(localStorage.getItem("nm-brief-asked") || "[]").filter(a => Date.now() - a.t < 30 * 864e5); } catch (e) { return []; } }
+function askBriefHtml(c) {
+  if (!BRIEF_ASK || member.plan === "free") return "";
+  const asks = briefAsks(), k = c.name.toLowerCase();
+  if (asks.some(a => a.c === k)) return `<div class="askrow"><b>Asked ✓</b><span>We are looking at this company again. If the public record supports a brief, it appears here.</span></div>`;
+  if (asks.filter(a => Date.now() - a.t < 7 * 864e5).length >= 3) return `<div class="askrow"><span>You have asked for three briefs this week. We work through those first.</span></div>`;
+  return `<div class="askrow"><button class="askb" type="button" data-askbrief="${esc(c.name)}">Ask us for a brief</button><span>We look at this company again and write what the public record supports.</span></div>`;
 }
+async function askBrief(btn) {
+  const company = btn.dataset.askbrief;
+  btn.disabled = true; btn.textContent = "Sending…";
+  const {error} = await sb.from("brief_requests").insert({company});
+  if (error) { btn.disabled = false; btn.textContent = "Ask us for a brief"; btn.nextElementSibling.textContent = "Could not send that just now. Please try again, or write to research@provenexa.com."; return; }
+  try { localStorage.setItem("nm-brief-asked", JSON.stringify([...briefAsks(), {c: company.toLowerCase(), t: Date.now()}].slice(-50))); } catch (e) {}
+  render();
+}
+function coPage(c) {
+  const r = READS.get(c.name.toLowerCase());
+  const ms = c.moves || [], first = ms[ms.length - 1], last = ms[0];
+  const sr = (STAGE_READ[c.category] || {})[c.stage];
+  const stage = stageLabel(c);
+  const li = a => (a || []).filter(Boolean).map(x => `<li>${esc(x)}</li>`).join("");
+  let quick, means, full, who, person;
+  if (r) {   // a written brief
+    const mv = r.mv || [];
+    quick = `<p class="hl">${esc(r.h || last.headline)}</p><p class="small">Latest move ${fmt(last.day, true)}. ${ms.length} dated move${ms.length === 1 ? "" : "s"} so far.</p>`;   // the story itself sits under Full brief
+    means = (mv[1] ? `<p><b>Why now:</b> ${esc(mv[1])}</p>` : "") + (r.w && r.w.to ? `<p><b>Window open until ${esc(r.w.to)}*</b> ${esc(r.w.why || "")}</p>` : "");
+    full = (r.s ? `<p>${esc(r.s)}</p>` : "") + ((r.ck || []).length ? `<p><b>Check before you call</b></p><ul>${li(r.ck)}</ul>` : "") + (mv[2] ? `<p><b>Also:</b> ${esc(mv[2])}</p>` : "")
+      + `<p class="small">${(r.src || []).length ? `Sources: ${srcLine(r.src)}. ` : ""}${r.up ? `Brief updated ${esc(r.up)}. ` : ""}${r.w && r.w.to ? "* our estimate." : ""}</p>`;
+    who = mv[0] ? `<p>${esc(mv[0])}</p>` : "";
+    person = (r.pp || []).length
+      ? `<p><b>${r.pp.map(x => x.u ? `<a href="${esc(x.u)}" target="_blank" rel="noopener">${esc(x.n)}</a>` : esc(x.n)).join(", ")}</b></p><p class="small">Might be the relevant person. Check before calling.</p>`
+      : `<p><b>Unknown so far</b></p><p class="small">We add a name once public sources show one.</p>`;
+  } else {   // no written brief: the dated facts, and what this stage usually means (no new facts, no names)
+    quick = `<p class="hl">${esc(last.headline)}</p><p>${ms.length > 1
+      ? `First seen ${fmt(first.day, true)}. Latest move ${fmt(last.day, true)}. ${ms.length} dated moves so far.`
+      : `Seen ${fmt(last.day, true)}. One dated move so far.`}</p>`;
+    means = sr ? `<p><b>At this stage:</b> ${esc(sr[0])} ${esc(sr[1])}</p>${sr[1].includes("*") ? '<p class="small">* our estimate.</p>' : ""}` : "";
+    // 12 Nov (Sumit): say the rule in the box (a full brief once a company has two or more moves in 30 days), and keep the ask button
+    const RULE = "We write a full brief once a company has two or more moves in 30 days.";
+    full = member.plan === "free"
+      ? (watching(c) ? `<div class="cwait"><b>Watching.</b> ${RULE} This one has fewer so far.</div>`
+                     : `<div class="cwait">The full account brief (what it means, who to approach, and when) comes with the paid plans.</div>`)
+      : `<div class="cwait">${watching(c) ? `<b>Watching.</b> ${RULE} This one has fewer so far.`
+                                           : `<b>Brief due.</b> ${RULE} This one has. Its brief is on the way.`}${askBriefHtml(c)}</div>`;
+    who = sr ? `<p>${esc(sr[2])}.</p>` : "";
+    person = `<p><b>Unknown so far</b></p><p class="small">We add a name once public sources show one.</p>`;
+  }
+  const steps = ms.slice(0, 5).map(stepHtml).join("")
+    + (ms.length > 5 ? `<details class="earlier"><summary>${Math.min(ms.length, 15) - 5} earlier move${Math.min(ms.length, 15) - 5 === 1 ? "" : "s"}</summary>${ms.slice(5, 15).map(stepHtml).join("")}</details>` : "")
+    + (ms.length > 15 ? `<p class="small">${ms.length - 15} older moves not shown.</p>` : "");
+  const meta = [`${c.yours ? '<span class="yours">YOUR ACCOUNT</span> ' : ""}${esc(c.city || "Site not stated")}`, stage ? `<span class="stw">${esc(stage)}</span>` : ""].filter(Boolean);
+  return `<button class="back" type="button" data-back>← Back to the list</button>
+    <div class="chead"><div><h1>${esc(c.name)}</h1><div class="cmeta">${meta.map(x => `<span>${x}</span>`).join('<span class="sep">|</span>')}</div></div>${followHtml(c)}</div>
+    <div class="ccols">
+      <div class="cmain">
+        <div class="csec o1"><h5>Quick view</h5>${quick}</div>
+        ${means ? `<div class="csec o2"><h5>What it means</h5><div class="cmeans">${means}</div></div>` : ""}
+        <div class="csec o5"><h5>Full brief</h5>${full}</div>
+      </div>
+      <div class="cside">
+        <div class="cbox o4"><h5>Dated moves</h5>${steps}</div>
+        ${who ? `<div class="cbox o3"><h5>Who can act</h5>${who}</div>` : ""}
+        <div class="cbox o6"><h5>Likely person</h5>${person}</div>
+      </div>
+    </div>
+    <div class="cfoot"><span><a href="mailto:research@provenexa.com?subject=${encodeURIComponent("Mistake: " + c.name)}">Report a mistake</a> &nbsp;·&nbsp; Need the original source for a move? <a href="mailto:research@provenexa.com?subject=${encodeURIComponent("Source request: " + c.name)}">Ask us</a></span><span>© Provenexa Research</span></div>`;
+}
+const coMissing = name => `<button class="back" type="button" data-back>← Back to the list</button>
+  <div class="chead"><div><h1>${esc(name)}</h1></div></div>
+  <p class="empty">This company is not in the view you have open. Go back to the list and try the other tab, or search for it.</p>`;
+// Opening and closing: the address carries the company (#c=Name), so the browser's Back button works and a link can open
+// one company directly. Going back returns to the same place in the list, with the filters as they were.
+let navDepth = 0;
+const hashCo = () => { const m = location.hash.match(/^#c=(.+)$/); try { return m ? decodeURIComponent(m[1]) : null; } catch (e) { return null; } };
+function setOpen(n) {
+  if (n && !view.open) view.listY = window.scrollY;
+  view.open = n || null;
+  if (n) { history.pushState(null, "", "#c=" + encodeURIComponent(n)); navDepth++; }
+  else history.replaceState(null, "", location.pathname + location.search);
+  render(); window.scrollTo(0, n ? 0 : (view.listY || 0));
+}
+function goBack() { if (navDepth > 0) { navDepth--; history.back(); } else setOpen(null); }
+window.addEventListener("popstate", () => { view.open = hashCo(); render(); window.scrollTo(0, view.open ? 0 : (view.listY || 0)); });
 
 function render() {
   const C = CATS[member.category] || CATS.gcc;
@@ -744,30 +829,18 @@ function render() {
       + `<button type="button" class="fclear" data-unset="all">Clear</button>` : "") + (togs ? `<span class="sp"></span>` + togs : "");
     $("showing").classList.toggle("hide", !chips.length && !togs);
   }
-  const stepHtml = m => `<div class="step"><span class="d">${fmt(m.day, true)}</span><span>${m.isNew ? '<span class="tg new">NEW</span>' : ""}<span class="k">${esc(m.kind_label || "")}</span>${esc(m.headline)}${String(m.url || "").startsWith("src:") ? ` <span class="sw">· ${esc(m.url.slice(4))}</span>` : ""}</span></div>`;
   const heads = hasTier && !view.tier;
   const tierSize = t => sorted.filter(c => c.tier === t && !c.yours).length;
   $("rows").innerHTML = sorted.slice(0, view.shown).map((c, i, arr) => `
     ${heads && !c.yours && (i === 0 || arr[i - 1].yours || arr[i - 1].tier !== c.tier) && c.tier
       ? `<div class="grp">${esc((TIERS.find(t => t[0] === c.tier) || [, ""])[1])}<span>${tierSize(c.tier)}</span></div>` : ""}
-    <div class="item${view.open === c.name ? " open" : ""}" data-name="${esc(c.name)}">
+    <div class="item" data-name="${esc(c.name)}">
       <div class="trow">
         <div class="co"><b>${esc(c.name)}</b>${c.yours ? '<span class="yours">YOUR ACCOUNT</span>' : ""}${READS.has(c.name.toLowerCase()) ? ' <span class="tg brf" title="Our full brief is ready">BRIEF</span>' : ""}<small>${esc(c.city || "Site not stated")}</small></div>
         <div class="lm">${c.isNew ? '<span class="tg new" title="Moved since your last visit">NEW</span>' : ""}${esc(c.moves[0].headline)}</div>
         <div class="stc">${stageWords(c)}</div>
         <div class="when">${fmt(c.latest)}</div>
-        <div class="view">${view.open === c.name ? "Close" : "View"}</div>
-      </div>
-      <div class="detail" role="dialog" aria-label="${esc(c.name)}">
-        <div class="dhead"><div><b>${esc(c.name)}</b><small>${esc([c.city || "Site not stated", label(c)].filter(Boolean).join(" · "))}</small></div><button class="ghost dclose" type="button">Close</button></div>
-        ${followHtml(c)}
-        <h5>What happened</h5>
-        ${c.moves.slice(0, 4).map(stepHtml).join("")}
-        ${c.moves.length > 4 ? `<details class="earlier"><summary>${Math.min(c.moves.length, 8) - 4} earlier step${Math.min(c.moves.length, 8) - 4 === 1 ? "" : "s"}</summary>${c.moves.slice(4, 8).map(stepHtml).join("")}</details>` : ""}
-        ${c.moves.length > 8 ? `<p class="free">${c.moves.length - 8} earlier moves not shown.</p>` : ""}
-        ${readHtml(c)}
-        <div class="dfoot"><span>Seen something wrong? <a href="mailto:research@provenexa.com?subject=${encodeURIComponent("Mistake: " + c.name)}">Report a mistake</a></span>
-          <span>Need the original source for a step? <a href="mailto:research@provenexa.com?subject=${encodeURIComponent("Source request: " + c.name)}">Ask us</a> and we will send it.</span></div>
+        <div class="view">View</div>
       </div>
     </div>`).join("") || (folded.length ? "" : `<p class="empty">Nothing here matches. Try another stage or city${member.plan === "free" ? ", or remember the Free plan shows moves a week late" : ""}.</p>`);
   if (folded.length && sorted.length <= view.shown) {
@@ -802,8 +875,11 @@ function render() {
       nl.classList.remove("hide");
     } else nl.classList.add("hide");
   }
-  { let v = $("veil"); if (view.open && !v) { v = document.createElement("div"); v.id = "veil"; document.body.appendChild(v); }
-    if (v) v.classList.toggle("hide", !view.open || !document.querySelector(".item.open")); }
+  { // 12 Nov: one company as its own page, in place of the list
+    const oc = view.open ? COS.find(x => x.name === view.open) : null;
+    $("s-app").classList.toggle("hide", !!view.open); $("s-co").classList.toggle("hide", !view.open);
+    $("s-co").innerHTML = view.open ? (oc ? coPage(oc) : coMissing(view.open)) : "";
+  }
   $("more").classList.toggle("hide", sorted.length <= view.shown);
   $("free").classList.toggle("hide", member.plan !== "free");
   $("upg").classList.toggle("hide", !PAY_OPEN || ["individual", "plus", "team", "staff"].includes(member.plan));
@@ -845,11 +921,12 @@ document.addEventListener("click", e => {
   const fo = e.target.closest("[data-follow]"); if (fo) { if (!fo.disabled) followAcc(fo); return; }
   const uf = e.target.closest("[data-unfollow]"); if (uf) { removeAcc(uf.dataset.unfollow); return; }
   const t = e.target.closest("[data-tier]"); if (t && t.closest("#f-tier")) { view.tier = view.tier === t.dataset.tier ? "" : t.dataset.tier; view.shown = 30; render(); return; }
-  const a = e.target.closest("[data-also]"); if (a) { view.tier = "4"; view.open = a.dataset.also; view.q = a.dataset.also; $("q").value = view.q; view.shown = 30; render(); return; }
+  const a = e.target.closest("[data-also]"); if (a) { setOpen(a.dataset.also); return; }
   const s = e.target.closest("[data-stage]"); if (s && s.closest("#f-stage,#ladder")) { view.stage = view.stage === s.dataset.stage ? "" : s.dataset.stage; view.shown = 30; render(); return; }
   const c = e.target.closest("[data-city]"); if (c && c.closest("#f-city,#cities")) { view.city = view.city === c.dataset.city ? "" : c.dataset.city; view.shown = 30; render(); return; }
-  if (e.target.closest(".dclose") || e.target.id === "veil") { view.open = null; render(); return; }
-  const r = e.target.closest(".trow"); if (r) { const n = r.parentElement.dataset.name; view.open = view.open === n ? null : n; render(); return; }
+  if (e.target.closest("[data-back]")) { goBack(); return; }
+  const ab = e.target.closest("[data-askbrief]"); if (ab) { if (!ab.disabled) askBrief(ab); return; }
+  const r = e.target.closest(".trow"); if (r) { setOpen(r.parentElement.dataset.name); return; }
   const x = e.target.closest(".chip button[data-id]"); if (x) { removeAcc(x.dataset.id); return; }
   const k = e.target.closest(".chip button[data-ask]"); if (k) { askTrack(k); return; }
 });
@@ -939,7 +1016,7 @@ function onSession(session) {
     $("b-out").onclick = () => sb.auth.signOut();
     show("s-app"); loadAll().then(() => { if (!upgStarted) { upgStarted = true; upgCheck(); } });
   } else {
-    $("who").textContent = ""; show("s-email");
+    $("who").textContent = ""; $("s-co").classList.add("hide"); show("s-email");
   }
 }
 sb.auth.onAuthStateChange((_e, session) => onSession(session));
