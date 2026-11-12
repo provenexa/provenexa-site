@@ -182,6 +182,8 @@ button.tile{font:inherit;font-weight:400;text-align:left;cursor:pointer;color:in
 .empty{padding:22px 16px;color:var(--muted)}
 .free{margin:0 0 14px;font-size:13.5px;color:var(--ink);border-left:3px solid var(--acc);padding:4px 0 4px 10px}
 footer{width:100%;max-width:1360px;margin:auto auto 0;padding:10px 20px 34px;font-size:12.5px;color:var(--muted)}
+footer .fco{color:var(--ink);font-weight:700;font-size:13px}
+footer .cbtn{display:inline-block;text-decoration:none;margin:6px 0 8px;color:var(--ink);border-color:var(--line);font-size:12.5px;padding:4px 10px}   /* 12 Nov (Sumit): short company line + Contact us; the full company details stay on the home page */
 body:has(#s-app.hide) footer{text-align:center}   /* signed out: footer sits centred at the bottom */
 
 .fxbtn{display:none}
@@ -324,7 +326,7 @@ body:has(#s-app.hide) footer{text-align:center}   /* signed out: footer sits cen
   </main>
 </div>
 
-<footer>Provenexa Research Private Limited · CIN U62099HP2026PTC013171 · Registered office: VPO Saloh, Haroli, Una, Himachal Pradesh 174303 &middot; Phone <a href="tel:+918169603074" style="white-space:nowrap">+91 8169 603 074</a> &middot; <a href="mailto:research@provenexa.com">research@provenexa.com</a><br>Moves are dated; news dates are when it was reported. Estimates are marked with a star (*).<p class="madein" style="margin:16px 0 0;text-align:center;font-size:12.5px;opacity:.8">Rooted in Una. Made with <span style="color:var(--acc)" aria-label="love">&hearts;</span> in Mumbai <svg width="18" height="12" viewBox="0 0 18 12" role="img" aria-label="India" style="vertical-align:-1px;margin-left:2px;border:1px solid rgba(128,128,128,.45)"><rect width="18" height="4" fill="#FF9933"/><rect y="4" width="18" height="4" fill="#FFFFFF"/><rect y="8" width="18" height="4" fill="#138808"/><circle cx="9" cy="6" r="1.5" fill="none" stroke="#000080" stroke-width=".5"/></svg></p>
+<footer><b class="fco">Provenexa Research Private Limited</b><br><a class="ghost cbtn" href="mailto:research@provenexa.com?subject=Members%20page" title="Write to research@provenexa.com">Contact us</a><br>Moves are dated; news dates are when it was reported. Estimates are marked with a star (*).<p class="madein" style="margin:16px 0 0;text-align:center;font-size:12.5px;opacity:.8">Rooted in Una. Made with <span style="color:var(--acc)" aria-label="love">&hearts;</span> in Mumbai <svg width="18" height="12" viewBox="0 0 18 12" role="img" aria-label="India" style="vertical-align:-1px;margin-left:2px;border:1px solid rgba(128,128,128,.45)"><rect width="18" height="4" fill="#FF9933"/><rect y="4" width="18" height="4" fill="#FFFFFF"/><rect y="8" width="18" height="4" fill="#138808"/><circle cx="9" cy="6" r="1.5" fill="none" stroke="#000080" stroke-width=".5"/></svg></p>
 </footer>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
