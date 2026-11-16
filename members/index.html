@@ -481,6 +481,8 @@ $("f-email").onsubmit = async e => {
   const {error} = await sb.auth.signInWithOtp({email, options: {shouldCreateUser: true, captchaToken}});
   try { if (tsId !== null) turnstile.reset(tsId); } catch (e) {}   // a token works once
   $("b-email").disabled = false;
+  if (error && /only request this after|rate limit/i.test(error.message)) { say("m-email", "We just sent you a code. Check your email, or wait a minute and ask again.", "err"); return; }   // 16 Nov: Supabase's one-code-a-minute rule, in plain words
+  if (error && /captcha/i.test(error.message)) { say("m-email", "The robot check did not pass. Tick the box above if it shows, or refresh the page and try again.", "err"); return; }
   if (error) { say("m-email", "We could not send the code: " + error.message, "err"); return; }
   say("m-email", ""); $("sent-to").textContent = email; show("s-code"); $("code").focus();
 };
