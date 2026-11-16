@@ -10,6 +10,39 @@
   --sans:Inter,"Segoe UI",system-ui,-apple-system,Roboto,Helvetica,Arial,sans-serif;--mono:ui-monospace,"Cascadia Mono",Consolas,monospace}
 @media (prefers-color-scheme:dark){:root:not([data-theme=light]){--bg:#0e0f0e;--card:#171816;--ink:#f1f0ec;--body:#d6d4cd;--muted:#9b998f;--hair:#34352f;--line:#5a5b54;--acc:#5fb58d;--acc-soft:#18291f;--on-acc:#0e0f0e;--warn:#e39a6b;--bar:#4a4b45;--soft:#1f201d}}
 :root[data-theme=dark]{--bg:#0e0f0e;--card:#171816;--ink:#f1f0ec;--body:#d6d4cd;--muted:#9b998f;--hair:#34352f;--line:#5a5b54;--acc:#5fb58d;--acc-soft:#18291f;--on-acc:#0e0f0e;--warn:#e39a6b;--bar:#4a4b45;--soft:#1f201d}
+/* 14 Nov 2026 (Sumit: "It's crowded... Yes, build it"): calmer list page. One summary line instead of the tiles and charts;
+   Your accounts first, then Worth a look, then Moving now (5 rows, then more). The company page is unchanged. */
+.strip{display:flex;flex-wrap:wrap;align-items:baseline;gap:4px 18px;margin:4px 0 4px;padding:9px 0;border-top:2px solid var(--line);border-bottom:1px solid var(--hair);font-size:14px;color:var(--body)}
+.strip b{font-weight:800;color:var(--ink)}
+.strip .g{color:var(--acc);font-weight:800}
+.strip button{all:unset;cursor:pointer;color:var(--body)}
+.strip button:hover{text-decoration:underline;text-underline-offset:3px}
+.strip button[aria-pressed=true]{color:var(--ink);text-decoration:underline;text-decoration-thickness:2px;text-underline-offset:3px}
+.sec{margin-top:24px}
+.sh{display:flex;align-items:baseline;justify-content:space-between;gap:12px;margin:0 0 8px}
+.sh h2{margin:0;font-size:18px;color:var(--ink);letter-spacing:-.01em}
+.sh .n{font-size:13px;color:var(--muted);text-align:right}
+.item.you{box-shadow:inset 5px 0 0 var(--acc)}
+.secnote{margin:8px 0 0;font-size:13.5px;color:var(--muted)}
+.secnote .gotab{padding:3px 8px;margin-left:4px;font-size:13px}
+.wal{background:var(--card);border:2px solid var(--acc)}
+.wal .it{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:6px 12px;align-items:center;padding:11px 14px;border-bottom:1px solid var(--hair)}
+.wal .wn{all:unset;cursor:pointer;font-size:14.5px;font-weight:800;color:var(--ink)}
+.wal .wn:hover,.wal .wn:focus-visible{text-decoration:underline;text-underline-offset:3px}
+.wal .it small{font-size:12.5px;color:var(--muted)}
+.wal .it p{margin:2px 0 0;font-size:13.5px;color:var(--body)}
+.wal .it .wb{display:flex;flex-direction:column;align-items:flex-end;gap:2px}
+.wal .watch{border:2px solid var(--acc);color:var(--acc);background:var(--card);font:inherit;font-weight:800;font-size:13px;padding:5px 10px;cursor:pointer;white-space:nowrap}
+.wal .watch[disabled]{opacity:.45;cursor:default}
+.wal .wmsg{font-size:11.5px;color:var(--warn);max-width:180px;text-align:right}
+.wal .ft{padding:9px 14px;background:var(--acc-soft);font-size:13px;color:var(--ink)}
+.morel{display:block;width:100%;text-align:left;padding:10px 16px;border:0;border-top:1px solid var(--hair);background:none;font:inherit;font-size:13.5px;font-weight:700;color:var(--ink);cursor:pointer}
+.morel:hover{background:var(--soft)}
+details.estd{margin-top:18px;font-size:13.5px;color:var(--muted);line-height:1.7}
+details.estd summary{cursor:pointer;font-weight:700;color:var(--ink)}
+details.estd p{margin:6px 0}
+@media (min-width:981px){.strip .rep{display:none}}
+@media (max-width:980px){.wal .it{padding:10px 12px}.sh h2{font-size:17px}.strip{font-size:13.5px;gap:2px 14px}}
 *{box-sizing:border-box}
 html{-webkit-text-size-adjust:100%}
 body{margin:0;background:var(--bg);color:var(--body);font-family:var(--sans);line-height:1.5;-webkit-font-smoothing:antialiased;min-height:100vh;display:flex;flex-direction:column}
@@ -244,7 +277,7 @@ body:has(#s-email:not(.hide)) footer,body:has(#s-code:not(.hide)) footer{text-al
   .cpage{padding:12px 14px 24px}
   .ccols{display:flex;flex-direction:column;align-items:stretch;gap:0;margin-top:18px}
   .cmain,.cside{display:contents}
-  .o1{order:1}.o2{order:2}.o3{order:3}.o4{order:4}.o5{order:5}.o6{order:6}
+  .o1{order:1}.o2{order:2}.o3{order:3}.o4{order:4}.o5{order:5}.o6{order:6}.o7{order:7}
   .csec,.cbox{margin-bottom:20px}
   .cmain p{font-size:16px}
   .cmeta{display:block}.cmeta .sep{display:none}.cmeta span{display:block;margin-top:3px}
@@ -309,7 +342,7 @@ body:has(#s-email:not(.hide)) footer,body:has(#s-code:not(.hide)) footer{text-al
     <button class="ghost fxbtn" id="b-mine" type="button" aria-expanded="false">My accounts</button>
     <div class="mine" id="mine">
       <b>My accounts</b>
-      <p>Add the companies you sell to. We highlight them when they move. Only you can see your list.</p>
+      <p id="mine-p">Add the companies you sell to. We highlight them when they move. Only you can see your list.</p>
       <form id="f-add">
         <div class="row">
           <div class="sugg-wrap">
@@ -322,7 +355,7 @@ body:has(#s-email:not(.hide)) footer,body:has(#s-code:not(.hide)) footer{text-al
       </form>
       <div class="chips" id="chips"></div>
       <div class="plannote" id="plannote"></div>
-      <p class="asknote">Can't find a company? Add it anyway and tap "Ask us to track it". We will start watching it for you. We see only the company name, never your list.</p>
+      <p class="asknote" id="asknote">Can't find a company? Add it anyway and tap "Ask us to track it". We will start watching it for you. We see only the company name, never your list.</p>
     </div>
   </aside>
 
@@ -333,21 +366,25 @@ body:has(#s-email:not(.hide)) footer,body:has(#s-code:not(.hide)) footer{text-al
     <div class="free upg hide" id="upg"><b>Get every move the same day.</b> Pick a plan:
       <span id="upg-plans"><button class="ghost" type="button" data-upg="individual">Individual · Rs 999 a month</button><button class="ghost" type="button" data-upg="plus">Plus · Rs 1,999 a month</button><button class="ghost" type="button" data-upg="team">Team · Rs 4,999 a month</button></span>
       <span id="upg-msg"></span></div>
-    <p class="free invite hide" id="invite"><b>Tell us which accounts you want to follow.</b> Add them under My accounts and we watch them for you: every move, and the full brief when they move. If one is not in our data yet, tap "Ask us to track it". Only you can see your list. <button class="ghost" id="b-invite" type="button">Add accounts</button></p>
-    <div class="tiles" id="tiles"></div>
-    <div class="panels">
-      <div class="panel"><h4 id="ladh"></h4><div class="ladder" id="ladder"></div></div>
-      <div class="panel"><h4>By city</h4><div class="cities" id="cities"></div></div>
-    </div>
-    <p class="newline hide" id="newline"></p>
-    <p class="othertabs hide" id="othertabs"></p>
-    <div class="lh"><h2>Moving now</h2><span id="count"></span></div>
+    <div class="strip" id="strip"></div>
+    <section class="sec hide" id="sec-yours">
+      <div class="sh"><h2>Your accounts</h2><span class="n" id="yours-n"></span></div>
+      <div class="table" id="yours-rows"></div>
+      <p class="secnote hide" id="othertabs"></p>
+    </section>
+    <section class="sec hide" id="sec-wal">
+      <div class="sh"><h2>Worth a look</h2><span class="n">moving in your lane, not on your list</span></div>
+      <div class="wal" id="wal"></div>
+    </section>
+    <section class="sec">
+    <div class="sh"><h2>Moving now</h2><span class="n" id="count"></span></div>
     <div class="showing hide" id="showing"></div>
     <div class="table">
-      <div class="thead"><span>Company</span><span>Latest move</span><span>Stage</span><span>When</span><span></span></div>
       <div id="rows"></div>
+      <button class="morel hide" id="more" type="button">Show more</button>
     </div>
-    <button class="ghost more hide" id="more">Show more</button>
+    <div id="estbox"></div>
+    </section>
   </main>
 </div>
 
@@ -357,6 +394,7 @@ body:has(#s-email:not(.hide)) footer,body:has(#s-code:not(.hide)) footer{text-al
 <footer><b class="fco">Provenexa Research Private Limited</b><br><a class="ghost cbtn" href="mailto:research@provenexa.com?subject=Members%20page" title="Write to research@provenexa.com">Contact us</a><br>Moves are dated; news dates are when it was reported. Estimates are marked with a star (*).<p class="madein" style="margin:16px 0 0;text-align:center;font-size:12.5px;opacity:.8">Rooted in Una. Made with <span style="color:var(--acc)" aria-label="love">&hearts;</span> in Mumbai <svg width="18" height="12" viewBox="0 0 18 12" role="img" aria-label="India" style="vertical-align:-1px;margin-left:2px;border:1px solid rgba(128,128,128,.45)"><rect width="18" height="4" fill="#FF9933"/><rect y="4" width="18" height="4" fill="#FFFFFF"/><rect y="8" width="18" height="4" fill="#138808"/><circle cx="9" cy="6" r="1.5" fill="none" stroke="#000080" stroke-width=".5"/></svg></p>
 </footer>
 
+<script src="/assets/ref.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
 <script>
 // Public values only (they are meant to be in the page; row-level security protects the data).
@@ -379,19 +417,19 @@ const PICK = {openg: c => ["opened", "growing"].includes(c.stage),
 const PICKL = {openg: "Opened their centre", started30: "Started in the last 30 days", orders30: "Won an order in the last 30 days", mineweek: "My accounts that moved this week"};
 const CATS = {
   gcc: {h1: s => `New India centres in ${s}`, lede: "Global companies setting up teams in India (GCCs, global capability centres), from their first quiet steps. Newest moves first.",
-        ladh: "Where each centre stands", noun: "centres",
+        ladh: "Where each centre stands", noun: "centres", estn: "established centre",
         st: [["registered", "Set up, not hiring yet"], ["quiet", "Hiring quietly"], ["announced", "Announced"], ["opened", "Opened"], ["growing", "Growing"]],
-        tiles: L => [[L.filter(x => x.stage === "quiet").length, "hiring with no announcement in our news", "stage:quiet"],
-                     [L.filter(PICK.openg).length, "opened their centre", "pick:openg"]]},
+        tiles: L => [[L.filter(x => x.stage === "quiet").length, "hiring quietly", "stage:quiet"],
+                     [L.filter(PICK.openg).length, "opened", "pick:openg"]]},
   plant: {h1: s => `Plants in ${s}, from approval to start`, lede: "New and growing plants, and the contract workers and apprentices they are likely to need. Newest moves first.",
           ladh: "Where each plant stands", noun: "plants",
           st: [["clearance", "Applied for approval"], ["planned", "Planned"], ["building", "Being built"], ["started", "Started"]],
-          tiles: L => [[L.filter(PICK.started30).length, "started in the last 30 days: hiring for shifts now", "pick:started30"],
-                       [L.filter(x => x.stage === "clearance").length, "applied for approval: hiring 9-24 months away*", "stage:clearance"]]},
+          tiles: L => [[L.filter(PICK.started30).length, "started in 30 days", "pick:started30"],
+                       [L.filter(x => x.stage === "clearance").length, "applied for approval", "stage:clearance"]]},
   supplier: {h1: s => `Industrial suppliers in ${s}, winning work`, lede: "Suppliers winning orders and adding capacity: more shifts, contract workers and vendors follow. Newest moves first.",
              ladh: "Where each supplier stands", noun: "suppliers",
              st: [["orders", "Won an order"], ["capacity", "Adding capacity"]],
-             tiles: L => [[L.filter(PICK.orders30).length, "won an order in the last 30 days", "pick:orders30"],
+             tiles: L => [[L.filter(PICK.orders30).length, "won an order in 30 days", "pick:orders30"],
                           [L.filter(x => x.stage === "capacity").length, "adding capacity", "stage:capacity"]]}
 };
 
@@ -515,6 +553,7 @@ async function loadAll() {
   if (me) ({data: m} = await sb.from("members").select("plan, plan_until, extra_accounts, category, state").maybeSingle());
   if (PREV === undefined) PREV = (m && m.last_seen) || null;
   if (!touched) { touched = true; sb.rpc("touch_me").then(() => {}, () => {}); }   // note the visit (when, not what)
+  noteSource();   // 14 Nov: where a new member came from (once, first sign-in only; the database refuses later writes)
   await loadNames();
   member = Object.assign({plan: "free", plan_until: null, extra_accounts: 0, category: "gcc", state: "Maharashtra"}, m || {});
   if (member.category === "supplier") member.category = "gcc";   // 4 Nov (Sumit): suppliers tab hidden for now
@@ -619,6 +658,20 @@ function srcLine(src) {
 }
 // 4 Nov (Sumit: a panel with only steps "looks like it has been left alone"): a standard read for every company without a
 // written one, built only from its own dated steps plus what that stage usually means. No new facts, no names.
+// 14 Nov 2026: each state's GCC support, from the state's own policy (checked at source 14 Nov 2026). Shown on GCC companies only.
+const STATE_SUPPORT = {
+  "Maharashtra": "Maharashtra's GCC policy pays support to centres that reach 100 staff within 2 years of starting (or invest Rs 50 crore). If it takes this support, expect hiring to at least that level.",
+  "Haryana": "Haryana's GCC policy (centres opened from 2026) pays support once a centre reaches 100 staff within 3 years. Contract staff with ESI or PF count. If it takes this support, expect hiring to at least that level.",
+  "Karnataka": "Karnataka's main GCC support is for centres outside Bengaluru with 100 or more staff.",
+  "Gujarat": "Gujarat's GCC policy pays support only while a centre keeps at least 50 staff on its payroll. If it takes this support, expect hiring to at least that level.",
+  "Uttar Pradesh": "Uttar Pradesh's GCC policy needs 100 staff (200 in Noida and Ghaziabad), or a set investment, before it pays support. If it takes this support, expect hiring to at least that level.",
+  "Madhya Pradesh": "Madhya Pradesh's GCC policy needs 100 staff, or Rs 15 crore invested, before it pays support. If it takes this support, expect hiring to at least that level.",
+  "Tamil Nadu": "Tamil Nadu's GCC payroll scheme is for centres of the world's largest companies that reach 200 staff by March 2027. If it takes this support, expect hiring to at least that level.",
+  "Andhra Pradesh": "Andhra Pradesh pays a job subsidy for each hire who stays 18 months. The firm needs 50 staff or Rs 30 crore in sales.",
+  "Odisha": "Odisha's GCC policy is for centres of the world's largest companies with at least 50 staff on payroll in Odisha.",
+  "Punjab": "Punjab's GCC policy needs 100 direct staff before it pays support. If it takes this support, expect hiring to at least that level."};
+// our loader files Gurugram and Noida under "Delhi NCR": their policy is the state the city is in (Delhi itself has only a draft)
+const NCR_STATE = {"gurugram": "Haryana", "gurgaon": "Haryana", "faridabad": "Haryana", "noida": "Uttar Pradesh", "greater noida": "Uttar Pradesh", "ghaziabad": "Uttar Pradesh"};
 const STAGE_READ = {
   gcc: {registered: ["Set up in India; no hiring seen yet.", "It is early: get known to the India team before hiring starts.", "RPO firms, IT recruiters, and office and facility vendors"],
         quiet: ["Hiring in India before any public announcement.", "Roles are open now, and the first hiring partners are being picked.", "RPO firms, and IT and finance recruiters"],
@@ -645,7 +698,7 @@ function followHtml(c) {
 async function followAcc(btn) {
   btn.disabled = true; btn.textContent = "Adding…";
   const {error} = await sb.from("my_accounts").insert({company: btn.dataset.follow});
-  if (error && error.code !== "23505") { btn.disabled = false; btn.textContent = "+ Follow"; btn.nextElementSibling.textContent = error.message || "Could not add it. Please try again."; return; }
+  if (error && error.code !== "23505") { btn.disabled = false; btn.textContent = btn.dataset.label || "+ Follow"; btn.nextElementSibling.textContent = error.message || "Could not add it. Please try again."; return; }
   loadAll();
 }
 // ---------------------------------------------------------------- the company page (12 Nov 2026, from Sumit's drawing)
@@ -702,6 +755,9 @@ function coPage(c) {
     who = sr ? `<p>${esc(sr[2])}.</p>` : "";
     person = `<p><b>Unknown so far</b></p><p class="small">We add a name once public sources show one.</p>`;
   }
+  const sup = c.category === "gcc" && STATE_SUPPORT[c.state === "Delhi NCR" ? NCR_STATE[String(c.city || "").toLowerCase()] : c.state];
+  // 14 Nov (Sumit): context sits in its own box on the right, beside the facts; shown only when there is a checked fact
+  const ctx = sup ? `<p><b>State support.</b> ${esc(sup)}</p><p class="small">State government policy, checked Nov 2026. We cannot see which centres take it.</p>` : "";
   const steps = ms.slice(0, 5).map(stepHtml).join("")
     + (ms.length > 5 ? `<details class="earlier"><summary>${Math.min(ms.length, 15) - 5} earlier move${Math.min(ms.length, 15) - 5 === 1 ? "" : "s"}</summary>${ms.slice(5, 15).map(stepHtml).join("")}</details>` : "")
     + (ms.length > 15 ? `<p class="small">${ms.length - 15} older moves not shown.</p>` : "");
@@ -718,6 +774,7 @@ function coPage(c) {
         <div class="cbox o4"><h5>Dated moves</h5>${steps}</div>
         ${who ? `<div class="cbox o3"><h5>Who can act</h5>${who}</div>` : ""}
         <div class="cbox o6"><h5>Likely person</h5>${person}</div>
+        ${ctx ? `<div class="cbox o7"><h5>Context</h5>${ctx}</div>` : ""}
       </div>
     </div>
     <div class="cfoot"><span><a href="mailto:research@provenexa.com?subject=${encodeURIComponent("Mistake: " + c.name)}">Report a mistake</a> &nbsp;·&nbsp; Need the original source for a move? <a href="mailto:research@provenexa.com?subject=${encodeURIComponent("Source request: " + c.name)}">Ask us</a></span><span>© Provenexa Research</span></div>`;
@@ -739,6 +796,29 @@ function setOpen(n) {
 function goBack() { if (navDepth > 0) { navDepth--; history.back(); } else setOpen(null); }
 window.addEventListener("popstate", () => { view.open = hashCo(); render(); window.scrollTo(0, view.open ? 0 : (view.listY || 0)); });
 
+// 14 Nov 2026 (Sumit): "Worth a look": up to 3 companies moving in this member's lane and state that are NOT on their list.
+// Picked only by real, fresh moves (latest move within 6 weeks; two or more moves in 30 days first), never by a score and
+// never by what other members watch. The Free plan already gets moves a week late from the database; checked here too.
+// Staffing, RPO and manpower firms are our members' competitors: never suggested.
+const COMPETE = /\b(staffing|manpower|recruit\w*|rpo|placements?|outsourcing|hr services|human resources?|talent|workforce|headhunt\w*|executive search)\b/i;
+function worthPicks(base) {
+  const since30 = daysAgo(30), fresh = daysAgo(42), freeCut = daysAgo(7);
+  return base.filter(c => !c.yours && c.latest >= fresh && (member.plan !== "free" || c.latest <= freeCut) && !COMPETE.test(c.name))
+    .map(c => ({c, two: c.moves.filter(m => m.day >= since30).length >= 2}))
+    .sort((a, b) => (b.two - a.two) || b.c.latest.localeCompare(a.c.latest))
+    .slice(0, 3).map(x => x.c);
+}
+const rowHtml = (c, stageWords, inYours) => `
+    <div class="item${c.yours ? " you" : ""}" data-name="${esc(c.name)}">
+      <div class="trow">
+        <div class="co"><b>${esc(c.name)}</b>${READS.has(c.name.toLowerCase()) ? ' <span class="tg brf" title="Our full brief is ready">BRIEF</span>' : ""}<small>${c.yours && !inYours ? "Your account · " : ""}${esc(c.city || "Site not stated")}</small></div>
+        <div class="lm">${c.isNew ? '<span class="tg new" title="Moved since your last visit">NEW</span>' : ""}${esc(c.moves[0].headline)}</div>
+        <div class="stc">${stageWords(c)}</div>
+        <div class="when">${fmt(c.latest)}</div>
+        <div class="view">View</div>
+      </div>
+    </div>`;
+
 function render() {
   const C = CATS[member.category] || CATS.gcc;
   const allIndia = ALL_INDIA.includes(member.plan);
@@ -747,7 +827,6 @@ function render() {
   const yoursAll = COS.filter(c => c.yours);
   $("dh").textContent = C.h1(place);
   $("lede").textContent = C.lede;
-  $("ladh").textContent = C.ladh;
 
   // filters with counts
   const q = view.q.toLowerCase();
@@ -774,23 +853,22 @@ function render() {
     .filter(r => (!stv || r.place === stv) && !base.some(c => c.name.toLowerCase() === r.name.toLowerCase()))
     .sort((a, b) => a.name.localeCompare(b.name));
 
-  // tiles
-  const movedWeek = yoursAll.filter(c => c.latest >= daysAgo(7)).length;
-  const t = [[base.length + est.length, est.length ? `${C.noun} we are watching here: ${base.length} with moves, ${est.length} established` : `${C.noun} we are watching here`], ...C.tiles(base)];
-  // 12 Nov DRAFT: each tile filters the list (the first one clears every filter)
+  // 14 Nov 2026 (Sumit): one summary line instead of the four tiles and the two charts (the left filters carry those counts).
+  // The numbers are the tiles' numbers and still filter the list when tapped.
   const noFilter = !view.stage && !view.city && !view.tier && !view.pick && !view.q && !view.onlyMine && !view.onlyNew;
   const tileOn = k => !k ? noFilter : k.startsWith("stage:") ? (view.stage === k.slice(6) && !view.pick) : view.pick === k.slice(5);
-  $("tiles").innerHTML = t.map(([n, l, k]) => `<button type="button" class="tile" data-tile="${k || "all"}" aria-pressed="${tileOn(k)}"><b>${n}</b><span>${esc(l)}</span></button>`).join("")
-    + `<button type="button" class="tile hot" data-tile="pick:mineweek" aria-pressed="${view.pick === "mineweek"}"><b>${movedWeek} of ${mine.length}</b><span>of your accounts moved this week</span></button>`;
-
-  // ladder and city bars (they filter too)
-  const maxSt = Math.max(1, ...C.st.map(([k]) => base.filter(c => c.stage === k).length));
-  $("ladder").innerHTML = C.st.map(([k, l]) => { const n = base.filter(c => c.stage === k).length;
-    return `<button data-stage="${k}" aria-pressed="${view.stage === k}"><span class="n">${n}</span><span class="b" style="height:${Math.round(100 * n / maxSt)}px"></span><span class="l">${esc(l)}</span></button>`; }).join("");
-  const maxC = Math.max(1, ...cities.map(x => x[1]));
-  $("cities").innerHTML = cities.slice(0, 8).map(([k, n]) =>
-    `<button data-city="${esc(k)}" aria-pressed="${view.city === k}"><span>${esc(k)}</span><span class="b" style="width:${Math.round(100 * n / maxC)}%"></span><span class="n">${n}</span></button>`).join("")
-    || `<p class="empty">No ${C.noun} here yet.</p>`;
+  {
+    let since = "";
+    if (SINCE) {
+      const lastDay = new Date(PREV).toLocaleDateString("en-CA", {timeZone: "Asia/Kolkata"});
+      const yN = COS.filter(c => c.yours && c.isNew).length, oN = base.filter(c => !c.yours && c.isNew).length;
+      const when = lastDay < todayIST() ? `Since ${nice(lastDay)}` : "Today";
+      since = `<span class="g">${when}: ${mine.length ? (yN ? `${yN} of your accounts moved` : "none of your accounts moved") : `${oN} compan${oN === 1 ? "y" : "ies"} moved`}</span>`;
+    }
+    const nW = base.length + est.length;
+    const parts = [[nW, `${C.noun} watched`, ""], ...C.tiles(base)];
+    $("strip").innerHTML = since + parts.map(([n, l, k]) => `<button type="button" data-tile="${k || "all"}"${k ? ' class="rep"' : ""} aria-pressed="${k ? tileOn(k) : false}"><b>${n}</b> ${esc(l)}</button>`).join("");
+  }
 
   // rows: your accounts in THIS tab first (4 Nov, Sumit: plant accounts were crowding the GCC tab), then everything in view.
   // Your accounts from other tabs show only when searched; a line above the list points to them.
@@ -806,13 +884,16 @@ function render() {
     $("othertabs").innerHTML = parts.length || out ? `Your other accounts: ${parts.join(" ")}${out}` : "";
     $("othertabs").classList.toggle("hide", !(parts.length || out)); }
   const tn = c => Number(c.tier) || 9;
-  const all = [...extra, ...list].filter(c => (!view.onlyMine || c.yours) && (!view.onlyNew || c.isNew)).sort((a, b) => (b.yours - a.yours)
-    || (a.yours ? ((b.isNew - a.isNew) || b.latest.localeCompare(a.latest)) : b.latest.localeCompare(a.latest)));   // 4 Nov: yours newest first; the rest newest first (no internal groups)
+  const picks = noFilter ? worthPicks(base) : [];
+  const above = new Set(noFilter && mine.length ? [...yoursAll.filter(c => c.category === member.category), ...picks] : picks);
+  const all = [...extra, ...list].filter(c => (!view.onlyMine || c.yours) && (!view.onlyNew || c.isNew) && !above.has(c)).sort((a, b) => (noFilter ? 0 : (b.yours - a.yours))
+    || (a.yours && !noFilter ? ((b.isNew - a.isNew) || b.latest.localeCompare(a.latest)) : b.latest.localeCompare(a.latest)));   // 14 Nov: newest first; yours first only when filtered   // 4 Nov: yours newest first; the rest newest first (no internal groups)
   // groups 1-3 as rows; 'Also watching' folded into a list of names below (unless searched, chosen, or your account)
   const fold = hasTier && !view.tier && !q;
   const folded = fold ? all.filter(c => c.tier === "4" && !c.yours) : [];
   const sorted = fold ? all.filter(c => !folded.includes(c)) : all;
-  $("count").textContent = `${all.length} compan${all.length === 1 ? "y" : "ies"}`;
+  $("count").textContent = `${all.length} ${above.size ? "more " : ""}compan${all.length === 1 ? "y" : "ies"} · newest first`;
+  const shownN = noFilter && !view.expanded ? (sorted.length <= 7 ? 7 : 5) : view.shown;   // 14 Nov (Sumit): 5 rows, then "Show N more"
   const label = (c) => ((CATS[c.category] || {st: []}).st.find(s => s[0] === c.stage) || [, c.category ? "" : "Your account"])[1];
   // 12 Nov DRAFT: the stage in words, with 'watching' under it (the coloured letters and their legend are gone)
   const stageWords = (c) => `<span class="stw">${esc(c.category ? label(c) : "")}${!READS.has(c.name.toLowerCase()) && watching(c) ? '<small title="Fewer than two moves in the last 30 days">watching</small>' : ""}</span>`;
@@ -827,34 +908,23 @@ function render() {
       + (SINCE ? `<button type="button" class="tog" data-only="onlyNew" aria-pressed="${!!view.onlyNew}">Only new since my last visit</button>` : "");
     $("showing").innerHTML = (chips.length ? `<span>Showing:</span>` + chips.map(([l, k]) => `<button type="button" class="fchip" data-unset="${k}" aria-label="Remove the filter ${esc(l)}">${esc(l)} ×</button>`).join("")
       + `<button type="button" class="fclear" data-unset="all">Clear</button>` : "") + (togs ? `<span class="sp"></span>` + togs : "");
-    $("showing").classList.toggle("hide", !chips.length && !togs);
+    $("showing").classList.toggle("hide", noFilter || (!chips.length && !togs));
   }
   const heads = hasTier && !view.tier;
   const tierSize = t => sorted.filter(c => c.tier === t && !c.yours).length;
-  $("rows").innerHTML = sorted.slice(0, view.shown).map((c, i, arr) => `
+  $("rows").innerHTML = sorted.slice(0, shownN).map((c, i, arr) => `
     ${heads && !c.yours && (i === 0 || arr[i - 1].yours || arr[i - 1].tier !== c.tier) && c.tier
-      ? `<div class="grp">${esc((TIERS.find(t => t[0] === c.tier) || [, ""])[1])}<span>${tierSize(c.tier)}</span></div>` : ""}
-    <div class="item" data-name="${esc(c.name)}">
-      <div class="trow">
-        <div class="co"><b>${esc(c.name)}</b>${c.yours ? '<span class="yours">YOUR ACCOUNT</span>' : ""}${READS.has(c.name.toLowerCase()) ? ' <span class="tg brf" title="Our full brief is ready">BRIEF</span>' : ""}<small>${esc(c.city || "Site not stated")}</small></div>
-        <div class="lm">${c.isNew ? '<span class="tg new" title="Moved since your last visit">NEW</span>' : ""}${esc(c.moves[0].headline)}</div>
-        <div class="stc">${stageWords(c)}</div>
-        <div class="when">${fmt(c.latest)}</div>
-        <div class="view">View</div>
-      </div>
-    </div>`).join("") || (folded.length ? "" : `<p class="empty">Nothing here matches. Try another stage or city${member.plan === "free" ? ", or remember the Free plan shows moves a week late" : ""}.</p>`);
-  if (folded.length && sorted.length <= view.shown) {
+      ? `<div class="grp">${esc((TIERS.find(t => t[0] === c.tier) || [, ""])[1])}<span>${tierSize(c.tier)}</span></div>` : ""}${rowHtml(c, stageWords)}`).join("") || (folded.length ? "" : `<p class="empty">Nothing here matches. Try another stage or city${member.plan === "free" ? ", or remember the Free plan shows moves a week late" : ""}.</p>`);
+  if (folded.length && sorted.length <= shownN) {
     $("rows").innerHTML += `<div class="alsow"><div class="grp" style="padding:4px 0 8px;border:0">Also watching<span>${folded.length}</span></div>
       <p>Companies with a single step so far. We keep watching them; tap a name to see its step.</p>
       ${folded.sort((a, b) => a.name.localeCompare(b.name)).map(c => `<button data-also="${esc(c.name)}">${esc(c.name)}</button>`).join(", ")}</div>`;
   }
   // 4 Nov (Sumit): established GCCs listed under the moving ones, with their label (no filters set, or a search that hits them)
   const estShown = (view.stage || view.city || view.tier) ? [] : est.filter(r => !q || r.name.toLowerCase().includes(q));
-  if (estShown.length) {
-    $("rows").innerHTML += `<div class="alsow"><div class="grp" style="padding:4px 0 8px;border:0">Established GCCs we watch<span>${estShown.length}</span></div>
+  $("estbox").innerHTML = estShown.length ? `<details class="estd"${q ? " open" : ""}><summary>${estShown.length} ${esc(C.estn || "established company")}${estShown.length === 1 ? "" : "s"} we watch</summary>
       <p>Global companies' own centres already running in India. No new move tracked yet; when one moves, it joins the list above.</p>
-      ${estShown.map(r => `<span class="estn"><b>${esc(r.name)}</b>${r.on ? ` <small>since ${esc(r.on.slice(0, 4))}</small>` : ""}</span>`).join(", ")}</div>`;
-  }
+      ${estShown.map(r => `<span class="estn"><b>${esc(r.name)}</b>${r.on ? ` <small>since ${esc(r.on.slice(0, 4))}</small>` : ""}</span>`).join(", ")}</details>` : "";
   // 31 Oct (Sumit): companies that have only registered so far (no credible move yet) still answer a search, with a note
   const fq = flat(view.q);
   const regHits = fq.length >= 2 ? NAMES.filter(x => (x.reg || x.est) && x.flat.includes(fq) && !COS.some(c => c.name.toLowerCase() === x.name.toLowerCase())
@@ -864,26 +934,42 @@ function render() {
       return `<div class="regrow"><b>${esc(x.name)}</b><span class="rgnote">${esc(noteText(x.name) + (r.place ? " · " + r.place : ""))}</span></div>`; }).join("")}</div>`;
     $("rows").innerHTML = (sorted.length ? $("rows").innerHTML : "") + block;
   }
-  { // 4 Nov (Sumit): one line on what moved since the last visit
-    const nl = $("newline");
-    if (SINCE && mine.length) {
-      const yN = COS.filter(c => c.yours && c.isNew).length, oN = COS.filter(c => !c.yours && c.isNew).length;
-      const lastDay = new Date(PREV).toLocaleDateString("en-CA", {timeZone: "Asia/Kolkata"});
-      const when = lastDay < todayIST() ? `since your last visit on ${nice(lastDay)}` : "today";
-      nl.innerHTML = (yN ? `<b>${yN} of your accounts moved ${when}.</b>` : `No new moves on your accounts ${when}.`)
-        + (oN ? ` ${oN} other compan${oN === 1 ? "y" : "ies"} in your view moved too.` : "") + (yN || oN ? " They carry the NEW tag." : "");
-      nl.classList.remove("hide");
-    } else nl.classList.add("hide");
+  { // 14 Nov 2026 (Sumit): Your accounts lead (their moves in this tab), then Worth a look. Both step aside while filtering.
+    const lim2 = (LIMITS[member.plan] ?? 3) + (member.extra_accounts || 0);
+    const mineRows = yoursAll.filter(c => c.category === member.category).sort((a, b) => (b.isNew - a.isNew) || b.latest.localeCompare(a.latest));
+    const moved30 = yoursAll.filter(c => c.latest >= daysAgo(30)).length;
+    const showYours = noFilter && mine.length > 0;
+    $("sec-yours").classList.toggle("hide", !showYours);
+    if (showYours) {
+      $("yours-n").textContent = `${moved30} moved in 30 days · ${Math.max(0, mine.length - moved30)} quiet`;
+      $("yours-rows").innerHTML = mineRows.map(c => rowHtml(c, stageWords, true)).join("")
+        || `<p class="empty">None of your accounts has a move here yet. We watch them, and they show here as soon as they move.</p>`;
+    }
+    $("othertabs").classList.toggle("hide", !showYours || $("othertabs").classList.contains("hide"));
+    $("sec-wal").classList.toggle("hide", !picks.length);
+    if (picks.length) {
+      const full = mine.length >= lim2, left = lim2 - mine.length;
+      $("wal").innerHTML = picks.map(c => `<div class="it"><div>${c.isNew ? '<span class="tg new">NEW</span>' : ""}<button type="button" class="wn" data-find="${esc(c.name)}">${esc(c.name)}</button> <small>· ${esc(c.city || "Site not stated")} · <span style="white-space:nowrap">${fmt(c.latest)}</span></small>
+          <p>${esc(c.moves[0].headline)}</p></div>
+          <div class="wb"><button class="watch" type="button" data-follow="${esc(c.name)}" data-label="+ Watch"${full ? " disabled" : ""}>+ Watch</button><span class="wmsg"></span></div></div>`).join("")
+        + `<div class="ft">${full
+          ? `Your list is full (${lim2} of ${lim2}). Remove one under My accounts to watch another${member.plan === "free" ? ", or move to a paid plan to watch 10 or more" : ", or write to research@provenexa.com for a pack of 5 more"}.`
+          : `You can watch ${left} more compan${left === 1 ? "y" : "ies"} on your plan.`}</div>`;
+    }
   }
   { // 12 Nov: one company as its own page, in place of the list
     const oc = view.open ? COS.find(x => x.name === view.open) : null;
     $("s-app").classList.toggle("hide", !!view.open); $("s-co").classList.toggle("hide", !view.open);
     $("s-co").innerHTML = view.open ? (oc ? coPage(oc) : coMissing(view.open)) : "";
   }
-  $("more").classList.toggle("hide", sorted.length <= view.shown);
+  $("more").classList.toggle("hide", sorted.length <= shownN);
+  $("more").textContent = `Show ${Math.min(sorted.length - shownN, noFilter && !view.expanded ? 25 : 30)} more`;
   $("free").classList.toggle("hide", member.plan !== "free");
   $("upg").classList.toggle("hide", !PAY_OPEN || ["individual", "plus", "team", "staff"].includes(member.plan));
-  $("invite").classList.toggle("hide", mine.length >= 5);   // 29 Oct (Sumit): gently invite, never require
+  // 29 Oct (Sumit): gently invite, never require. 14 Nov: the invite lives in the My accounts box, only while the list is empty.
+  $("mine-p").classList.toggle("hide", mine.length > 0); $("asknote").classList.toggle("hide", mine.length > 0);
+  $("mine-p").innerHTML = mine.length ? ""
+    : "<b>Tell us which accounts you want to follow.</b> Add them here and we watch them for you: every move, and the full brief when they move. If one is not in our data yet, tap \"Ask us to track it\". Only you can see your list.";
   $("free").textContent = member.ended
     ? `Your ${PLAN_NAMES[member.ended.plan] || "plan"} ended on ${nice(member.ended.until)}, so you now see the Free plan: each move shows a week after it happens. To keep same-day moves, write to research@provenexa.com.`
     : "On the Free plan, each move shows a week after it happens. Paid plans show it the same day.";
@@ -902,7 +988,7 @@ function render() {
   }).join("");
   const ends = !member.ended && member.plan !== "free" && member.plan_until ? ` Ends after ${nice(member.plan_until)}.` : "";
   $("plannote").textContent = `${PLAN_NAMES[member.plan] || "Your plan"}: ${mine.length} of ${lim} accounts used.${ends}`;
-  $("b-mine").textContent = `My accounts (${mine.length} of ${lim})`;
+  $("b-mine").textContent = mine.length ? `My accounts (${mine.length} of ${lim})` : "My accounts: add the companies you sell to";
   $("b-add").disabled = mine.length >= lim;
 }
 
@@ -930,11 +1016,10 @@ document.addEventListener("click", e => {
   const x = e.target.closest(".chip button[data-id]"); if (x) { removeAcc(x.dataset.id); return; }
   const k = e.target.closest(".chip button[data-ask]"); if (k) { askTrack(k); return; }
 });
-$("b-invite").onclick = () => { $("mine").classList.add("open"); $("b-mine").setAttribute("aria-expanded", "true"); $("company").focus(); };
 $("b-mine").onclick = () => { const o = $("mine").classList.toggle("open"); $("b-mine").setAttribute("aria-expanded", String(o)); };
 $("b-fx").onclick = () => { const o = $("fx").classList.toggle("open"); $("b-fx").setAttribute("aria-expanded", String(o)); };
 $("q").addEventListener("input", e => { view.q = e.target.value.trim(); view.shown = 30; render(); });
-$("more").onclick = () => { view.shown += 30; render(); };
+$("more").onclick = () => { if (!view.expanded) { view.expanded = true; view.shown = 30; } else view.shown += 30; render(); };
 
 // ---------------------------------------------------------------- my accounts
 $("f-add").onsubmit = async e => {
@@ -971,6 +1056,15 @@ async function removeAcc(id) {
 
 // ---------------------------------------------------------------- session
 let touched = false;
+// 14 Nov 2026 (ads rule, 8 Nov): hand the first tagged visit (kept by /assets/ref.js in this browser) to the member's
+// record. The database writes it only within a day of their first sign-up and never twice; for everyone else it does nothing.
+let sourced = false;
+function noteSource() {
+  if (sourced) return; sourced = true;
+  let f = {};
+  try { f = JSON.parse(localStorage.getItem("pvx-first-ref") || "{}") || {}; } catch (e) {}
+  sb.rpc("note_signup_source", {p_ref: f.ref || null, p_campaign: f.c || null, p_from: f.from || null, p_landed: f.d || null}).then(() => {}, () => {});
+}
 // ---------------------------------------------------------------- upgrade (10 Nov 2026, DRAFT)
 // A member picks a plan -> one row in plan_requests (their own, SQL 018) -> we prepare their pay link in about a minute
 // -> "Pay now" opens the payment gateway's own page -> the plan switches on a minute or two after they pay.
