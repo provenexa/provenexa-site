@@ -684,6 +684,38 @@ const STAGE_READ = {
           started: ["Production has started.", "Shift hiring, mostly through local vendors, and apprentices.", "Staffing firms, contract-labour vendors, and apprenticeship partners"]},
   supplier: {orders: ["Has won an order.", "Delivering it usually means more shifts and contract workers.", "Staffing firms and contract-labour vendors"],
              capacity: ["Is adding capacity.", "New lines need workers, trainees and vendors.", "Staffing firms, apprenticeship partners, and vendors"]}};
+// 16 Nov 2026: one plain line for a move, from its kind (the headline itself stays under Dated moves). No company name.
+const KIND_LINE = {"Office / centre": "New office or centre", "Hiring": "Hiring", "Hiring now": "Hiring now", "New plant": "New plant",
+  "Construction": "Construction under way", "Starting operations": "Operations started", "Order / contract": "Won an order",
+  "Investment": "New investment", "Expansion": "Expanding", "Approval / plan": "Plant or expansion in approvals",
+  "Government approval": "Government approval received", "Land / clearance": "Land or site clearance", "Registered in India": "Set up its India company",
+  "People move": "Leadership change", "Fundraise": "Raised money", "Deal / ownership": "Deal or ownership change", "Plans to list": "Plans to list its shares",
+  "Tender": "Out to tender", "Setback": "Setback", "Stopped for now": "Work stopped for now", "Project dropped / stalled": "Project dropped or stalled",
+  "Workers freed": "Workers let go"};
+const NO_PLACE = new Set(["Won an order", "Leadership change", "Raised money", "Deal or ownership change", "Plans to list its shares", "Set up its India company"]);
+function moveLine(m, c) {
+  let s = KIND_LINE[m.kind_label];
+  if (!s) { const sr = (STAGE_READ[c.category] || {})[c.stage]; return sr ? sr[0] : "In the news."; }   // plain "News": say the stage, not the story
+  if (c.city && !NO_PLACE.has(s)) s += ` in ${c.city}`;
+  return s + ".";   // 16 Nov: sizes from headlines were tested and dropped (1 in 5 wrong: other companies' numbers, market totals)
+}
+function agoWords(day) {
+  const n = Math.round((new Date(todayIST() + "T00:00:00") - new Date(day + "T00:00:00")) / 864e5);
+  return n <= 0 ? "today" : n === 1 ? "yesterday" : n < 14 ? `${n} days ago` : n < 60 ? `${Math.round(n / 7)} weeks ago` : `${Math.round(n / 30)} months ago`;
+}
+// what usually comes next at each stage (not a fact about this company; says what to look out for)
+const WATCH_NEXT = {
+  gcc: {registered: "the first India job ads, an office address, a named India head",
+        quiet: "more roles, an office lease, the public announcement",
+        announced: "the first job ads, a centre head named, the office opening",
+        opened: "batch hiring drives, more floors or a second site",
+        growing: "the next hiring round, new space, a new city"},
+  plant: {clearance: "the approval itself, land allotment, the start of construction",
+          planned: "the approval, land, a construction contract",
+          building: "the first shop-floor job ads, apprentice notices, the start of production",
+          started: "shift hiring, a second line, apprentice intake"},
+  supplier: {orders: "more orders, extra shifts, hiring at the plant",
+             capacity: "the new line starting, hiring for it"}};
 // 12 Nov 2026 DRAFT: follow a company from its own panel; the line shows how many accounts the plan has left
 function followHtml(c) {
   const lim = (LIMITS[member.plan] ?? 3) + (member.extra_accounts || 0);
@@ -741,10 +773,13 @@ function coPage(c) {
       ? `<p><b>${r.pp.map(x => x.u ? `<a href="${esc(x.u)}" target="_blank" rel="noopener">${esc(x.n)}</a>` : esc(x.n)).join(", ")}</b></p><p class="small">Might be the relevant person. Check before calling.</p>`
       : `<p><b>Unknown so far</b></p><p class="small">We add a name once public sources show one.</p>`;
   } else {   // no written brief: the dated facts, and what this stage usually means (no new facts, no names)
-    quick = `<p class="hl">${esc(last.headline)}</p><p>${ms.length > 1
-      ? `First seen ${fmt(first.day, true)}. Latest move ${fmt(last.day, true)}. ${ms.length} dated moves so far.`
-      : `Seen ${fmt(last.day, true)}. One dated move so far.`}</p>`;
-    means = sr ? `<p><b>At this stage:</b> ${esc(sr[0])} ${esc(sr[1])}</p>${sr[1].includes("*") ? '<p class="small">* our estimate.</p>' : ""}` : "";
+    // 16 Nov 2026 (Sumit: "looking like a news article, not like a sales intelligence service"): the headline lives under
+    // Dated moves as the evidence; up here, what kind of move it is and where, then what it means for someone who sells
+    quick = `<p class="hl">${esc(moveLine(last, c))}</p><p>Reported ${fmt(last.day, true)}, ${agoWords(last.day)}. ${ms.length > 1
+      ? `${ms.length} dated moves since ${fmt(first.day, true)}.` : "One dated move so far."}</p>`;
+    const nx = (WATCH_NEXT[c.category] || {})[c.stage];
+    means = sr ? `<p><b>At this stage:</b> ${esc(sr[0])}</p><p><b>Your opening:</b> ${esc(sr[1])}</p>`
+      + (nx ? `<p><b>Watch for:</b> ${esc(nx)}.</p>` : "") + (sr[1].includes("*") ? '<p class="small">* our estimate.</p>' : "") : "";
     // 12 Nov (Sumit): say the rule in the box (a full brief once a company has two or more moves in 30 days), and keep the ask button
     const RULE = "We write a full brief once a company has two or more moves in 30 days.";
     full = member.plan === "free"
