@@ -284,7 +284,7 @@ body:has(#s-email:not(.hide)) footer,body:has(#s-code:not(.hide)) footer{text-al
   .cmeta .stw{text-align:left;max-width:none;font-size:11px}.cmeta .yours{display:inline-block}
   .step{grid-template-columns:1fr;gap:2px}
 }
-.ts{margin-top:12px}
+.ts:not(:empty){margin-top:12px}
 </style>
 </head>
 <body>
@@ -401,7 +401,7 @@ body:has(#s-email:not(.hide)) footer,body:has(#s-code:not(.hide)) footer{text-al
 <script>
 // 16 Nov 2026: robot check on sign-in (Cloudflare Turnstile, free). Supabase checks the token before it sends a code.
 let tsId = null;
-window.tsReady = () => { try { tsId = turnstile.render("#ts", {sitekey: "0x4AAAAAAGDeBOsJUCV9c5Xs", theme: "auto", size: "flexible"}); } catch (e) {} };
+window.tsReady = () => { try { tsId = turnstile.render("#ts", {sitekey: "0x4AAAAAAGDeBOsJUCV9c5Xs", theme: "auto", size: "flexible", appearance: "interaction-only"}); } catch (e) {} };
 </script>
 <script src="https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit&onload=tsReady" defer></script>
 <script>
