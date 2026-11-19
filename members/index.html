@@ -405,7 +405,7 @@ body:has(#s-email:not(.hide)) footer,body:has(#s-code:not(.hide)) footer{text-al
 </footer>
 
 <script src="/assets/ref.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
+<script src="/assets/supabase-js-2.45.4.min.js"></script>   <!-- 19 Nov: our own copy (Brave on Android blocked or stalled the outside one) -->
 <script>
 // 16 Nov 2026: robot check on sign-in (Cloudflare Turnstile, free). Supabase checks the token before it sends a code.
 let tsId = null;
@@ -449,6 +449,11 @@ const CATS = {
                           [L.filter(x => x.stage === "capacity").length, "adding capacity", "stage:capacity"]]}
 };
 
+if (!window.supabase) {   // 19 Nov: if a browser blocks the sign-in library, say so instead of showing a blank page
+  const s = document.getElementById("s-email"); s.classList.remove("hide");
+  s.innerHTML = '<h1>Sign in</h1><p class="lede">Your browser blocked part of this page. Please allow provenexa.com in its privacy or shield settings, then reload.</p><p class="lede">Still stuck? Write to <a href="mailto:research@provenexa.com">research@provenexa.com</a>.</p>';
+  throw new Error("sign-in library blocked");
+}
 const sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 const $ = id => document.getElementById(id);
 const esc = s => String(s ?? "").replace(/[&<>"]/g, c => ({"&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;"}[c]));
