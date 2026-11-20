@@ -636,13 +636,24 @@ function setupTop() {
     .concat(STATES.map(s => `<option ${s === (allIndia ? view.allIndiaState : member.state) ? "selected" : ""}>${esc(s)}</option>`)).join("");
 }
 
+// 20 Nov 2026: a tab tap after the page sat open for over an hour did nothing (Raghu, phone). The old code asked the
+// server "who am I" with a sign-in that had run out, got no answer and stopped silently. getSession() renews the
+// sign-in first; if that fails too, say so and reload instead of doing nothing.
+async function myId() {
+  try { const {data} = await sb.auth.getSession(); return data.session ? data.session.user.id : null; }
+  catch (e) { return null; }
+}
+function signedOut() { alert("Your sign-in has timed out. The page will reload; sign in again if it asks."); location.reload(); }
+
 $("tabs").addEventListener("click", async e => {
   const b = e.target.closest("button[data-cat]");
   if (!b) return;
   if (b.dataset.cat === member.category) { if (view.open) setOpen(null); return; }   // on a company page: the tab takes you back to its list
   if (location.hash) history.replaceState(null, "", location.pathname + location.search);
   // Free and Individual cover one category: switching changes it (saved under the member's own row)
-  const {error} = await sb.from("members").update({category: b.dataset.cat}).eq("id", (await sb.auth.getUser()).data.user.id);
+  const uid = await myId();
+  if (!uid) return signedOut();
+  const {error} = await sb.from("members").update({category: b.dataset.cat}).eq("id", uid);
   if (error) { alert("Could not switch: " + error.message); return; }
   view = {tier: "", stage: "", city: "", q: "", shown: 30, open: null, allIndiaState: view.allIndiaState};
   loadAll();
@@ -652,7 +663,9 @@ document.addEventListener("click", e => { const f = e.target.closest("button[dat
 document.addEventListener("click", e => { const g = e.target.closest("button[data-go]"); if (g) { const b = $("tabs").querySelector(`button[data-cat="${g.dataset.go}"]`); if (b) b.click(); } });
 $("state").addEventListener("change", async e => {
   if (ALL_INDIA.includes(member.plan)) { view.allIndiaState = e.target.value; view.city = ""; render(); return; }
-  const {error} = await sb.from("members").update({state: e.target.value}).eq("id", (await sb.auth.getUser()).data.user.id);
+  const uid = await myId();
+  if (!uid) return signedOut();
+  const {error} = await sb.from("members").update({state: e.target.value}).eq("id", uid);
   if (error) { alert("Could not change the state: " + error.message); return; }
   view.city = ""; loadAll();
 });
