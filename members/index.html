@@ -540,18 +540,27 @@ const noteText = n => { const k = n.toLowerCase(); return REG.has(k) ? regText(R
 const SUFFIX = /\b(private|pvt|limited|ltd|llp|inc|plc|co|company|corporation|corp|india|services|technologies|group)\b/g;
 const flat = s => s.toLowerCase().replace(/[^a-z0-9]/g, "");
 const core = s => s.toLowerCase().replace(/&/g, " and ").replace(/[^a-z0-9 ]/g, " ").replace(SUFFIX, " ").replace(/\s+/g, "");
+// 20 Nov 2026 (Sumit: "too much lag" opening a company from an alert): the page fetched its data in pieces of 1,000,
+// one after another (about 25 trips). Now the first piece also asks how many rows there are, and all the other pieces
+// are fetched at the same time. Same rows, same order (a unique column breaks ties so pieces never overlap).
+// colsList: the columns to ask for, then older fallbacks for a database that lacks a newer column.
+async function allRows(make, colsList, cap) {
+  let cols = null, first = null;
+  for (const c of colsList) { first = await make(c, {count: "exact"}).range(0, 999); cols = c; if (!first.error) break; }
+  if (first.error || !first.data) return {data: [], error: first.error};
+  const rows = first.data.slice();
+  const total = Math.min(first.count ?? rows.length, cap || 1e9);
+  if (rows.length < 1000 || total <= 1000) return {data: rows};
+  const rest = [];
+  for (let from = 1000; from < total; from += 1000) rest.push(make(cols).range(from, Math.min(from + 999, total - 1)));
+  for (const g of await Promise.all(rest)) { if (g.error || !g.data) break; rows.push(...g.data); }
+  return {data: rows};
+}
 async function loadNames() {
   if (namesLoaded) return;
-  const names = [];
-  let cols = "name, status, registered_on, place, tab";   // 20 Nov: 'tab' (SQL 024) says which tab a company sits in
-  for (let from = 0; ; from += 1000) {
-    let {data, error} = await sb.from("companies").select(cols).order("name").range(from, from + 999);
-    if (error && cols.endsWith(", tab")) { cols = "name, status, registered_on, place"; from -= 1000; continue; }   // before SQL 024
-    if (error && cols !== "name") { cols = "name"; from -= 1000; continue; }   // before the 015 columns exist
-    if (error || !data) break;
-    names.push(...data);
-    if (data.length < 1000) break;
-  }
+  // 20 Nov: 'tab' (SQL 024) says which tab a company sits in; the shorter lists are for an older database
+  const {data: names} = await allRows((c, o) => sb.from("companies").select(c, o).order("name"),
+    ["name, status, registered_on, place, tab", "name, status, registered_on, place", "name"]);
   if (!names.length) return;
   namesLoaded = true;
   known = new Set(names.map(r => r.name.toLowerCase()));
@@ -590,13 +599,22 @@ document.addEventListener("click", e => { if (!e.target.closest(".sugg-wrap")) $
 
 // ---------------------------------------------------------------- data
 async function loadAll() {
+  // 20 Nov: everything below is asked for at once (it used to wait for each answer in turn); what the database returns
+  // for moves already depends on the member's own row, which is saved before loadAll is called
+  const pAcc = sb.from("my_accounts").select("id, company, added_at").order("added_at", {ascending: false});
+  // the database returns only what this member's plan allows (their category and state, Free a week late, plus their own accounts)
+  const pMoves = allRows((c, o) => sb.from("moves").select(c, o).order("day", {ascending: false}).order("id"),
+    ["company, day, kind_label, headline, url, category, stage, city, state, loaded_at, tier",
+     "company, day, kind_label, headline, url, category, stage, city, state, loaded_at"], 20000);   // before SQL 016: no groups yet
+  const pReads = allRows((c, o) => sb.from("account_reads").select(c, o).order("company"), ["company, read"]);
+  const pNames = loadNames();
   // 4 Nov: read the previous visit BEFORE noting this one, so 'new since your last visit' is right
   let {data: m, error: me} = await sb.from("members").select("plan, plan_until, extra_accounts, category, state, last_seen").maybeSingle();
   if (me) ({data: m} = await sb.from("members").select("plan, plan_until, extra_accounts, category, state").maybeSingle());
   if (PREV === undefined) PREV = (m && m.last_seen) || null;
   if (!touched) { touched = true; sb.rpc("touch_me").then(() => {}, () => {}); }   // note the visit (when, not what)
   noteSource();   // 14 Nov: where a new member came from (once, first sign-in only; the database refuses later writes)
-  await loadNames();
+  await pNames;
   member = Object.assign({plan: "free", plan_until: null, extra_accounts: 0, category: "gcc", state: "Maharashtra"}, m || {});
   if (member.category === "supplier") member.category = "gcc";   // 4 Nov (Sumit): suppliers tab hidden for now
   member.ended = null;
@@ -604,19 +622,9 @@ async function loadAll() {
     member.ended = {plan: member.plan, until: member.plan_until};
     member.plan = "free";
   }
-  const {data: acc} = await sb.from("my_accounts").select("id, company, added_at").order("added_at", {ascending: false});
+  const {data: acc} = await pAcc;
   mine = acc || [];
-  // the database returns only what this member's plan allows (their category and state, Free a week late, plus their own accounts)
-  const rows = [];
-  let cols = "company, day, kind_label, headline, url, category, stage, city, state, loaded_at, tier";
-  for (let from = 0; from < 20000; from += 1000) {
-    const {data, error} = await sb.from("moves").select(cols)
-      .order("day", {ascending: false}).range(from, from + 999);
-    if (error && cols.endsWith(", tier")) { cols = cols.slice(0, -6); from -= 1000; continue; }   // before SQL 016: no groups yet
-    if (error || !data) break;
-    rows.push(...data);
-    if (data.length < 1000) break;
-  }
+  const {data: rows} = await pMoves;
   const by = new Map();
   for (const r of rows) {
     const k = r.company.toLowerCase();
@@ -624,7 +632,7 @@ async function loadAll() {
     by.get(k).moves.push(r);
   }
   READS = new Map();
-  { const {data: rd} = await sb.from("account_reads").select("company, read"); for (const r of rd || []) READS.set(r.company.toLowerCase(), r.read); }
+  { const {data: rd} = await pReads; for (const r of rd || []) READS.set(r.company.toLowerCase(), r.read); }
   const mineSet = new Set(mine.map(a => a.company.toLowerCase()));
   COS = [...by.values()].map(c => Object.assign(c, {yours: mineSet.has(c.name.toLowerCase())}));
   // 4 Nov (Sumit): NEW = caught after the last visit before today (so a second look the same day still shows today's moves).
