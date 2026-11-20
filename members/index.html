@@ -16,8 +16,8 @@
 <style>
 :root{--bg:#f2f1ed;--card:#fff;--ink:#111;--body:#2b2b2b;--muted:#6b6b6b;--hair:#d4d2ca;--line:#111;--acc:#1d5c45;--acc-soft:#e0ebe5;--on-acc:#fff;--warn:#8a3b12;--bar:#bdbaaf;--soft:#eceae4;
   --sans:Inter,"Segoe UI",system-ui,-apple-system,Roboto,Helvetica,Arial,sans-serif;--mono:ui-monospace,"Cascadia Mono",Consolas,monospace}
-@media (prefers-color-scheme:dark){:root:not([data-theme=light]){--bg:#0e0f0e;--card:#171816;--ink:#f1f0ec;--body:#d6d4cd;--muted:#9b998f;--hair:#34352f;--line:#5a5b54;--acc:#5fb58d;--acc-soft:#18291f;--on-acc:#0e0f0e;--warn:#e39a6b;--bar:#4a4b45;--soft:#1f201d}}
-:root[data-theme=dark]{--bg:#0e0f0e;--card:#171816;--ink:#f1f0ec;--body:#d6d4cd;--muted:#9b998f;--hair:#34352f;--line:#5a5b54;--acc:#5fb58d;--acc-soft:#18291f;--on-acc:#0e0f0e;--warn:#e39a6b;--bar:#4a4b45;--soft:#1f201d}
+@media (prefers-color-scheme:dark){:root:not([data-theme=light]){--bg:#1c1c1a;--card:#252522;--ink:#ece9e1;--body:#d2cfc6;--muted:#a3a097;--hair:#3b3b36;--line:#6b6b63;--acc:#8fb9a2;--acc-soft:#26312b;--on-acc:#1c1c1a;--warn:#e0a07a;--bar:#56564f;--soft:#2c2c28}}
+:root[data-theme=dark]{--bg:#1c1c1a;--card:#252522;--ink:#ece9e1;--body:#d2cfc6;--muted:#a3a097;--hair:#3b3b36;--line:#6b6b63;--acc:#8fb9a2;--acc-soft:#26312b;--on-acc:#1c1c1a;--warn:#e0a07a;--bar:#56564f;--soft:#2c2c28}
 /* 14 Nov 2026 (Sumit: "It's crowded... Yes, build it"): calmer list page. One summary line instead of the tiles and charts;
    Your accounts first, then Worth a look, then Moving now (5 rows, then more). The company page is unchanged. */
 .strip{display:flex;flex-wrap:wrap;align-items:baseline;gap:4px 18px;margin:4px 0 4px;padding:9px 0;border-top:2px solid var(--line);border-bottom:1px solid var(--hair);font-size:14px;color:var(--body)}
@@ -614,7 +614,7 @@ async function loadAll() {
   if (PREV === undefined) PREV = (m && m.last_seen) || null;
   if (!touched) { touched = true; sb.rpc("touch_me").then(() => {}, () => {}); }   // note the visit (when, not what)
   noteSource();   // 14 Nov: where a new member came from (once, first sign-in only; the database refuses later writes)
-  await pNames;
+  // 20 Nov (Sumit: "show the page 1st"): the company-name list (search, 'no move yet' notes) no longer holds up the page
   member = Object.assign({plan: "free", plan_until: null, extra_accounts: 0, category: "gcc", state: "Maharashtra"}, m || {});
   if (member.category === "supplier") member.category = "gcc";   // 4 Nov (Sumit): suppliers tab hidden for now
   member.ended = null;
@@ -650,6 +650,7 @@ async function loadAll() {
   if (!hashRead) { hashRead = true; if (!view.open) view.open = hashCo(); }   // a link that opens one company directly
   setupTop();
   render();
+  if (!namesLoaded) pNames.then(() => { if (namesLoaded) render(); });   // 20 Nov: search and notes fill in when the names arrive
 }
 let hashRead = false;
 
@@ -1118,7 +1119,7 @@ function render() {
   const lim = (LIMITS[member.plan] ?? 3) + (member.extra_accounts || 0);
   const asked = askedList();
   $("chips").innerHTML = mine.map(a => {
-    const nt = !known.has(a.company.toLowerCase());
+    const nt = namesLoaded && !known.has(a.company.toLowerCase());   // 20 Nov: never 'not tracked' before the name list is in
     const rg = REG.get(a.company.toLowerCase());
     const ask = !nt ? "" : asked.includes(a.company.toLowerCase())
       ? `<button class="ask" disabled>Asked ✓</button>`
@@ -1166,6 +1167,7 @@ $("f-add").onsubmit = async e => {
   e.preventDefault();
   const typed = $("company").value.trim().replace(/\s+/g, " ");
   if (typed.length < 2) return;
+  await loadNames();   // 20 Nov: the name list loads in the background; adding waits for it (at once if it is in)
   const company = canonical(typed) || typed;
   $("sugg").classList.add("hide");
   $("b-add").disabled = true;
