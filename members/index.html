@@ -293,6 +293,20 @@ body:has(#s-email:not(.hide)) footer,body:has(#s-code:not(.hide)) footer{text-al
   .step{grid-template-columns:1fr;gap:2px}
 }
 .ts:not(:empty){margin-top:12px}
+/* 20 Nov (Manju): a tap answers at once; a thin bar shows while the page works */
+button:active,.trow:active,a:active{opacity:.6}
+body.busy{cursor:progress}
+body.busy::before{content:"";position:fixed;top:0;left:0;right:0;height:3px;background:var(--acc);z-index:999;animation:busy 1s ease-in-out infinite alternate}
+@keyframes busy{from{opacity:.35}to{opacity:1}}
+/* 20 Nov (Sumit): what the stage words mean */
+.gloss{margin:22px 0 8px;font-size:14px;color:var(--body)}
+.gloss summary{cursor:pointer;font-weight:600;color:var(--ink)}
+.gloss dl{margin:10px 0 0;display:grid;grid-template-columns:max-content 1fr;gap:6px 14px}
+.gloss dt{font-weight:600;color:var(--ink)}
+.gloss dd{margin:0}
+@media (max-width:640px){.gloss dl{grid-template-columns:1fr;gap:2px}.gloss dd{margin-bottom:8px}}
+.qmark{font-size:12px;font-weight:400;margin-left:6px;color:var(--muted);text-decoration:underline;cursor:pointer;background:none;border:0;padding:0}
+.regs .gotab{margin-left:6px}
 </style>
 </head>
 <body>
@@ -346,7 +360,7 @@ body:has(#s-email:not(.hide)) footer,body:has(#s-code:not(.hide)) footer{text-al
     <button class="ghost fxbtn" id="b-fx" type="button" aria-expanded="false">Filters: stage and city</button>
     <div class="fx" id="fx">
       <h3 id="h-tier" class="hide">Size and pace</h3><div class="filters" id="f-tier"></div>
-      <h3>Stage</h3><div class="filters" id="f-stage"></div>
+      <h3>Stage <button type="button" class="qmark" id="b-gloss">what do these mean?</button></h3><div class="filters" id="f-stage"></div>
       <h3>Region</h3><div class="filters" id="f-city"></div>
     </div>
     <button class="ghost fxbtn" id="b-mine" type="button" aria-expanded="false">My accounts</button>
@@ -394,6 +408,7 @@ body:has(#s-email:not(.hide)) footer,body:has(#s-code:not(.hide)) footer{text-al
       <button class="morel hide" id="more" type="button">Show more</button>
     </div>
     <div id="estbox"></div>
+    <details class="gloss" id="gloss"><summary>What the words mean</summary><dl id="gloss-dl"></dl></details>
     </section>
   </main>
 </div>
@@ -528,9 +543,10 @@ const core = s => s.toLowerCase().replace(/&/g, " and ").replace(/[^a-z0-9 ]/g, 
 async function loadNames() {
   if (namesLoaded) return;
   const names = [];
-  let cols = "name, status, registered_on, place";
+  let cols = "name, status, registered_on, place, tab";   // 20 Nov: 'tab' (SQL 024) says which tab a company sits in
   for (let from = 0; ; from += 1000) {
     let {data, error} = await sb.from("companies").select(cols).order("name").range(from, from + 999);
+    if (error && cols.endsWith(", tab")) { cols = "name, status, registered_on, place"; from -= 1000; continue; }   // before SQL 024
     if (error && cols !== "name") { cols = "name"; from -= 1000; continue; }   // before the 015 columns exist
     if (error || !data) break;
     names.push(...data);
@@ -541,7 +557,7 @@ async function loadNames() {
   known = new Set(names.map(r => r.name.toLowerCase()));
   REG = new Map(names.filter(r => r.status === "registered").map(r => [r.name.toLowerCase(), {on: r.registered_on || "", place: r.place || ""}]));
   EST = new Map(names.filter(r => r.status === "established").map(r => [r.name.toLowerCase(), {name: r.name, on: r.registered_on || "", place: r.place || ""}]));
-  NAMES = names.map(r => ({name: r.name, flat: flat(r.name), core: core(r.name), reg: r.status === "registered", est: r.status === "established"}));
+  NAMES = names.map(r => ({name: r.name, flat: flat(r.name), core: core(r.name), reg: r.status === "registered", est: r.status === "established", tab: "tab" in r ? (r.tab || "") : null, place: r.place || ""}));
 }
 function matches(q) {
   const f = flat(q);
@@ -650,17 +666,22 @@ $("tabs").addEventListener("click", async e => {
   if (!b) return;
   if (b.dataset.cat === member.category) { if (view.open) setOpen(null); return; }   // on a company page: the tab takes you back to its list
   if (location.hash) history.replaceState(null, "", location.pathname + location.search);
+  // 20 Nov (Manju): the tab lights up at once and a bar shows while the other tab loads
+  for (const x of $("tabs").querySelectorAll("button")) x.setAttribute("aria-pressed", String(x === b));
+  document.body.classList.add("busy"); $("count").textContent = "Loading…";
   // Free and Individual cover one category: switching changes it (saved under the member's own row)
   const uid = await myId();
-  if (!uid) return signedOut();
+  if (!uid) { document.body.classList.remove("busy"); return signedOut(); }
   const {error} = await sb.from("members").update({category: b.dataset.cat}).eq("id", uid);
-  if (error) { alert("Could not switch: " + error.message); return; }
-  view = {tier: "", stage: "", city: "", q: "", shown: 30, open: null, allIndiaState: view.allIndiaState};
-  loadAll();
+  if (error) { document.body.classList.remove("busy"); for (const x of $("tabs").querySelectorAll("button")) x.setAttribute("aria-pressed", String(x.dataset.cat === member.category)); alert("Could not switch: " + error.message); return; }
+  view = {tier: "", stage: "", city: "", q: carryQ, shown: 30, open: null, allIndiaState: view.allIndiaState};
+  $("q").value = carryQ; carryQ = "";
+  try { await loadAll(); } finally { document.body.classList.remove("busy"); }
 });
 document.addEventListener("keydown", e => { if (e.key === "Escape" && view.open) goBack(); });
 document.addEventListener("click", e => { const f = e.target.closest("button[data-find]"); if (f) { setOpen(f.dataset.find); return; } });
-document.addEventListener("click", e => { const g = e.target.closest("button[data-go]"); if (g) { const b = $("tabs").querySelector(`button[data-cat="${g.dataset.go}"]`); if (b) b.click(); } });
+document.addEventListener("click", e => { const g = e.target.closest("button[data-go]"); if (g) { const b = $("tabs").querySelector(`button[data-cat="${g.dataset.go}"]`); if (b) { carryQ = g.dataset.q || ""; b.click(); } } });
+document.addEventListener("click", e => { if (e.target.closest("#b-gloss")) { const d = $("gloss"); d.open = true; d.scrollIntoView({behavior: "smooth", block: "start"}); } });
 $("state").addEventListener("change", async e => {
   if (ALL_INDIA.includes(member.plan)) { view.allIndiaState = e.target.value; view.city = ""; render(); return; }
   const uid = await myId();
@@ -835,7 +856,7 @@ function coPage(c) {
   const steps = ms.slice(0, 5).map(stepHtml).join("")
     + (ms.length > 5 ? `<details class="earlier"><summary>${Math.min(ms.length, 15) - 5} earlier move${Math.min(ms.length, 15) - 5 === 1 ? "" : "s"}</summary>${ms.slice(5, 15).map(stepHtml).join("")}</details>` : "")
     + (ms.length > 15 ? `<p class="small">${ms.length - 15} older moves not shown.</p>` : "");
-  const meta = [`${c.yours ? '<span class="yours">YOUR ACCOUNT</span> ' : ""}${esc(c.city || "Site not stated")}`, stage ? `<span class="stw">${esc(stage)}</span>` : ""].filter(Boolean);
+  const meta = [`${c.yours ? '<span class="yours">YOUR ACCOUNT</span> ' : ""}${esc(c.city || "Site not stated")}`, stage ? `<span class="stw"${meanOf(stage) ? ` title="${esc(meanOf(stage))}"` : ""}>${esc(stage)}</span>` : ""].filter(Boolean);
   return `<button class="back" type="button" data-back>← Back to the list</button>
     <div class="chead"><div><h1>${esc(c.name)}</h1><div class="cmeta">${meta.map(x => `<span>${x}</span>`).join('<span class="sep">|</span>')}</div></div>${followHtml(c)}</div>
     <div class="ccols">
@@ -860,12 +881,37 @@ const coMissing = name => `<button class="back" type="button" data-back>← Back
 // one company directly. Going back returns to the same place in the list, with the filters as they were.
 let navDepth = 0;
 const hashCo = () => { const m = location.hash.match(/^#c=(.+)$/); try { return m ? decodeURIComponent(m[1]) : null; } catch (e) { return null; } };
+// 20 Nov 2026 (Sumit, after Manju's first look): every stage word explained. Hover shows it on a computer; the list under
+// the companies shows it on every screen. Temporary help until the help page carries it.
+const MEAN = {
+  "Set up, not hiring yet": "The company has set up in India (a new India company or office), but we have not seen job ads yet.",
+  "Hiring quietly": "Job ads for its India centre are out, but the company has not announced the centre yet.",
+  "Announced": "The company, or a news report, has said the India centre is coming.",
+  "Opened": "The centre is open and working.",
+  "Growing": "An open centre is adding people or space.",
+  "Applied for approval": "The company has asked the government to approve a plant or an expansion. Not approved yet.",
+  "Planned": "A plant or an expansion is planned, but building has not started.",
+  "Being built": "The plant is being built or set up.",
+  "Started": "The plant has started production.",
+  "Won an order": "The supplier has won an order.",
+  "Adding capacity": "The supplier is adding capacity: a new line, shift or site."};
+const MEAN_ALL = [["watching", "Fewer than two moves in the last 30 days. We keep watching, and add each new move."],
+  ["reported", "From a news report, not the company's own word."],
+  ["*", "Our estimate, not a fact from the company."]];
+const meanOf = l => MEAN[l] || "";
+function glossHtml(cat) {
+  const st = ((CATS[cat] || CATS.gcc).st || []).map(s => s[1]).filter(l => MEAN[l]);
+  return st.map(l => `<dt>${esc(l)}</dt><dd>${esc(MEAN[l])}</dd>`).join("") + MEAN_ALL.map(([l, m]) => `<dt>${esc(l)}</dt><dd>${esc(m)}</dd>`).join("");
+}
+let carryQ = "";   // 20 Nov: a search carried into the other tab ("Show" on a company found there)
+
 function setOpen(n) {
   if (n && !view.open) view.listY = window.scrollY;
   view.open = n || null;
   if (n) { history.pushState(null, "", "#c=" + encodeURIComponent(n)); navDepth++; }
   else history.replaceState(null, "", location.pathname + location.search);
-  render(); window.scrollTo(0, n ? 0 : (view.listY || 0));
+  document.body.classList.add("busy");   // 20 Nov: answer the tap at once, then draw
+  requestAnimationFrame(() => setTimeout(() => { try { render(); window.scrollTo(0, n ? 0 : (view.listY || 0)); } finally { document.body.classList.remove("busy"); } }, 0));
 }
 function goBack() { if (navDepth > 0) { navDepth--; history.back(); } else setOpen(null); }
 window.addEventListener("popstate", () => { view.open = hashCo(); render(); window.scrollTo(0, view.open ? 0 : (view.listY || 0)); });
@@ -907,7 +953,7 @@ function render() {
   const textHit = c => !q || c.name.toLowerCase().includes(q) || (c.city || "").toLowerCase().includes(q);
   const stageCount = s => base.filter(c => (!s || c.stage === s) && (!view.city || (c.city || "Site not stated") === view.city)).length;
   $("f-stage").innerHTML = [["", "All stages"], ...C.st].map(([k, l]) =>
-    `<button data-stage="${k}" aria-pressed="${view.stage === k}">${esc(l)}<span>${stageCount(k)}</span></button>`).join("");
+    `<button data-stage="${k}" aria-pressed="${view.stage === k}"${meanOf(l) ? ` title="${esc(meanOf(l))}"` : ""}>${esc(l)}<span>${stageCount(k)}</span></button>`).join("");
   const cityCounts = {};
   for (const c of base.filter(c => !view.stage || c.stage === view.stage)) { const k = c.city || "Site not stated"; cityCounts[k] = (cityCounts[k] || 0) + 1; }
   const cities = Object.entries(cityCounts).sort((a, b) => b[1] - a[1]);
@@ -970,7 +1016,7 @@ function render() {
   const shownN = noFilter && !view.expanded ? (sorted.length <= 7 ? 7 : 5) : view.shown;   // 14 Nov (Sumit): 5 rows, then "Show N more"
   const label = (c) => ((CATS[c.category] || {st: []}).st.find(s => s[0] === c.stage) || [, c.category ? "" : "Your account"])[1];
   // 12 Nov DRAFT: the stage in words, with 'watching' under it (the coloured letters and their legend are gone)
-  const stageWords = (c) => `<span class="stw">${esc(c.category ? label(c) : "")}${!READS.has(c.name.toLowerCase()) && watching(c) ? '<small title="Fewer than two moves in the last 30 days">watching</small>' : ""}</span>`;
+  const stageWords = (c) => `<span class="stw"${c.category && meanOf(label(c)) ? ` title="${esc(meanOf(label(c)))}"` : ""}>${esc(c.category ? label(c) : "")}${!READS.has(c.name.toLowerCase()) && watching(c) ? '<small title="Fewer than two moves in the last 30 days">watching</small>' : ""}</span>`;
   { // 12 Nov DRAFT: the 'Showing' line: the filters in force, each with an x, and two switches
     const chips = [];
     const stL = (C.st.find(s => s[0] === view.stage) || [])[1];
@@ -996,16 +1042,28 @@ function render() {
   }
   // 4 Nov (Sumit): established GCCs listed under the moving ones, with their label (no filters set, or a search that hits them)
   const estShown = (view.stage || view.city || view.tier) ? [] : est.filter(r => !q || r.name.toLowerCase().includes(q));
+  $("gloss-dl").innerHTML = glossHtml(member.category);
   $("estbox").innerHTML = estShown.length ? `<details class="estd"${q ? " open" : ""}><summary>${estShown.length} ${esc(C.estn || "established company")}${estShown.length === 1 ? "" : "s"} we watch</summary>
       <p>Global companies' own centres already running in India. No new move tracked yet; when one moves, it joins the list above.</p>
       ${estShown.map(r => `<span class="estn"><b>${esc(r.name)}</b>${r.on ? ` <small>since ${esc(r.on.slice(0, 4))}</small>` : ""}</span>`).join(", ")}</details>` : "";
   // 31 Oct (Sumit): companies that have only registered so far (no credible move yet) still answer a search, with a note
   const fq = flat(view.q);
-  const regHits = fq.length >= 2 ? NAMES.filter(x => (x.reg || x.est) && x.flat.includes(fq) && !COS.some(c => c.name.toLowerCase() === x.name.toLowerCase())
-    && !estShown.some(r => r.name === x.name)).slice(0, 6) : [];
+  const regHits = fq.length >= 2 ? NAMES.filter(x => x.flat.includes(fq) && !COS.some(c => c.name.toLowerCase() === x.name.toLowerCase())
+    && !estShown.some(r => r.name === x.name)).slice(0, 8) : [];
   if (regHits.length) {
-    const block = `<div class="regs"><h5>Also in our records</h5>${regHits.map(x => { const r = REG.get(x.name.toLowerCase()) || EST.get(x.name.toLowerCase());
-      return `<div class="regrow"><b>${esc(x.name)}</b><span class="rgnote">${esc(noteText(x.name) + (r.place ? " · " + r.place : ""))}</span></div>`; }).join("")}</div>`;
+    // 20 Nov (Manju searched Hyundai on the GCC tab and got nothing): a company we hold outside this view still answers,
+    // with where it sits. The database shows a member only their own tab, so the line says where to look.
+    const where = x => {
+      if (x.reg || x.est) { const r = REG.get(x.name.toLowerCase()) || EST.get(x.name.toLowerCase()) || {};
+        return [esc(noteText(x.name) + (r.place ? " · " + r.place : "")), ""]; }
+      if (x.tab && x.tab !== member.category && TABN[x.tab])
+        return [`Moving under ${esc(TABN[x.tab])}`, `<button class="ghost gotab" data-go="${x.tab}" data-q="${esc(view.q)}">Show</button>`];
+      if (x.tab === member.category && x.place) return [`Moving in ${esc(x.place)}, outside your plan's state. Add it to My accounts to see its moves.`, ""];
+      if (x.tab === null) return ["In our records. It may be under the other tab or in another state; add it to My accounts to see its moves.", ""];   // before SQL 024
+      return [x.tab ? "In our records. Add it to My accounts to see its moves." : "In our records, with moves outside these tabs. Add it to My accounts to see them.", ""];
+    };
+    const block = `<div class="regs"><h5>Also in our records</h5>${regHits.map(x => { const [w, b] = where(x);
+      return `<div class="regrow"><b>${esc(x.name)}</b><span class="rgnote">${w}</span>${b}</div>`; }).join("")}</div>`;
     $("rows").innerHTML = (sorted.length ? $("rows").innerHTML : "") + block;
   }
   { // 14 Nov 2026 (Sumit): Your accounts lead (their moves in this tab), then Worth a look. Both step aside while filtering.
@@ -1178,12 +1236,15 @@ async function upgAsk(plan) {
 }
 document.addEventListener("click", e => { const u = e.target.closest("[data-upg]"); if (u && !u.disabled) upgAsk(u.dataset.upg); });
 
+let wasIn = false;   // 20 Nov: after sign-out nothing the member saw may stay on screen (shared computers): reload clean
 function onSession(session) {
   if (session) {
+    wasIn = true;
     $("who").innerHTML = `<span class="em">${esc(session.user.email)}</span> <button class="ghost" id="b-out">Sign out</button>`;
     $("b-out").onclick = () => sb.auth.signOut();
     show("s-app"); loadAll().then(() => { if (!upgStarted) { upgStarted = true; upgCheck(); } });
   } else {
+    if (wasIn) { member = null; mine = []; COS = []; $("s-app").innerHTML = ""; $("s-co").innerHTML = ""; location.replace(location.pathname); return; }
     $("who").textContent = ""; $("s-co").classList.add("hide"); show("s-email");
   }
 }
