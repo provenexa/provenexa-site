@@ -24,6 +24,7 @@
 .strip b{font-weight:800;color:var(--ink)}
 .strip .g{color:var(--acc);font-weight:800}
 .strip button{all:unset;cursor:pointer;color:var(--body)}
+.strip button.g{color:var(--acc);font-weight:800}
 .strip button:hover{text-decoration:underline;text-underline-offset:3px}
 .strip button[aria-pressed=true]{color:var(--ink);text-decoration:underline;text-decoration-thickness:2px;text-underline-offset:3px}
 .sec{margin-top:24px}
@@ -990,9 +991,13 @@ function render() {
     let since = "";
     if (SINCE) {
       const lastDay = new Date(PREV).toLocaleDateString("en-CA", {timeZone: "Asia/Kolkata"});
-      const yN = COS.filter(c => c.yours && c.isNew).length, oN = base.filter(c => !c.yours && c.isNew).length;
+      const yC = COS.filter(c => c.yours && c.isNew), yN = yC.length, oN = base.filter(c => !c.yours && c.isNew).length;
       const when = lastDay < todayIST() ? `Since ${nice(lastDay)}` : "Today";
-      since = `<span class="g">${when}: ${mine.length ? (yN ? `${yN} of your accounts moved` : "none of your accounts moved") : `${oN} compan${oN === 1 ? "y" : "ies"} moved`}</span>`;
+      // 21 Nov 2026 (Sumit): name the accounts, and make the line a link that shows them (with their new moves)
+      const who = yN === 1 ? `${esc(yC[0].name)} has a new move` : yN === 2 ? `${esc(yC[0].name)} and ${esc(yC[1].name)} have new moves` : `${yN} of your accounts have new moves`;
+      since = mine.length
+        ? (yN ? `<button type="button" class="g" data-newmine="1" aria-pressed="${!!(view.onlyMine && view.onlyNew)}">${when}: ${who} &rsaquo;</button>` : `<span class="g">${when}: none of your accounts moved</span>`)
+        : (oN ? `<button type="button" class="g" data-newmine="1" aria-pressed="${!!view.onlyNew}">${when}: ${oN} compan${oN === 1 ? "y" : "ies"} moved &rsaquo;</button>` : `<span class="g">${when}: no new moves yet</span>`);
     }
     const nW = base.length + est.length;
     const parts = [[nW, `${C.noun} watched`, ""], ...C.tiles(base)];
@@ -1127,7 +1132,7 @@ function render() {
     const title = nt ? "Not tracked yet: it shows here as soon as it moves" : rg ? regText(rg) + ". We watch it: it shows here as soon as it moves." : "";
     return `<span class="chip${nt ? " nt" : rg ? " rg" : ""}" title="${esc(title)}">${esc(a.company)}${rg ? `<span class="rgnote">no move yet</span>` : ""}${ask}<button data-id="${a.id}" aria-label="Remove ${esc(a.company)}">×</button></span>`;
   }).join("");
-  const ends = !member.ended && member.plan !== "free" && member.plan_until ? ` Ends after ${nice(member.plan_until)}.` : "";
+  const ends = !member.ended && !["free", "staff"].includes(member.plan) && member.plan_until && member.plan_until >= todayIST() ? ` Ends after ${nice(member.plan_until)}.` : "";   // 21 Nov: staff logins never end; never show a past date
   $("plannote").textContent = `${PLAN_NAMES[member.plan] || "Your plan"}: ${mine.length} of ${lim} accounts used.${ends}`;
   $("b-mine").textContent = mine.length ? `My accounts (${mine.length} of ${lim})` : "My accounts: add the companies you sell to";
   $("b-add").disabled = mine.length >= lim;
@@ -1144,6 +1149,8 @@ document.addEventListener("click", e => {
     view.shown = 30; render(); return; }
   const un = e.target.closest("[data-unset]");
   if (un) { const k = un.dataset.unset; if (k === "all") clearFilters(); else if (k === "q") { view.q = ""; $("q").value = ""; } else view[k] = ""; view.shown = 30; render(); return; }
+  const nm = e.target.closest("[data-newmine]");   // 21 Nov: the 'Today: ... has a new move' line
+  if (nm) { const off = view.onlyNew && (view.onlyMine || !mine.length); clearFilters(); if (!off) { view.onlyNew = true; view.onlyMine = !!mine.length; } render(); return; }
   const on = e.target.closest("[data-only]"); if (on) { view[on.dataset.only] = !view[on.dataset.only]; view.shown = 30; render(); return; }
   const fo = e.target.closest("[data-follow]"); if (fo) { if (!fo.disabled) followAcc(fo); return; }
   const uf = e.target.closest("[data-unfollow]"); if (uf) { removeAcc(uf.dataset.unfollow); return; }
