@@ -55,6 +55,7 @@ nav a.on{color:var(--ink);font-weight:700}
 .plan .price{font-size:40px;font-weight:800;color:var(--ink);letter-spacing:-1px;line-height:1.1;margin-top:10px}
 .plan .price small{font-size:15px;font-weight:600;color:var(--muted);letter-spacing:0}
 .plan .bill{font-size:13.5px;color:var(--muted);min-height:20px}
+.plan .gst{font-size:13.5px;font-weight:600;color:var(--ink);margin-top:2px}   /* 22 Nov 2026: the amount with GST, so no surprise at checkout */
 .plan .cta{padding:0 20px 18px}
 .plan .cta .btn{width:100%}
 .plan ul{list-style:none;margin:0;padding:16px 20px 18px;border-top:1px solid var(--hair)}
@@ -158,7 +159,8 @@ footer .wrap{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap}
   <div class="plans">
     <div class="plan">
       <div class="head"><div class="tag">Try it</div><h2>Free</h2>
-        <div class="price">Rs 0 <small>forever</small></div><div class="bill">No card needed</div></div>
+        <div class="price">Rs 0 <small>forever</small></div>
+        <div class="gst">&nbsp;</div><div class="bill">No card needed</div></div>
       <div class="cta"><a class="btn soon" href="mailto:research@provenexa.com?subject=Early%20access%20-%20Free%20plan">Coming soon &middot; tell me first</a></div>
       <ul>
         <li>Last week's moves in one category and one state</li>
@@ -171,6 +173,7 @@ footer .wrap{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap}
     <div class="plan">
       <div class="head"><div class="tag">One salesperson</div><h2>Individual</h2>
         <div class="price" data-m="Rs 999" data-y="Rs 9,999">Rs 999 <small data-m="/ month" data-y="/ year">/ month</small></div>
+        <div class="gst" data-m="+ 18% GST: Rs 1,178.82 in all" data-y="+ 18% GST: Rs 11,798.82 in all">+ 18% GST: Rs 1,178.82 in all</div>
         <div class="bill" data-m="or Rs 9,999 a year" data-y="Rs 833 a month, billed yearly">or Rs 9,999 a year</div></div>
       <div class="cta"><a class="btn soon" href="mailto:research@provenexa.com?subject=Early%20access%20-%20Individual%20plan">Coming soon &middot; tell me first</a></div>
       <ul>
@@ -186,6 +189,7 @@ footer .wrap{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap}
       <span class="badge">Most popular</span>
       <div class="head"><div class="tag">For serious sellers</div><h2>Plus</h2>
         <div class="price" data-m="Rs 1,999" data-y="Rs 19,999">Rs 1,999 <small data-m="/ month" data-y="/ year">/ month</small></div>
+        <div class="gst" data-m="+ 18% GST: Rs 2,358.82 in all" data-y="+ 18% GST: Rs 23,598.82 in all">+ 18% GST: Rs 2,358.82 in all</div>
         <div class="bill" data-m="or Rs 19,999 a year" data-y="Rs 1,667 a month, billed yearly">or Rs 19,999 a year</div></div>
       <div class="cta"><a class="btn soon" href="mailto:research@provenexa.com?subject=Early%20access%20-%20Plus%20plan">Coming soon &middot; tell me first</a></div>
       <ul>
@@ -199,6 +203,7 @@ footer .wrap{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap}
     <div class="plan">
       <div class="head"><div class="tag">Small firm</div><h2>Team</h2>
         <div class="price" data-m="Rs 4,999" data-y="Rs 49,999">Rs 4,999 <small data-m="/ month" data-y="/ year">/ month</small></div>
+        <div class="gst" data-m="+ 18% GST: Rs 5,898.82 in all" data-y="+ 18% GST: Rs 58,998.82 in all">+ 18% GST: Rs 5,898.82 in all</div>
         <div class="bill" data-m="up to 5 people · or Rs 49,999 a year" data-y="up to 5 people · Rs 4,167 a month, billed yearly">up to 5 people · or Rs 49,999 a year</div></div>
       <div class="cta"><a class="btn" href="mailto:research@provenexa.com?subject=Two-week%20pilot%20-%20Team%20plan">Start a two-week pilot</a></div>
       <ul>
@@ -234,7 +239,7 @@ footer .wrap{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap}
         <tr><td>Search any company</td><td>Stage and last move</td><td class="y">Full record</td><td class="y">Full record</td><td class="y">Full record</td></tr>
         <tr class="grp"><td colspan="5">Your accounts</td></tr>
         <tr><td>Accounts included</td><td>3</td><td>10</td><td>25</td><td>50, shared</td></tr>
-        <tr><td>Extra accounts (packs of 5)</td><td class="n">Upgrade</td><td>Rs 69 each</td><td>Rs 49 each</td><td>Rs 29 each</td></tr>
+        <tr><td>Extra accounts (packs of 5)</td><td class="n">Upgrade</td><td>Rs 69 each + GST</td><td>Rs 49 each + GST</td><td>Rs 29 each + GST</td></tr>
         <tr><td>Swaps a month</td><td>1</td><td>2</td><td>5</td><td>20</td></tr>
         <tr><td>Alerts when your accounts move</td><td class="y">Same day</td><td class="y">Same day</td><td class="y">Same day</td><td class="y">Same day</td></tr>
         <tr class="grp"><td colspan="5">People and tools</td></tr>
