@@ -55,6 +55,7 @@ nav a.on{color:var(--ink);font-weight:700}
 .plan .price{font-size:40px;font-weight:800;color:var(--ink);letter-spacing:-1px;line-height:1.1;margin-top:10px}
 .plan .price small{font-size:15px;font-weight:600;color:var(--muted);letter-spacing:0}
 .plan .bill{font-size:13.5px;color:var(--muted);min-height:20px}
+.plan .bill a.yv{color:var(--acc);font-weight:700;text-decoration:underline;text-underline-offset:2px}   /* 22 Nov 2026: monthly view points to yearly */
 .plan .gst{font-size:13.5px;font-weight:600;color:var(--ink);margin-top:2px}   /* 22 Nov 2026: the amount with GST, so no surprise at checkout */
 .plan .cta{padding:0 20px 18px}
 .plan .cta .btn{width:100%}
@@ -174,7 +175,7 @@ footer .wrap{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap}
       <div class="head"><div class="tag">One salesperson</div><h2>Individual</h2>
         <div class="price" data-m="Rs 999" data-y="Rs 9,999">Rs 999 <small data-m="/ month" data-y="/ year">/ month</small></div>
         <div class="gst" data-m="+ 18% GST: Rs 1,178.82 in all" data-y="+ 18% GST: Rs 11,798.82 in all">+ 18% GST: Rs 1,178.82 in all</div>
-        <div class="bill" data-m="or Rs 9,999 a year" data-y="Rs 833 a month, billed yearly">or Rs 9,999 a year</div></div>
+        <div class="bill" data-mlink="" data-m="" data-y="Rs 833 a month, billed yearly"><a class="yv" href="#yearly">Best value: pay yearly, 2 months free &rsaquo;</a></div></div>
       <div class="cta"><a class="btn soon" href="mailto:research@provenexa.com?subject=Early%20access%20-%20Individual%20plan">Coming soon &middot; tell me first</a></div>
       <ul>
         <li class="lead">Everything in Free, plus</li>
@@ -190,7 +191,7 @@ footer .wrap{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap}
       <div class="head"><div class="tag">For serious sellers</div><h2>Plus</h2>
         <div class="price" data-m="Rs 1,999" data-y="Rs 19,999">Rs 1,999 <small data-m="/ month" data-y="/ year">/ month</small></div>
         <div class="gst" data-m="+ 18% GST: Rs 2,358.82 in all" data-y="+ 18% GST: Rs 23,598.82 in all">+ 18% GST: Rs 2,358.82 in all</div>
-        <div class="bill" data-m="or Rs 19,999 a year" data-y="Rs 1,667 a month, billed yearly">or Rs 19,999 a year</div></div>
+        <div class="bill" data-mlink="" data-m="" data-y="Rs 1,667 a month, billed yearly"><a class="yv" href="#yearly">Best value: pay yearly, 2 months free &rsaquo;</a></div></div>
       <div class="cta"><a class="btn soon" href="mailto:research@provenexa.com?subject=Early%20access%20-%20Plus%20plan">Coming soon &middot; tell me first</a></div>
       <ul>
         <li class="lead">Everything in Individual, plus</li>
@@ -204,7 +205,7 @@ footer .wrap{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap}
       <div class="head"><div class="tag">Small firm</div><h2>Team</h2>
         <div class="price" data-m="Rs 4,999" data-y="Rs 49,999">Rs 4,999 <small data-m="/ month" data-y="/ year">/ month</small></div>
         <div class="gst" data-m="+ 18% GST: Rs 5,898.82 in all" data-y="+ 18% GST: Rs 58,998.82 in all">+ 18% GST: Rs 5,898.82 in all</div>
-        <div class="bill" data-m="up to 5 people · or Rs 49,999 a year" data-y="up to 5 people · Rs 4,167 a month, billed yearly">up to 5 people · or Rs 49,999 a year</div></div>
+        <div class="bill" data-mlink="up to 5 people · " data-m="" data-y="up to 5 people · Rs 4,167 a month, billed yearly">up to 5 people · <a class="yv" href="#yearly">Best value: pay yearly, 2 months free &rsaquo;</a></div></div>
       <div class="cta"><a class="btn" href="mailto:research@provenexa.com?subject=Two-week%20pilot%20-%20Team%20plan">Start a two-week pilot</a></div>
       <ul>
         <li class="lead">Plus, for up to 5 people</li>
@@ -298,9 +299,14 @@ document.querySelectorAll('.seg button').forEach(b=>b.onclick=()=>{
   document.querySelectorAll('.seg button').forEach(x=>{x.classList.toggle('on',x===b);x.setAttribute('aria-selected',x===b)});
   document.querySelectorAll('[data-m]').forEach(el=>{
     const v=y?el.dataset.y:el.dataset.m;
-    if(el.classList.contains('price')){el.firstChild.nodeValue=v+' '}else{el.textContent=v}
+    if(el.classList.contains('price')){el.firstChild.nodeValue=v+' '}
+    else if(!y&&el.dataset.mlink!==undefined){el.innerHTML=el.dataset.mlink+'<a class="yv" href="#yearly">Best value: pay yearly, 2 months free &rsaquo;</a>'}   // 22 Nov 2026
+    else{el.textContent=v}
   });
 });
+// 22 Nov 2026: 'Best value: pay yearly' and /pricing/#yearly switch the page to the yearly prices
+document.addEventListener('click',e=>{const a=e.target.closest('a.yv');if(!a)return;e.preventDefault();const yb=document.querySelector('.seg button[data-b="y"]');if(yb){yb.click();yb.scrollIntoView({block:'center',behavior:'smooth'});}});
+if(location.hash==='#yearly'){const yb=document.querySelector('.seg button[data-b="y"]');if(yb)yb.click();}
 (function(){const r=document.documentElement,b=document.getElementById('theme');if(location.hash==='#light'||location.hash==='#dark')r.dataset.theme=location.hash.slice(1);
  const dark=()=>r.dataset.theme?r.dataset.theme==='dark':matchMedia('(prefers-color-scheme: dark)').matches;
  const set=()=>{b.textContent=dark()?'Light':'Dark'};set();
