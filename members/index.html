@@ -605,7 +605,8 @@ async function loadAll() {
   const pAcc = sb.from("my_accounts").select("id, company, added_at").order("added_at", {ascending: false});
   // the database returns only what this member's plan allows (their category and state, Free a week late, plus their own accounts)
   const pMoves = allRows((c, o) => sb.from("moves").select(c, o).order("day", {ascending: false}).order("id"),
-    ["company, day, kind_label, headline, url, category, stage, city, state, loaded_at, tier",
+    ["company, day, kind_label, headline, url, category, stage, city, state, loaded_at, tier, states",   // 22 Nov: states (SQL 029)
+     "company, day, kind_label, headline, url, category, stage, city, state, loaded_at, tier",
      "company, day, kind_label, headline, url, category, stage, city, state, loaded_at"], 20000);   // before SQL 016: no groups yet
   const pReads = allRows((c, o) => sb.from("account_reads").select(c, o).order("company"), ["company, read"]);
   const pNames = loadNames();
@@ -705,7 +706,10 @@ $("state").addEventListener("change", async e => {
 function inView() {
   const cat = member.category, allIndia = ALL_INDIA.includes(member.plan);
   const st = allIndia ? view.allIndiaState : member.state;
-  return COS.filter(c => c.category === cat && (!st || c.state === st));
+  // 22 Nov 2026 (Sumit: "we show the state for now"): a company shows in a state when ANY of its moves in this tab is
+  // there, or names no place but carries that state in its list (company-wide moves, SQL 029); not only its latest move
+  return COS.filter(c => c.category === cat && (!st || c.state === st ||
+    c.moves.some(m => m.category === cat && (m.state === st || (!m.state && (m.states || []).includes(st))))));
 }
 // 29 Oct (Sumit): fewer than 2 moves in the last 30 days = 'Watching' (we are watching, not missing it)
 function watching(c) {
