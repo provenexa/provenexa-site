@@ -200,6 +200,12 @@ button.tile{font:inherit;font-weight:400;text-align:left;cursor:pointer;color:in
 .cbox p{margin:0 0 6px;font-size:15px;line-height:1.5}
 .cbox .step{grid-template-columns:1fr;gap:2px;padding:8px 0}
 .cbox .step .d{color:var(--ink);font-weight:700}
+/* 17 Nov 2026: QUICK BRIEF (facts first; Sumit: "the new quick brief is the right path, till we get the need for actual account brief") */
+.qview{background:var(--card);border-left:4px solid var(--acc);padding:10px 14px;margin:4px 0 12px;font-size:16.5px;line-height:1.55;max-width:38em}
+.qask{font-weight:700;color:var(--ink);border-left:4px solid var(--acc);padding:2px 0 2px 14px}
+.qb-basis{display:block;color:var(--muted);font-size:12.5px}
+.qfree{background:var(--card);border:1px dashed var(--muted);padding:12px 14px;font-size:15.5px;max-width:38em}
+details.fullb summary{cursor:pointer;font-weight:700;color:var(--acc)}
 .cfoot{display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px 20px;border-top:1px solid var(--line);margin-top:10px;padding-top:12px;font-size:13px;color:var(--muted)}
 .cfoot a{color:var(--acc);font-weight:700}
 .invite .ghost{margin-left:8px;font-size:12.5px;padding:3px 9px}
@@ -626,11 +632,13 @@ async function loadAll() {
   }
   const {data: acc} = await pAcc;
   mine = acc || [];
+  if (QB_FREE_MONTH > 0) await qbLoadOpens();   // 17 Nov 2026: Free plan, quick briefs opened this month (off: 0 a month)
   const {data: rows} = await pMoves;
   const by = new Map();
   for (const r of rows) {
     const k = r.company.toLowerCase();
     if (!by.has(k)) by.set(k, {name: r.company, category: r.category, stage: r.stage, city: r.city, state: r.state, tier: r.tier ? String(r.tier) : "", latest: r.day, moves: []});
+    else if (!by.get(k).category && r.category) Object.assign(by.get(k), {category: r.category, stage: r.stage, city: r.city, state: r.state});   // 17 Nov 2026
     by.get(k).moves.push(r);
   }
   READS = new Map();
@@ -644,7 +652,7 @@ async function loadAll() {
   for (const c of COS) {
     for (const mv of c.moves) {
       let at = mv.loaded_at ? new Date(mv.loaded_at) : null;
-      if (at && member.plan === "free") { const vis = new Date(mv.day + "T00:00:00+05:30"); vis.setDate(vis.getDate() + 7); if (vis > at) at = vis; }
+      if (at && member.plan === "free" && !c.yours) { const vis = new Date(mv.day + "T00:00:00+05:30"); vis.setDate(vis.getDate() + 7); if (vis > at) at = vis; }
       mv.isNew = !!(SINCE && at && at > SINCE);
     }
     c.isNew = c.moves.some(mv => mv.isNew);
@@ -754,9 +762,9 @@ const STAGE_READ = {
         growing: ["Adding people or space.", "Expansion means more hiring rounds and more seats to service.", "RPO firms, recruiters, and facility vendors"]},
   plant: {clearance: ["Has applied for approval for a plant or an expansion.", "Hiring is likely 9-24 months away*: the time to get on the vendor list is before it closes.", "Staffing firms, apprenticeship partners, and local manpower vendors"],
           planned: ["A plant or expansion is planned.", "Construction comes first; shop-floor vendors are picked closer to the start.", "Staffing firms and local manpower vendors"],
-          building: ["The plant is being built.", "Construction workers are needed now, and the shop-floor vendor panel is being set.", "Staffing firms, contract-labour vendors, and apprenticeship partners"],
+          building: ["The plant is being built.", "The shop-floor vendor panel is being set while it is built.", "Staffing firms, contract-labour vendors, and apprenticeship partners"],
           started: ["Production has started.", "Shift hiring, mostly through local vendors, and apprentices.", "Staffing firms, contract-labour vendors, and apprenticeship partners"]},
-  supplier: {orders: ["Has won an order.", "Delivering it usually means more shifts and contract workers.", "Staffing firms and contract-labour vendors"],
+  supplier: {orders: ["Has won orders.", "Delivering big orders can mean more shifts and contract workers, in our view.", "Staffing firms and contract-labour vendors"],
              capacity: ["Is adding capacity.", "New lines need workers, trainees and vendors.", "Staffing firms, apprenticeship partners, and vendors"]}};
 // 16 Nov 2026: one plain line for a move, from its kind (the headline itself stays under Dated moves). No company name.
 const KIND_LINE = {"Office / centre": "New office or centre", "Hiring": "Hiring", "Hiring now": "Hiring now", "New plant": "New plant",
@@ -785,11 +793,147 @@ const WATCH_NEXT = {
         opened: "batch hiring drives, more floors or a second site",
         growing: "the next hiring round, new space, a new city"},
   plant: {clearance: "the approval itself, land allotment, the start of construction",
-          planned: "the approval, land, a construction contract",
+          planned: "land, a construction contract, a start date",
           building: "the first shop-floor job ads, apprentice notices, the start of production",
           started: "shift hiring, a second line, apprentice intake"},
   supplier: {orders: "more orders, extra shifts, hiring at the plant",
              capacity: "the new line starting, hiring for it"}};
+// 22 Nov 2026: "Brief written <date>, N days ago". The launch copy of the page has writtenLine; the live page did not yet,
+// so the quick brief carries its own (same wording) and uses the page's when it exists.
+const qbWritten = typeof writtenLine === "function" ? writtenLine : (r => {
+  if (!r || !r.wd) return r && r.up ? `Brief written ${esc(r.up)}.` : "";
+  const n = Math.round((new Date(todayIST() + "T00:00:00") - new Date(r.wd + "T00:00:00")) / 864e5);
+  return `Brief written ${fmt(r.wd, true)}, ${n <= 0 ? "today" : n === 1 ? "yesterday" : n + " days ago"}.`;
+});
+// ---------------------------------------------------------------- QUICK BRIEF (17 Nov 2026)
+// Sumit: "the new quick brief is the right path, till we get the need for actual account brief"; "keep the quick brief on
+// all plans for account on their plans.. coz brief is the selling points.. for free accounts we can still keep it as above".
+// Facts first: the dated moves (each with its stage and whose word it is), the stage wording above, one question for the
+// call, and what we don't know yet. All of it is built here from the moves this member can already see. Only "Our view"
+// may come from us (account_reads.read.qb.view, loaded only when it was written and checked for the company's latest move);
+// without it, the stage wording below stands in. The full account brief is a separate, paid lane: written on request.
+// 18 Nov 2026 (Sumit): every plan works the same way; the only limit is how many accounts it follows (Free 3). Free gets the
+// quick brief on its followed accounts and no extra opens (QB_FREE_MONTH 0; set it above 0 to bring back 'Show the quick brief').
+const QB_FREE_MONTH = 0;
+const QB_FREE_WATCHED = true;
+// The full account brief is a paid lane (Sumit, 17 Nov). Its price is not set yet: leave this empty and the page says
+// nothing about price. Set it (e.g. "Rs 499") once Sumit decides; the payment link comes with the payment gateway work.
+const FULL_BRIEF_PRICE = "Rs 299 plus GST";   // 18 Nov 2026 (Sumit): Rs 299 a full brief, before GST
+const QB_VIEW = {
+  gcc: {registered: "In our view, this is the early window. The India team is small, and hiring partners are not picked yet.",
+        quiet: "In our view, the hiring is ahead of any big news. A partner who gets in early is known before the launch.",
+        announced: "In our view, the next few months matter most. Hiring partners are often picked soon after the news.",
+        opened: "In our view, the centre is filling its seats. That means batch hiring and services for the new office.",
+        growing: "In our view, growth means another hiring round. It is a reason to call the India team."},
+  plant: {clearance: "In our view, this is early. The time to get known is before the vendor list is drawn up.",
+          planned: "In our view, the plan is set but the site is not running. Vendors are picked closer to the start.",
+          building: "In our view, the vendor panel for the shop floor is being set. Getting on it early matters.",
+          started: "In our view, a new line means shift hiring. Most of it goes through local vendors."},
+  supplier: {orders: "In our view, big orders mean busy plants. Extra shifts often need contract staff.",
+             capacity: "In our view, new capacity needs new shifts. The vendor list for it is set before it runs."}};
+const QB_ASK = {
+  gcc: {registered: "When does India hiring start{at}, and who picks the hiring partners?",
+        quiet: "Which roles{at} are hardest to fill, and do you use outside hiring partners?",
+        announced: "When do the first roles open{at}, and is the hiring-partner list set yet?",
+        opened: "How many seats are you filling{at} this year, and which roles are hardest?",
+        growing: "Where does the next hiring round happen, and who manages hiring partners?"},
+  plant: {clearance: "When does work start{at}, and who will set up the vendor list for the site?",
+          planned: "When does the site{at} start, and who will set up its vendor list?",
+          building: "When does the shop floor{at} start hiring, and will it go through vendors?",
+          started: "Is shift hiring{at} direct or through vendors, and how do we get on the vendor list?"},
+  supplier: {orders: "Will these orders need extra shifts{at}, and who supplies contract staff?",
+             capacity: "When does the new line{at} start, and who supplies its shift staff?"}};
+// the stage of each dated move, from its own words (same ordered rules as natsweep/linked_test/quick_brief_shadow/quick_brief.py)
+const QB_HIRING = /\b(walk-?ins?|hiring|apprentices?|campus|recruit\w*|open (\w+ ){0,2}roles|roles? (posted|listed|open)|lists \d+|\d+ (open )?(\w+ ){0,2}roles|job (ads?|posts?)|drive count|careers? site|vacanc\w*|trainees)\b/i;
+const QB_UPDATE = /\b(results?|sales|profit|revenue|output|quarterly|board meeting|investor (call|presentation|meet)|share grant|trade profile|expo)\b/i;
+const QB_RULES = {
+  plant: [["Hiring", QB_HIRING],
+    ["Order or bid", /\b(orders?|bids?|bidders?|tender|contract|deal to sell|maintenance deal|wins?|won|bags?|award(ed|s)?|letter of award)\b/i],
+    ["Deal", /\b(stake|acquir\w*|buys?|bought|takes? over|merg\w*|sells? \d+|joint company|joint venture|list(ing)? [\w ]{0,20}on the stock market)\b/i],
+    ["Approval", /\b(clearance|environment (approval|review)|study terms|terms of reference|expert committee|state committee|agenda|regulator|consent|incentives?|cabinet approves|public (session|hearing)|no-objection|nod|licen[cs]e|central approval|approval for)\b/i],
+    ["Started", /\b(commission\w*|starts? (commercial )?production|production (has )?start\w*|(has )?started|start of|starting up|starts (a|the|its|new)?\s?[\w. ]{0,45}(plant|line|unit|project)|switched on|turned on|running|inaugurat\w*|opens?|opened|leaves the plant|expanded|produced|stabilising|confirms the [\w ]{0,15}start|reaches \d)\b/i],
+    ["Being built", /\b(building|construction|being built|under way|broke ground|breaks? ground|groundbreaking|foundation stone|reactor|spent)\b/i],
+    ["Planned", /\b(plan(s|ned)?|announc\w*|propos\w*|explor\w*|expan\w*|capacity|will start|to start|due (by|in)|doubling|aims?|launch(es|ed)? (a |the |its )?[\w ,+-]{0,40}(park|plant|project|platform|pipeline)|launches with|(line|plant|unit|mill) approved|crore [\w ,]{0,40}plant|jobs by 20\d\d)\b/i],
+    ["Land", /\b(acres?|land)\b/i],
+    ["People", /\b(chief \w+ officer|head takes|takes charge|appoint\w*|names? (a )?new|names [\w ]{0,25}(ceo|chief|head)|joins|joined|next ceo)\b/i],
+    ["Company update", QB_UPDATE],
+    ["Money", /\b(loans?|bonds?|funds?|raise[sd]?|ipo|rights issue|investment|investing|invests?|grants?|crore (put|more)|put into|money raised)\b/i]],
+  gcc: [["Opened", /\b(opens?|opened|opening|inaugurat\w*|is open|fully operational|operational|(centre|center|hub|office|gcc)\b[^.;]{0,25}\blaunch(ed|es)?|launch(ed|es)?\b[^.;]{0,25}\b(centre|center|hub|office|gcc))\b(?!\s+(\w+\s+){0,2}(roles?|positions|jobs|vacancies))/i],
+    ["Growing", /\b(expan\w*|new (floor|office|site|city)|second (site|office|centre)|consolidated|more space|eyeing|explor\w*)\b/i],
+    ["Hiring", new RegExp(QB_HIRING.source + "|\\bwill hire\\b|\\bto hire\\b", "i")],
+    ["Announced", /\b(announc\w*|plans? (a|an|its|to)|to set up|will set up|to open|set to|unveil\w*)\b/i],
+    ["Set up", /\b(regist\w*|incorporat\w*|india arm|indian arm|indian company|set up (an|its) india)\b/i],
+    ["People", /\b(chief \w+ officer|head named|takes charge|appoint\w*|names? (a )?new|joins|joined)\b/i],
+    ["Deal", /\b(stake|acquir\w*|buys?|takes? over|merg\w*)\b/i]]};
+function qbTag(m, c) {
+  const t = m.headline || "", g = c.category === "gcc" ? "gcc" : "plant";
+  if (g === "plant") {
+    if (/^(building|construction|work)\b[^.;]{0,12}\b(starts?|started|begins?|began)\b|\bconstruction has started\b/i.test(t)) return "Being built";
+    if (/\bpre-order\b|\bmachines? (pre-)?orders?\b|\borders? for machines\b/i.test(t)) return "Planned";
+  }
+  const board = /\bboard\b[^.;]{0,20}\bapprov/i.test(t);
+  for (const [tag, rx] of QB_RULES[g]) {
+    if (tag === "Approval" && board && !/clearance|regulator|committee|consent/i.test(t)) continue;   // a board approval is the company's own plan or money
+    if (tag === "Deal" && QB_UPDATE.test(t)) continue;
+    if (rx.test(t)) return tag;
+  }
+  if (board) return /\b(plant|line|unit|capacity|mw|gwh|mill)\b/i.test(t) ? "Planned" : "Money";
+  return "News";
+}
+// whose word it is, from the move's general source label (the loader sends "src:<label>", never a link)
+const QB_BASIS = {"Company filings": "The company's own word", "Company's own website": "The company's own word",
+  "Public records": "Public record", "Job ads": "Job ads seen", "News reports": "Reported", "Social media": "Reported"};
+const qbBasis = m => { const lab = String(m.url || "").startsWith("src:") ? m.url.slice(4) : ""; return [QB_BASIS[lab] || "Reported", lab || "News reports"]; };
+const QB_STATES = new Set(["Maharashtra", "Gujarat", "Karnataka", "Tamil Nadu", "Telangana", "Andhra Pradesh", "Kerala", "Odisha", "West Bengal",
+  "Uttar Pradesh", "Madhya Pradesh", "Rajasthan", "Haryana", "Punjab", "Bihar", "Jharkhand", "Chhattisgarh", "Assam", "Goa", "Delhi NCR", "Uttarakhand", "Himachal Pradesh"]);
+const QB_JOBNUM = /\b\d[\d,]*\+?\s+(?:\w+\s){0,3}?(jobs|workers|staff|people|hires|operators|apprentices|employees|professionals|engineers)\b/i;
+const QB_START = /\b(by|from|in|before|due)\s+(?:(?:early|mid|late|end)[- ])?(?:(?:january|february|march|april|may|june|july|august|september|october|november|december|jan|feb|mar|apr|jun|jul|aug|sep|sept|oct|nov|dec)\s+)?20\d\d\b|\bstarts? in\b/i;
+function qbDontKnow(c, ms, hasPerson) {
+  const facts = ms.map(m => m.headline).join(" . "), g = c.category, st = c.stage, out = [];
+  out.push(QB_JOBNUM.test(facts) ? "How much of the stated hiring goes through outside partners or contract staff." : "How many people it will need to run.");
+  if (g === "plant" && ["clearance", "planned", "building"].includes(st) && !QB_START.test(facts)) out.push("When production starts.");
+  if (g === "gcc" && ["registered", "announced"].includes(st)) out.push("When India hiring starts.");
+  out.push(g === "gcc" ? "Whether hiring runs in-house or through a partner." : "Whether shop-floor hiring is direct or through local vendors.");
+  if (!hasPerson) out.push("Who runs hiring for this site.");
+  return out.slice(0, 4);
+}
+function qbAsk(c) {
+  const t = (QB_ASK[c.category] || {})[c.stage];
+  if (!t) return "";
+  const at = c.city ? (QB_STATES.has(c.city) ? ` in ${c.city}` : ` at ${c.city}`) : (c.state && QB_STATES.has(c.state) ? ` in ${c.state}` : "");
+  return t.replace("{at}", at);
+}
+// Free plan: which companies this member opened a quick brief for this month (their own rows only; SQL 021).
+// Until SQL 021 is run, the count lives in this browser only.
+let QB_OPENS = null;   // Set of lower-case company names opened this month
+const qbMonth = () => todayIST().slice(0, 7);
+async function qbLoadOpens() {
+  QB_OPENS = new Set();
+  if (member.plan !== "free") return;
+  const {data, error} = await sb.from("quick_brief_opens").select("company").eq("month", qbMonth());
+  if (!error && data) { for (const r of data) QB_OPENS.add(r.company.toLowerCase()); qbOpens.db = true; return; }
+  qbOpens.db = false;
+  try { for (const k of JSON.parse(localStorage.getItem("nm-qb-" + qbMonth()) || "[]")) QB_OPENS.add(k); } catch (e) {}
+}
+function qbOpens() { return QB_OPENS || new Set(); }
+async function qbOpen(btn) {
+  const company = btn.dataset.qbopen, k = company.toLowerCase();
+  btn.disabled = true; btn.textContent = "Opening…";
+  if (qbOpens.db) {
+    const {error} = await sb.from("quick_brief_opens").insert({company, month: qbMonth()});
+    if (error && error.code !== "23505") { btn.disabled = false; btn.textContent = "Show the quick brief"; btn.nextElementSibling.textContent = error.code === "42501" ? `Your ${QB_FREE_MONTH} quick briefs for this month are used.` : "Could not open it just now. Please try again."; return; }
+  } else {
+    try { localStorage.setItem("nm-qb-" + qbMonth(), JSON.stringify([...qbOpens(), k])); } catch (e) {}
+  }
+  qbOpens().add(k);
+  render();
+}
+// may this member see the quick brief for company c?
+function qbAllowed(c) {
+  if (member.plan !== "free") return !!c.yours;   // 18 Nov 2026 (Sumit): paid plans get it on the accounts they follow
+  if (QB_FREE_WATCHED && c.yours) return true;
+  return QB_FREE_MONTH > 0 && qbOpens().has(c.name.toLowerCase());
+}
 // 12 Nov 2026 DRAFT: follow a company from its own panel; the line shows how many accounts the plan has left
 function followHtml(c) {
   const lim = (LIMITS[member.plan] ?? 3) + (member.extra_accounts || 0);
@@ -809,6 +953,8 @@ async function followAcc(btn) {
 }
 // ---------------------------------------------------------------- the company page (12 Nov 2026, from Sumit's drawing)
 const stageLabel = c => ((CATS[c.category] || {st: []}).st.find(s => s[0] === c.stage) || [, ""])[1];
+// 17 Nov 2026 (quick brief): the move's stage from its own words, and whose word it is (general label only)
+const qbStepHtml = (m, c) => { const [w, lab] = qbBasis(m); return `<div class="step"><span class="d">${fmt(m.day, true)}</span><span>${m.isNew ? '<span class="tg new">NEW</span>' : ""}<span class="k">${esc(qbTag(m, c))}</span>${esc(m.headline)}<span class="qb-basis">${esc(w)}${w.startsWith("The company") || w === "Reported" ? " · " + esc(lab) : ""}</span></span></div>`; };
 const stepHtml = m => `<div class="step"><span class="d">${fmt(m.day, true)}</span><span>${m.isNew ? '<span class="tg new">NEW</span>' : ""}<span class="k">${esc(m.kind_label || "")}</span>${esc(m.headline)}${String(m.url || "").startsWith("src:") ? ` <span class="sw">· ${esc(m.url.slice(4))}</span>` : ""}</span></div>`;
 // "Ask us for a brief": only the company name reaches us, never who asked (same promise as 'Ask us to track it').
 // The brief_requests table exists since 12 Nov 2026 (SQL 019, run by Sumit, checked from outside). Only plans that carry briefs see the button.
@@ -817,59 +963,81 @@ function briefAsks() { try { return JSON.parse(localStorage.getItem("nm-brief-as
 function askBriefHtml(c) {
   if (!BRIEF_ASK || member.plan === "free") return "";
   const asks = briefAsks(), k = c.name.toLowerCase();
-  if (asks.some(a => a.c === k)) return `<div class="askrow"><b>Asked ✓</b><span>We are looking at this company again. If the public record supports a brief, it appears here.</span></div>`;
+  if (asks.some(a => a.c === k)) return `<div class="askrow"><b>Asked ✓</b><span>We are writing it. If the public record supports a full brief, it appears here within one working day.</span></div>`;
   if (asks.filter(a => Date.now() - a.t < 7 * 864e5).length >= 3) return `<div class="askrow"><span>You have asked for three briefs this week. We work through those first.</span></div>`;
-  return `<div class="askrow"><button class="askb" type="button" data-askbrief="${esc(c.name)}">Ask us for a brief</button><span>We look at this company again and write what the public record supports.</span></div>`;
+  return `<div class="askrow"><button class="askb" type="button" data-askbrief="${esc(c.name)}">Ask us for the full brief</button><span>We write it within one working day, from what the public record supports.</span></div>`;
 }
 async function askBrief(btn) {
   const company = btn.dataset.askbrief;
   btn.disabled = true; btn.textContent = "Sending…";
   const {error} = await sb.from("brief_requests").insert({company});
-  if (error) { btn.disabled = false; btn.textContent = "Ask us for a brief"; btn.nextElementSibling.textContent = "Could not send that just now. Please try again, or write to research@provenexa.com."; return; }
+  if (error) { btn.disabled = false; btn.textContent = "Ask us for the full brief"; btn.nextElementSibling.textContent = "Could not send that just now. Please try again, or write to research@provenexa.com."; return; }
   try { localStorage.setItem("nm-brief-asked", JSON.stringify([...briefAsks(), {c: company.toLowerCase(), t: Date.now()}].slice(-50))); } catch (e) {}
   render();
 }
 function coPage(c) {
   const r = READS.get(c.name.toLowerCase());
-  const ms = c.moves || [], first = ms[ms.length - 1], last = ms[0];
+  // 17 Nov 2026: the brief is built only from the company's own moves (the rows the loader kept in the tabs). For a company a
+  // member follows, the database also sends rows the loader kept out (results, another company's move, news abroad):
+  // those fold away under "Other news that names it", never as this company's steps.
+  const allMs = c.moves || [], tabMs = allMs.filter(m => m.category);
+  const ms = tabMs.length ? tabMs : allMs, otherMs = tabMs.length ? allMs.filter(m => !m.category) : [];
+  const first = ms[ms.length - 1], last = ms[0];
   const sr = (STAGE_READ[c.category] || {})[c.stage];
   const stage = stageLabel(c);
   const li = a => (a || []).filter(Boolean).map(x => `<li>${esc(x)}</li>`).join("");
-  let quick, means, full, who, person;
-  if (r) {   // a written brief
-    const mv = r.mv || [];
-    quick = `<p class="hl">${esc(r.h || last.headline)}</p><p class="small">Latest move ${fmt(last.day, true)}. ${ms.length} dated move${ms.length === 1 ? "" : "s"} so far.</p>`;   // the story itself sits under Full brief
-    means = (mv[1] ? `<p><b>Why now:</b> ${esc(mv[1])}</p>` : "") + (r.w && r.w.to ? `<p><b>Window open until ${esc(r.w.to)}*</b> ${esc(r.w.why || "")}</p>` : "");
-    full = (r.s ? `<p>${esc(r.s)}</p>` : "") + ((r.ck || []).length ? `<p><b>Check before you call</b></p><ul>${li(r.ck)}</ul>` : "") + (mv[2] ? `<p><b>Also:</b> ${esc(mv[2])}</p>` : "")
-      + `<p class="small">${(r.src || []).length ? `Sources: ${srcLine(r.src)}. ` : ""}${r.up ? `Brief updated ${esc(r.up)}. ` : ""}${r.w && r.w.to ? "* our estimate." : ""}</p>`;
-    who = mv[0] ? `<p>${esc(mv[0])}</p>` : "";
-    person = (r.pp || []).length
-      ? `<p><b>${r.pp.map(x => x.u ? `<a href="${esc(x.u)}" target="_blank" rel="noopener">${esc(x.n)}</a>` : esc(x.n)).join(", ")}</b></p><p class="small">Might be the relevant person. Check before calling.</p>`
-      : `<p><b>Unknown so far</b></p><p class="small">We add a name once public sources show one.</p>`;
-  } else {   // no written brief: the dated facts, and what this stage usually means (no new facts, no names)
-    // 16 Nov 2026 (Sumit: "looking like a news article, not like a sales intelligence service"): the headline lives under
-    // Dated moves as the evidence; up here, what kind of move it is and where, then what it means for someone who sells
-    quick = `<p class="hl">${esc(moveLine(last, c))}</p><p>Reported ${fmt(last.day, true)}, ${agoWords(last.day)}. ${ms.length > 1
-      ? `${ms.length} dated moves since ${fmt(first.day, true)}.` : "One dated move so far."}</p>`;
-    const nx = (WATCH_NEXT[c.category] || {})[c.stage];
-    means = sr ? `<p><b>At this stage:</b> ${esc(sr[0])}</p><p><b>Your opening:</b> ${esc(sr[1])}</p>`
-      + (nx ? `<p><b>Watch for:</b> ${esc(nx)}.</p>` : "") + (sr[1].includes("*") ? '<p class="small">* our estimate.</p>' : "") : "";
-    // 12 Nov (Sumit): say the rule in the box (a full brief once a company has two or more moves in 30 days), and keep the ask button
-    const RULE = "We write a full brief once a company has two or more moves in 30 days.";
-    full = member.plan === "free"
-      ? (watching(c) ? `<div class="cwait"><b>Watching.</b> ${RULE} This one has fewer so far.</div>`
-                     : `<div class="cwait">The full account brief (what it means, who to approach, and when) comes with the paid plans.</div>`)
-      : `<div class="cwait">${watching(c) ? `<b>Watching.</b> ${RULE} This one has fewer so far.`
-                                           : `<b>Brief due.</b> ${RULE} This one has. Its brief is on the way.`}${askBriefHtml(c)}</div>`;
-    who = sr ? `<p>${esc(sr[2])}.</p>` : "";
-    person = `<p><b>Unknown so far</b></p><p class="small">We add a name once public sources show one.</p>`;
+  const fullB = r && r.s ? r : null;            // a written full account brief (the paid lane, written on request)
+  const pp = (r && r.pp) || [];
+  const ok = qbAllowed(c);                       // the quick brief (18 Nov 2026: paid plans on the accounts they follow; Free: see QB_FREE_WATCHED + 5 a month)
+  // QUICK VIEW: the checked line when it is not older than the latest move; otherwise what kind of move it is and where
+  const qv = (r && r.qb && r.qb.qv && r.qb.day >= last.day) ? r.qb.qv
+    : (fullB && fullB.h && fullB.wd && fullB.wd >= last.day) ? fullB.h : moveLine(last, c);
+  const quick = `<p class="hl">${esc(qv)}</p><p class="small">Latest move ${fmt(last.day, true)}, ${agoWords(last.day)}. ${ms.length > 1
+    ? `${ms.length} dated moves since ${fmt(first.day, true)}.` : "One dated move so far."}</p>`;
+  // WHAT IT MEANS: the stage wording; then (quick brief) our view, what to watch for, what we don't know, one question
+  const nx = (WATCH_NEXT[c.category] || {})[c.stage];
+  const view = (r && r.qb && r.qb.view && r.qb.day === last.day) ? r.qb.view : (QB_VIEW[c.category] || {})[c.stage];
+  let means = sr ? `<p><b>At this stage:</b> ${esc(sr[0])}</p><p><b>Your opening:</b> ${esc(sr[1])}</p>` : "";
+  let brief = "";
+  if (ok && sr) {
+    means += (view ? `<p style="margin-top:12px"><b>Our view</b></p><div class="qview">${esc(view)}</div>` : "")
+      + (nx ? `<p><b>Watch for:</b> ${esc(nx)}.</p>` : "");
+    const ask = qbAsk(c);
+    brief = `<div class="csec o2b"><h5>We don't know yet</h5><ul>${li(qbDontKnow(c, ms, pp.length > 0))}</ul></div>`
+      + (ask ? `<div class="csec o2c"><h5>Ask on the call</h5><p class="qask">${esc(ask)}</p></div>` : "");
+  } else if (sr && (member.plan !== "free" || !QB_FREE_MONTH)) {   // 18 Nov 2026: a company this member does not follow (every plan)
+    brief = `<div class="csec o2b"><div class="qfree"><b>Quick brief</b>: our view, what we don't know yet, and one question to ask on the call. Follow this company to get it: your plan has a quick brief on every account you follow.</div></div>`;
+  } else if (sr) {   // Free plan, a company that is not theirs and not opened this month
+    const left = Math.max(0, QB_FREE_MONTH - qbOpens().size);
+    brief = `<div class="csec o2b"><div class="qfree">${left
+      ? `<b>Quick brief</b>: our view, what we don't know yet, and one question to ask on the call.<div class="askrow"><button class="askb" type="button" data-qbopen="${esc(c.name)}">Show the quick brief</button><span>${left} of ${QB_FREE_MONTH} left this month.${QB_FREE_WATCHED ? " The companies you follow always have one." : ""}</span></div>`
+      : `Your ${QB_FREE_MONTH} quick briefs for this month are used.${QB_FREE_WATCHED ? " The companies you follow always have one." : ""} Paid plans have a quick brief on every account they follow.`}</div></div>`;
   }
+  if (sr && sr[1].includes("*")) means += '<p class="small">* our estimate.</p>';
+  // FULL ACCOUNT BRIEF: the long version, a paid lane written on request (17 Nov 2026, Sumit: "we can make that a paid service lane")
+  let full;
+  if (member.plan === "free") full = `<div class="cwait">The full account brief is written for paid plans, on request.</div>`;
+  else if (fullB) {
+    const mv = fullB.mv || [];
+    full = `<details class="fullb"><summary>Read the full account brief</summary>`
+      + (fullB.s ? `<p>${esc(fullB.s)}</p>` : "")
+      + (mv[0] ? `<p><b>Your move:</b> ${esc(mv[0])}</p>` : "") + (mv[1] ? `<p><b>Why now:</b> ${esc(mv[1])}</p>` : "")
+      + ((fullB.ck || []).length ? `<p><b>Check before you call</b></p><ul>${li(fullB.ck)}</ul>` : "") + (mv[2] ? `<p><b>Also:</b> ${esc(mv[2])}</p>` : "")
+      + `<p class="small">${(fullB.src || []).length ? `Sources: ${srcLine(fullB.src)}. ` : ""}${qbWritten(fullB)}</p></details>`;
+  } else full = `<div class="cwait">Want the long version for this company? We write the full account brief on request.${FULL_BRIEF_PRICE
+      ? ` It costs ${esc(FULL_BRIEF_PRICE)}; the payment link comes with payments.` : ""}${askBriefHtml(c)}</div>`;
+  const who = sr ? `<p>${esc(sr[2])}.</p>` : "";
+  const person = pp.length
+    ? `<p><b>${pp.map(x => x.u ? `<a href="${esc(x.u)}" target="_blank" rel="noopener">${esc(x.n)}</a>` : esc(x.n)).join(", ")}</b></p><p class="small">Might be the relevant person. Check before calling.</p>`
+    : `<p><b>Unknown so far</b></p><p class="small">We add a name once public sources show one.</p>`;
   const sup = c.category === "gcc" && STATE_SUPPORT[c.state === "Delhi NCR" ? NCR_STATE[String(c.city || "").toLowerCase()] : c.state];
   // 14 Nov (Sumit): context sits in its own box on the right, beside the facts; shown only when there is a checked fact
   const ctx = sup ? `<p><b>State support.</b> ${esc(sup)}</p><p class="small">State government policy, checked Nov 2026. We cannot see which centres take it.</p>` : "";
-  const steps = ms.slice(0, 5).map(stepHtml).join("")
-    + (ms.length > 5 ? `<details class="earlier"><summary>${Math.min(ms.length, 15) - 5} earlier move${Math.min(ms.length, 15) - 5 === 1 ? "" : "s"}</summary>${ms.slice(5, 15).map(stepHtml).join("")}</details>` : "")
-    + (ms.length > 15 ? `<p class="small">${ms.length - 15} older moves not shown.</p>` : "");
+  const sh = ok ? (m => qbStepHtml(m, c)) : stepHtml;
+  const steps = ms.slice(0, 5).map(sh).join("")
+    + (ms.length > 5 ? `<details class="earlier"><summary>${Math.min(ms.length, 15) - 5} earlier move${Math.min(ms.length, 15) - 5 === 1 ? "" : "s"}</summary>${ms.slice(5, 15).map(sh).join("")}</details>` : "")
+    + (ms.length > 15 ? `<p class="small">${ms.length - 15} older moves not shown.</p>` : "")
+    + (otherMs.length ? `<details class="earlier"><summary>Other news that names it (${otherMs.length})</summary><p class="small">Not counted as its moves: results, another company's move, or news abroad.</p>${otherMs.slice(0, 10).map(stepHtml).join("")}</details>` : "");
   const meta = [`${c.yours ? '<span class="yours">YOUR ACCOUNT</span> ' : ""}${esc(c.city || "Site not stated")}`, stage ? `<span class="stw"${meanOf(stage) ? ` title="${esc(meanOf(stage))}"` : ""}>${esc(stage)}</span>` : ""].filter(Boolean);
   return `<button class="back" type="button" data-back>← Back to the list</button>
     <div class="chead"><div><h1>${esc(c.name)}</h1><div class="cmeta">${meta.map(x => `<span>${x}</span>`).join('<span class="sep">|</span>')}</div></div>${followHtml(c)}</div>
@@ -877,7 +1045,8 @@ function coPage(c) {
       <div class="cmain">
         <div class="csec o1"><h5>Quick view</h5>${quick}</div>
         ${means ? `<div class="csec o2"><h5>What it means</h5><div class="cmeans">${means}</div></div>` : ""}
-        <div class="csec o5"><h5>Full brief</h5>${full}</div>
+        ${brief}
+        <div class="csec o5"><h5>Full account brief</h5>${full}</div>
       </div>
       <div class="cside">
         <div class="cbox o4"><h5>Dated moves</h5>${steps}</div>
@@ -945,7 +1114,7 @@ function worthPicks(base) {
 const rowHtml = (c, stageWords, inYours) => `
     <div class="item${c.yours ? " you" : ""}" data-name="${esc(c.name)}">
       <div class="trow">
-        <div class="co"><b>${esc(c.name)}</b>${READS.has(c.name.toLowerCase()) ? ' <span class="tg brf" title="Our full brief is ready">BRIEF</span>' : ""}<small>${c.yours && !inYours ? "Your account · " : ""}${esc(c.city || "Site not stated")}</small></div>
+        <div class="co"><b>${esc(c.name)}</b>${(READS.get(c.name.toLowerCase()) || {}).s ? ' <span class="tg brf" title="Our full account brief is ready">BRIEF</span>' : ""}<small>${c.yours && !inYours ? "Your account · " : ""}${esc(c.city || "Site not stated")}</small></div>
         <div class="lm">${c.isNew ? '<span class="tg new" title="Moved since your last visit">NEW</span>' : ""}${esc(c.moves[0].headline)}</div>
         <div class="stc">${stageWords(c)}</div>
         <div class="when">${fmt(c.latest)}</div>
@@ -1034,7 +1203,7 @@ function render() {
   const shownN = noFilter && !view.expanded ? (sorted.length <= 7 ? 7 : 5) : view.shown;   // 14 Nov (Sumit): 5 rows, then "Show N more"
   const label = (c) => ((CATS[c.category] || {st: []}).st.find(s => s[0] === c.stage) || [, c.category ? "" : "Your account"])[1];
   // 12 Nov DRAFT: the stage in words, with 'watching' under it (the coloured letters and their legend are gone)
-  const stageWords = (c) => `<span class="stw"${c.category && meanOf(label(c)) ? ` title="${esc(meanOf(label(c)))}"` : ""}>${esc(c.category ? label(c) : "")}${!READS.has(c.name.toLowerCase()) && watching(c) ? '<small title="Fewer than two moves in the last 30 days">watching</small>' : ""}</span>`;
+  const stageWords = (c) => `<span class="stw"${c.category && meanOf(label(c)) ? ` title="${esc(meanOf(label(c)))}"` : ""}>${esc(c.category ? label(c) : "")}${!(READS.get(c.name.toLowerCase()) || {}).s && watching(c) ? '<small title="Fewer than two moves in the last 30 days">watching</small>' : ""}</span>`;
   { // 12 Nov DRAFT: the 'Showing' line: the filters in force, each with an x, and two switches
     const chips = [];
     const stL = (C.st.find(s => s[0] === view.stage) || [])[1];
@@ -1052,7 +1221,7 @@ function render() {
   const tierSize = t => sorted.filter(c => c.tier === t && !c.yours).length;
   $("rows").innerHTML = sorted.slice(0, shownN).map((c, i, arr) => `
     ${heads && !c.yours && (i === 0 || arr[i - 1].yours || arr[i - 1].tier !== c.tier) && c.tier
-      ? `<div class="grp">${esc((TIERS.find(t => t[0] === c.tier) || [, ""])[1])}<span>${tierSize(c.tier)}</span></div>` : ""}${rowHtml(c, stageWords)}`).join("") || (folded.length ? "" : `<p class="empty">Nothing here matches. Try another stage or city${member.plan === "free" ? ", or remember the Free plan shows moves a week late" : ""}.</p>`);
+      ? `<div class="grp">${esc((TIERS.find(t => t[0] === c.tier) || [, ""])[1])}<span>${tierSize(c.tier)}</span></div>` : ""}${rowHtml(c, stageWords)}`).join("") || (folded.length ? "" : `<p class="empty">Nothing here matches. Try another stage or city${member.plan === "free" ? ", or remember the Free plan shows moves a week late, except on the accounts you follow" : ""}.</p>`);
   if (folded.length && sorted.length <= shownN) {
     $("rows").innerHTML += `<div class="alsow"><div class="grp" style="padding:4px 0 8px;border:0">Also watching<span>${folded.length}</span></div>
       <p>Companies with a single step so far. We keep watching them; tap a name to see its step.</p>
@@ -1119,7 +1288,7 @@ function render() {
   // 29 Oct (Sumit): gently invite, never require. 14 Nov: the invite lives in the My accounts box, only while the list is empty.
   $("mine-p").classList.toggle("hide", mine.length > 0); $("asknote").classList.toggle("hide", mine.length > 0);
   $("mine-p").innerHTML = mine.length ? ""
-    : "<b>Tell us which accounts you want to follow.</b> Add them here and we watch them for you: every move, and the full brief when they move. If one is not in our data yet, tap \"Ask us to track it\". Only you can see your list.";
+    : "<b>Tell us which accounts you want to follow.</b> Add them here and we watch them for you: every move, and a quick brief on each one. If one is not in our data yet, tap \"Ask us to track it\". Only you can see your list.";
   $("free").textContent = member.ended
     ? `Your ${PLAN_NAMES[member.ended.plan] || "plan"} ended on ${nice(member.ended.until)}, so you now see the Free plan: each move shows a week after it happens. To keep same-day moves, write to research@provenexa.com.`
     : "On the Free plan, each move shows a week after it happens. Paid plans show it the same day.";
@@ -1164,6 +1333,7 @@ document.addEventListener("click", e => {
   const c = e.target.closest("[data-city]"); if (c && c.closest("#f-city,#cities")) { view.city = view.city === c.dataset.city ? "" : c.dataset.city; view.shown = 30; render(); return; }
   if (e.target.closest("[data-back]")) { goBack(); return; }
   const ab = e.target.closest("[data-askbrief]"); if (ab) { if (!ab.disabled) askBrief(ab); return; }
+  const qo = e.target.closest("[data-qbopen]"); if (qo) { if (!qo.disabled) qbOpen(qo); return; }
   const r = e.target.closest(".trow"); if (r) { setOpen(r.parentElement.dataset.name); return; }
   const x = e.target.closest(".chip button[data-id]"); if (x) { removeAcc(x.dataset.id); return; }
   const k = e.target.closest(".chip button[data-ask]"); if (k) { askTrack(k); return; }
