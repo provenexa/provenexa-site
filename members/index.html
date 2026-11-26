@@ -522,21 +522,23 @@ function show(id) {
 })();
 
 // ---------------------------------------------------------------- sign-in
+// 26 Nov (Sumit): count the sign-up steps (no email or name is sent, only the step), so we can see where ad visitors stop
+const step = p => { try { if (window.goatcounter && window.goatcounter.count) window.goatcounter.count({path: "signup/" + p, title: p, event: true}); } catch (e) {} };
 $("f-email").onsubmit = async e => {
   e.preventDefault();
   email = $("email").value.trim().toLowerCase();
-  $("b-email").disabled = true; say("m-email", "Sending…");
+  $("b-email").disabled = true; say("m-email", "Sending…"); step("1-code-asked");
   let captchaToken;
   for (let i = 0; i < 40 && window.turnstile && tsId !== null && !(captchaToken = turnstile.getResponse(tsId)); i++) await new Promise(r => setTimeout(r, 250));
   const {error} = await sb.auth.signInWithOtp({email, options: {shouldCreateUser: true, captchaToken}});
   try { if (tsId !== null) turnstile.reset(tsId); } catch (e) {}   // a token works once
   $("b-email").disabled = false;
-  if (error && /only request this after|rate limit/i.test(error.message)) { say("m-email", "We just sent you a code. Check your email, or wait a minute and ask again.", "err"); return; }   // 16 Nov: Supabase's one-code-a-minute rule, in plain words
-  if (error && /captcha/i.test(error.message)) { say("m-email", "The robot check did not pass. Tick the box above if it shows, or refresh the page and try again.", "err"); return; }
+  if (error && /only request this after|rate limit/i.test(error.message)) { step("x-wait-a-minute"); say("m-email", "We just sent you a code. Check your email, or wait a minute and ask again.", "err"); return; }   // 16 Nov: Supabase's one-code-a-minute rule, in plain words
+  if (error && /captcha/i.test(error.message)) { step("x-robot-check-failed"); say("m-email", "The robot check did not pass. Tick the box above if it shows, or refresh the page and try again.", "err"); return; }
   // 20 Nov (Sumit): new members sign up with a work email; the sign-in service refuses personal addresses and says why
-  if (error && /work email/i.test(error.message)) { say("m-email", error.message, "err"); return; }
-  if (error) { say("m-email", "We could not send the code: " + error.message, "err"); return; }
-  say("m-email", ""); $("sent-to").textContent = email; show("s-code"); $("code").focus();
+  if (error && /work email/i.test(error.message)) { step("x-refused-personal-email"); say("m-email", error.message, "err"); return; }
+  if (error) { step("x-code-not-sent"); say("m-email", "We could not send the code: " + error.message, "err"); return; }
+  step("2-code-sent"); say("m-email", ""); $("sent-to").textContent = email; show("s-code"); $("code").focus();
 };
 $("f-code").onsubmit = async e => {
   e.preventDefault();
@@ -545,8 +547,8 @@ $("f-code").onsubmit = async e => {
   let {error} = await sb.auth.verifyOtp({email, token, type: "email"});
   if (error) ({error} = await sb.auth.verifyOtp({email, token, type: "signup"}));   // first sign-in: "Confirm signup" code
   $("b-code").disabled = false;
-  if (error) { say("m-code", "That code did not work. Check it, or ask for a new one.", "err"); return; }
-  say("m-code", "");
+  if (error) { step("x-code-wrong"); say("m-code", "That code did not work. Check it, or ask for a new one.", "err"); return; }
+  step("3-signed-in"); say("m-code", "");
 };
 $("b-back").onclick = () => { $("code").value = ""; say("m-code", ""); show("s-email"); };
 
@@ -1493,5 +1495,7 @@ function onSession(session) {
 sb.auth.onAuthStateChange((_e, session) => onSession(session));
 sb.auth.getSession().then(({data}) => onSession(data.session));
 </script>
+<!-- visit count (26 Nov 2026): GoatCounter, no cookies, no personal data; same account as the home page -->
+<script data-goatcounter="https://provenexa-ledger.goatcounter.com/count" data-goatcounter-settings='{"path": "site/members"}' async src="//gc.zgo.at/count.js"></script>
 </body>
 </html>
