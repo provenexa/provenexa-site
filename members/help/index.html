@@ -1,0 +1,193 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Help · Next Moves</title>
+<meta name="description" content="Short answers on signing in, the stages, your accounts, briefs and alerts in Next Moves.">
+<!-- 23 Nov 2026 (Sumit, 19 Nov: "build it for launch"): the members help page. Minimal, same Swiss look as /members/.
+     Facts here follow the members page and the pricing page; change them together. No source or method names. -->
+<style>
+:root{--bg:#f2f1ed;--card:#fff;--ink:#111;--body:#2b2b2b;--muted:#6b6b6b;--hair:#d4d2ca;--line:#111;--acc:#1d5c45;--acc-soft:#e0ebe5;--soft:#eceae4;
+  --sans:Inter,"Segoe UI",system-ui,-apple-system,Roboto,Helvetica,Arial,sans-serif;--mono:ui-monospace,"Cascadia Mono",Consolas,monospace}
+@media (prefers-color-scheme:dark){:root:not([data-theme=light]){--bg:#1c1c1a;--card:#252522;--ink:#ece9e1;--body:#d2cfc6;--muted:#a3a097;--hair:#3b3b36;--line:#6b6b63;--acc:#8fb9a2;--acc-soft:#26312b;--soft:#2c2c28}}
+:root[data-theme=dark]{--bg:#1c1c1a;--card:#252522;--ink:#ece9e1;--body:#d2cfc6;--muted:#a3a097;--hair:#3b3b36;--line:#6b6b63;--acc:#8fb9a2;--acc-soft:#26312b;--soft:#2c2c28}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--body);font-family:var(--sans);line-height:1.55;-webkit-font-smoothing:antialiased;min-height:100vh;display:flex;flex-direction:column}
+a{color:var(--acc)}
+.topbar{background:var(--card);border-bottom:1px solid var(--line)}
+.top{max-width:1360px;margin:0 auto;padding:10px 20px;display:flex;align-items:center;gap:18px}
+.brand{display:flex;align-items:center;gap:12px;font-weight:800;font-size:24px;letter-spacing:-.01em;color:var(--ink);text-decoration:none;white-space:nowrap;line-height:1.05}
+.brand .bt{display:flex;flex-wrap:wrap;align-items:baseline;gap:4px 14px}
+.brand .by{font:700 10.5px var(--mono);letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+.brand b{color:var(--acc)}
+.logo{width:36px;height:36px;flex:none}
+.ghost{margin-left:auto;background:transparent;color:var(--body);border:1px solid var(--hair);border-radius:0;padding:6px 10px;font:600 13px var(--sans);cursor:pointer}
+main{flex:1 0 auto;width:100%;max-width:760px;margin:0 auto;padding:22px 20px 40px}
+.back{display:inline-block;font-size:14px;font-weight:700;color:var(--ink);text-decoration:none;margin:4px 0 18px}
+.back:hover{text-decoration:underline;text-underline-offset:3px}
+h1{font-size:clamp(30px,6vw,42px);line-height:1.05;letter-spacing:-.03em;margin:0 0 8px;color:var(--ink);font-weight:800}
+.lede{margin:0 0 26px;color:var(--muted);font-size:15.5px}
+h2{font:800 11.5px var(--mono);letter-spacing:.14em;text-transform:uppercase;color:var(--acc);margin:30px 0 0;padding-bottom:8px;border-bottom:2px solid var(--line)}
+details{border-bottom:1px solid var(--hair)}
+summary{cursor:pointer;list-style:none;padding:13px 28px 13px 0;position:relative;font-weight:700;font-size:16px;color:var(--ink)}
+summary::-webkit-details-marker{display:none}
+summary::after{content:"+";position:absolute;right:4px;top:11px;font-weight:400;font-size:20px;color:var(--muted)}
+details[open] summary::after{content:"\2212"}
+summary:hover{text-decoration:underline;text-underline-offset:3px}
+details .a{padding:0 0 14px;font-size:15px}
+details .a p{margin:0 0 8px}
+details .a p:last-child{margin-bottom:0}
+dl{margin:4px 0 6px;display:grid;grid-template-columns:max-content 1fr;gap:6px 14px}
+dt{font-weight:700;color:var(--ink)}
+dd{margin:0}
+.sub{font:800 11px var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:12px 0 4px}
+.stuck{margin-top:34px;background:var(--card);border:1px solid var(--line);padding:18px 20px;font-size:15.5px;color:var(--ink)}
+.stuck b{display:block;font-size:17px;margin-bottom:4px}
+footer{width:100%;max-width:760px;margin:0 auto;padding:10px 20px 34px;font-size:12.5px;color:var(--muted)}
+footer b{color:var(--ink)}
+@media (max-width:640px){
+  .top{padding:10px 16px}.brand{font-size:20px}.logo{width:30px;height:30px}.brand .by{display:none}
+  main{padding:16px 16px 32px}footer{padding:10px 16px 28px}
+  summary{font-size:15.5px}dl{grid-template-columns:1fr;gap:2px}dd{margin-bottom:8px}
+}
+</style>
+</head>
+<body>
+<header class="topbar"><div class="top">
+  <a class="brand" href="/members/">
+    <svg class="logo" viewBox="0 0 120 120" aria-hidden="true"><path d="M36 104 V24 H68 a26 26 0 0 1 0 52 H36" fill="none" stroke="currentColor" stroke-width="20" stroke-linecap="square" stroke-linejoin="miter"/><rect x="88" y="6" width="24" height="24" fill="var(--acc)"/></svg>
+    <span class="bt"><span>Next <b>Moves</b></span><span class="by">by Provenexa Research</span></span>
+  </a>
+  <button class="ghost" id="theme" type="button">Dark</button>
+</div></header>
+
+<main>
+<a class="back" href="/members/">&larr; Back to Next Moves</a>
+<h1>Help</h1>
+<p class="lede">Short answers to the questions members ask most. Tap a question to open it.</p>
+
+<h2 id="signin">Signing in</h2>
+<details><summary>I did not get a code</summary><div class="a">
+  <p>Look in your spam or junk folder. The code comes from research@provenexa.com.</p>
+  <p>You can ask for a new code once a minute. Each code works for a few minutes only, so use the newest one.</p>
+</div></details>
+<details><summary>It asks for a work email</summary><div class="a">
+  <p>Please sign up with the email you use at your company. Personal addresses like Gmail cannot be used.</p>
+  <p>Only have a personal address? Write to research@provenexa.com and we will help.</p>
+</div></details>
+<details><summary>The page is blank or stuck</summary><div class="a">
+  <p>Some browsers block part of the page. On Brave, turn off Shields for provenexa.com. An ad blocker can do the same: allow provenexa.com in it.</p>
+  <p>Then reload the page.</p>
+</div></details>
+<details><summary>I was signed out</summary><div class="a">
+  <p>A sign-in ends after a while. Sign in again with a new code. Your accounts stay as you left them.</p>
+</div></details>
+
+<h2 id="page">The page</h2>
+<details><summary>What is a move?</summary><div class="a">
+  <p>A sign that a company is about to grow in a place. It can be a new plant, a new office, or a new GCC (a team a foreign company sets up in India). It can also be a hiring push or a new leader.</p>
+  <p>Every move has a date. The newest moves come first.</p>
+</div></details>
+<details><summary>What do the stages mean?</summary><div class="a">
+  <p class="sub">GCC hiring</p>
+  <dl>
+    <dt>Set up, not hiring yet</dt><dd>The company has set up in India (a new India company or office), but we have not seen job ads yet.</dd>
+    <dt>Hiring quietly</dt><dd>Job ads for its India centre are out, but the company has not announced the centre yet.</dd>
+    <dt>Announced</dt><dd>The company, or a news report, has said the India centre is coming.</dd>
+    <dt>Opened</dt><dd>The centre is open and working.</dd>
+    <dt>Growing</dt><dd>An open centre is adding people or space.</dd>
+  </dl>
+  <p class="sub">Plant staffing</p>
+  <dl>
+    <dt>Applied for approval</dt><dd>The company has asked the government to approve a plant or an expansion. Not approved yet.</dd>
+    <dt>Planned</dt><dd>A plant or an expansion is planned, but building has not started.</dd>
+    <dt>Being built</dt><dd>The plant is being built or set up.</dd>
+    <dt>Started</dt><dd>The plant has started production.</dd>
+  </dl>
+</div></details>
+<details><summary>Whose word is it?</summary><div class="a">
+  <p>Each move says where it came from:</p>
+  <dl>
+    <dt>The company's own word</dt><dd>From the company's own papers or its website.</dd>
+    <dt>Public record</dt><dd>From a public record, such as an approval.</dd>
+    <dt>Job ads seen</dt><dd>We saw the company's job ads.</dd>
+    <dt>Reported</dt><dd>From a news report, not the company itself.</dd>
+  </dl>
+  <p>For a news report, the date is the day it was reported. The event itself may have happened a little earlier.</p>
+  <p>Need the original source of a move? Tap "Ask us" at the bottom of the company's page. We send it to you by email.</p>
+</div></details>
+<details><summary>What does the star (*) mean?</summary><div class="a">
+  <p>A star marks our estimate, such as when hiring is likely to start. It is not a fact from the company.</p>
+</div></details>
+<details><summary>What do "Watching" and "Worth a look" mean?</summary><div class="a">
+  <p><b>Watching</b> means the company has had fewer than two moves in the last 30 days. We keep watching it and add each new move.</p>
+  <p><b>Worth a look</b> shows up to three companies moving in your area that are not on your list. We pick them by their latest moves, never by a score.</p>
+</div></details>
+
+<h2 id="accounts">Your accounts</h2>
+<details><summary>How do I follow a company?</summary><div class="a">
+  <p>Type its name under My accounts and tap +. Its moves then come first, under Your accounts.</p>
+  <p>Only you can see your list. We never ask for it.</p>
+</div></details>
+<details><summary>I cannot find a company</summary><div class="a">
+  <p>Add it anyway and tap "Ask us to track it". We start watching it for you.</p>
+  <p>We see only the company name, never who asked.</p>
+</div></details>
+<details><summary>Can I change my accounts?</summary><div class="a">
+  <p>Yes, within your swaps for the month. A company you add stays on your list for at least 30 days.</p>
+</div></details>
+<details><summary>How do alerts work?</summary><div class="a">
+  <p>On every plan, we email you when a company you follow moves. You get one short email a day, and only on a day when one of them moves.</p>
+  <p>To turn alerts on or off, tick or untick "Email me when my accounts move" under My accounts.</p>
+</div></details>
+
+<h2 id="briefs">Briefs</h2>
+<details><summary>What is a quick brief?</summary><div class="a">
+  <p>Every company you follow has one, on every plan. You find it on the company's page:</p>
+  <dl>
+    <dt>Quick view</dt><dd>What happened, and when the latest move was.</dd>
+    <dt>What it means</dt><dd>The stage, your opening, and our view in two or three sentences.</dd>
+    <dt>We don't know yet</dt><dd>What is still missing, so you know what to check.</dd>
+    <dt>Ask on the call</dt><dd>One question to ask.</dd>
+  </dl>
+  <p>The dated moves, who can act and the likely person sit on the right.</p>
+</div></details>
+<details><summary>What is a full account brief?</summary><div class="a">
+  <p>It is the long version for one company, written by us when you ask. It is for paid plans.</p>
+  <p>Tap "Get the full brief · Rs 299" on the company's page. It opens our payment page on Razorpay with the company name already filled in. We write the brief within one working day, from what the public record supports, and mail it to you. If the public record has nothing real on that company yet, we tell you and refund the Rs 299 in full.</p>
+</div></details>
+
+<h2 id="plans">Plans</h2>
+<details><summary>Free or paid: what is the difference?</summary><div class="a">
+  <p>On Free, you see last week's moves for one category and one state. Your 3 followed accounts come the same day, with alerts and a quick brief.</p>
+  <p>Paid plans show every move the same day and follow more accounts. <a href="/pricing/">Compare the plans</a>.</p>
+</div></details>
+
+<h2 id="wrong">Something wrong?</h2>
+<details><summary>I found a mistake</summary><div class="a">
+  <p>Tap "Report a mistake" at the bottom of the company's page and tell us what is wrong. We fix it and write back within one working day.</p>
+</div></details>
+
+<div class="stuck"><b>Still stuck?</b>Write to <a href="mailto:research@provenexa.com?subject=Help">research@provenexa.com</a>. We answer within one working day.</div>
+</main>
+
+<footer><b>Provenexa Research Private Limited</b> &nbsp;·&nbsp; <a href="/members/">Next Moves</a> &nbsp;·&nbsp; <a href="/pricing/">Pricing</a></footer>
+
+<script>
+// same Light/Dark switch and saved choice as the members page (key nm-theme)
+(() => {
+  const r = document.documentElement, b = document.getElementById("theme");
+  try { const t = localStorage.getItem("nm-theme"); if (t) r.dataset.theme = t; } catch (e) {}
+  const dark = () => r.dataset.theme ? r.dataset.theme === "dark" : matchMedia("(prefers-color-scheme: dark)").matches;
+  const set = () => { b.textContent = dark() ? "Light" : "Dark"; };
+  set();
+  b.onclick = () => { r.dataset.theme = dark() ? "light" : "dark"; try { localStorage.setItem("nm-theme", r.dataset.theme); } catch (e) {} set(); };
+  // open a question straight from a link like /members/help/#signin
+  if (location.hash) { const s = document.querySelector(location.hash); if (s) { let d = s.nextElementSibling; if (d && d.tagName === "DETAILS") d.open = true; } }
+})();
+</script>
+</body>
+</html>

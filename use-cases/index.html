@@ -14,8 +14,8 @@
 <link rel="apple-touch-icon" href="../assets/apple-touch-icon.png">
 <style>
 :root{--bg:#f2f1ed;--card:#fff;--ink:#111;--body:#2b2b2b;--muted:#6b6b6b;--hair:#d4d2ca;--line:#111;--acc:#1d5c45;--acc-soft:#e0ebe5;--soft:#eceae4;--on-acc:#fff}
-@media (prefers-color-scheme:dark){:root:not([data-theme=light]){--bg:#0e0f0e;--card:#171816;--ink:#f1f0ec;--body:#d6d4cd;--muted:#9b998f;--hair:#34352f;--line:#5a5b54;--acc:#5fb58d;--acc-soft:#18291f;--soft:#22231f;--on-acc:#0e0f0e}}
-:root[data-theme=dark]{--bg:#0e0f0e;--card:#171816;--ink:#f1f0ec;--body:#d6d4cd;--muted:#9b998f;--hair:#34352f;--line:#5a5b54;--acc:#5fb58d;--acc-soft:#18291f;--soft:#22231f;--on-acc:#0e0f0e}
+@media (prefers-color-scheme:dark){:root:not([data-theme=light]){--bg:#1c1c1a;--card:#252522;--ink:#ece9e1;--body:#d2cfc6;--muted:#a3a097;--hair:#3b3b36;--line:#6b6b63;--acc:#8fb9a2;--acc-soft:#26312b;--soft:#2c2c28;--on-acc:#1c1c1a}}
+:root[data-theme=dark]{--bg:#1c1c1a;--card:#252522;--ink:#ece9e1;--body:#d2cfc6;--muted:#a3a097;--hair:#3b3b36;--line:#6b6b63;--acc:#8fb9a2;--acc-soft:#26312b;--soft:#2c2c28;--on-acc:#1c1c1a}
 *{box-sizing:border-box}
 html{-webkit-text-size-adjust:100%}
 body{margin:0;background:var(--bg);color:var(--body);font:16px/1.55 Inter,"Segoe UI",system-ui,-apple-system,sans-serif}
@@ -23,7 +23,8 @@ a{color:var(--acc)}
 .wrap{max-width:1180px;margin:0 auto;padding:0 24px}
 header.top{border-bottom:1px solid var(--line);background:var(--card)}
 header.top .wrap{display:flex;align-items:center;gap:24px;height:64px}
-.brand{font-weight:800;color:var(--ink);text-decoration:none;font-size:18px;letter-spacing:-.2px}
+.brand{display:flex;align-items:center;gap:10px;font-weight:800;color:var(--ink);text-decoration:none;font-size:18px;letter-spacing:-.2px;white-space:nowrap}
+.logo{width:30px;height:30px;flex:0 0 auto}
 nav{display:flex;gap:20px;margin-left:auto;align-items:center}
 nav a{color:var(--body);text-decoration:none;font-size:15px}
 nav a.on{color:var(--ink);font-weight:700}
@@ -92,13 +93,13 @@ footer .wrap{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap}
 </head>
 <body>
 <header class="top"><div class="wrap">
-  <a class="brand" href="../">Provenexa Research</a>
+  <a class="brand" href="../" aria-label="Provenexa Research home"><svg class="logo" viewBox="0 0 120 120" aria-hidden="true"><path d="M36 104 V24 H68 a26 26 0 0 1 0 52 H36" fill="none" stroke="currentColor" stroke-width="20" stroke-linecap="square" stroke-linejoin="miter"/><rect x="88" y="6" width="24" height="24" fill="var(--acc)"/></svg>Provenexa Research</a>
   <nav>
     <a href="../#get">Next Moves</a>
     <a href="./" class="on">Use cases</a>
     <a href="../pricing/">Pricing</a>
     <a href="../#founder">Founder</a>
-    <a class="btn" href="mailto:research@provenexa.com?subject=Early%20access">Get early access</a>
+    <a class="btn" href="../members/">Sign up free</a>
   </nav>
 </div></header>
 
@@ -197,7 +198,7 @@ footer .wrap{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap}
 </div>
 
 <section class="final"><div class="wrap">
-  <div><h2>See the moves for your region.</h2><p>Companies can start a two-week pilot now. Individual sign-up opens soon, at founding member prices.</p></div>
+  <div><h2>See the moves for your region.</h2><p>Start free with your work email. Companies can also ask for a two-week pilot.</p></div>
   <a class="btn" href="mailto:research@provenexa.com?subject=Two-week%20pilot">Ask for a pilot</a>
 </div></section>
 </main>

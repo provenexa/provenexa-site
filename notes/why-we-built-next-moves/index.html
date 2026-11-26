@@ -1,0 +1,122 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Why we built Next Moves · Provenexa Research</title>
+<meta name="description" content="Most lost deals are lost on timing. Companies move in steps, and Next Moves shows those steps early, with a date and a source on each.">
+<link rel="canonical" href="https://provenexa.com/notes/why-we-built-next-moves/">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Why we built Next Moves">
+<meta property="og:description" content="Most lost deals are lost on timing. Companies move in steps, and Next Moves shows those steps early.">
+<meta property="og:url" content="https://provenexa.com/notes/why-we-built-next-moves/">
+<!-- 23 Nov 2026 (Sumit: "The text are good.. We can go ahead with these"): first note, goes live with the launch-morning commit (26 Nov).
+     Text = provenexa-brand/notes/2026-11-26 why-we-built-next-moves/post.md. ZF dates checked against our record 23 Nov
+     (land 3 Sep, production reported 12 Nov). No source names, no method. -->
+<style>
+:root{--bg:#f2f1ed;--card:#fff;--ink:#111;--body:#2b2b2b;--muted:#6b6b6b;--hair:#d4d2ca;--line:#111;--acc:#1d5c45;
+  --sans:Inter,"Segoe UI",system-ui,-apple-system,Roboto,Helvetica,Arial,sans-serif;--mono:ui-monospace,"Cascadia Mono",Consolas,monospace}
+@media (prefers-color-scheme:dark){:root:not([data-theme=light]){--bg:#1c1c1a;--card:#252522;--ink:#ece9e1;--body:#d2cfc6;--muted:#a3a097;--hair:#3b3b36;--line:#6b6b63;--acc:#8fb9a2}}
+:root[data-theme=dark]{--bg:#1c1c1a;--card:#252522;--ink:#ece9e1;--body:#d2cfc6;--muted:#a3a097;--hair:#3b3b36;--line:#6b6b63;--acc:#8fb9a2}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--body);font-family:var(--sans);line-height:1.65;-webkit-font-smoothing:antialiased}
+a{color:var(--acc)}
+.topbar{background:var(--card);border-bottom:1px solid var(--line)}
+.top{max-width:1100px;margin:0 auto;padding:10px 20px;display:flex;align-items:center;gap:18px}
+.brand{display:flex;align-items:center;gap:12px;font-weight:800;font-size:22px;color:var(--ink);text-decoration:none;white-space:nowrap}
+.logo{width:34px;height:34px;flex:none}
+.ghost{margin-left:auto;background:transparent;color:var(--body);border:1px solid var(--hair);border-radius:0;padding:6px 10px;font:600 13px var(--sans);cursor:pointer}
+main{max-width:700px;margin:0 auto;padding:34px 20px 40px}
+.kick{font:800 11.5px var(--mono);letter-spacing:.14em;text-transform:uppercase;color:var(--acc)}
+h1{font-size:clamp(32px,6.5vw,48px);line-height:1.04;letter-spacing:-.03em;margin:10px 0 12px;color:var(--ink);font-weight:800}
+.by{margin:0 0 30px;padding-bottom:18px;border-bottom:2px solid var(--line);color:var(--muted);font-size:14.5px}
+h2{font-size:22px;line-height:1.2;letter-spacing:-.01em;color:var(--ink);font-weight:800;margin:36px 0 10px}
+p{margin:0 0 16px;font-size:17.5px}
+.big{font-size:21px;font-weight:700;color:var(--ink);line-height:1.45}
+ul.three{list-style:none;margin:6px 0 20px;padding:0;border:1px solid var(--line);background:var(--card)}
+ul.three li{display:flex;gap:14px;align-items:flex-start;padding:14px 18px;border-bottom:1px solid var(--hair);font-size:17px}
+ul.three li:last-child{border-bottom:0}
+ul.three .sq{flex:0 0 12px;height:12px;background:var(--acc);margin-top:8px}
+ul.three b{color:var(--ink)}
+.ex{border-left:4px solid var(--acc);padding:2px 0 2px 18px;margin:20px 0}
+.ex p{margin:0 0 10px}
+.ex .d{font:800 12px var(--mono);letter-spacing:.1em;text-transform:uppercase;color:var(--acc);display:block;margin-bottom:2px}
+.cta{margin:34px 0 8px;background:var(--card);border:1px solid var(--line);padding:20px 22px}
+.cta b{display:block;font-size:19px;color:var(--ink);margin-bottom:4px}
+.cta p{font-size:16px;margin:0 0 14px}
+.btn{display:inline-block;background:var(--ink);color:var(--bg);text-decoration:none;font-weight:800;padding:11px 18px;font-size:15.5px}
+.btn:hover{opacity:.9}
+footer{max-width:700px;margin:0 auto;padding:10px 20px 34px;font-size:12.5px;color:var(--muted)}
+footer b{color:var(--ink)}
+@media (max-width:640px){.top{padding:10px 16px}.brand{font-size:19px}main{padding:24px 16px 32px}footer{padding:10px 16px 28px}p{font-size:16.5px}.big{font-size:19px}}
+</style>
+</head>
+<body>
+<header class="topbar"><div class="top">
+  <a class="brand" href="/">
+    <svg class="logo" viewBox="0 0 120 120" aria-hidden="true"><path d="M36 104 V24 H68 a26 26 0 0 1 0 52 H36" fill="none" stroke="currentColor" stroke-width="20" stroke-linecap="square" stroke-linejoin="miter"/><rect x="88" y="6" width="24" height="24" fill="var(--acc)"/></svg>
+    <span>Provenexa</span>
+  </a>
+  <button class="ghost" id="theme" type="button">Dark</button>
+</div></header>
+
+<main>
+<span class="kick">Notes</span>
+<h1>Why we built Next Moves</h1>
+<p class="by">Sumit Jaswal, Founder, Provenexa Research &middot; 26 November 2026</p>
+
+<p>If you sell to companies, you know this line: "We already have a vendor."</p>
+<p>You hear it on a call you made in good faith. The company really did need what you sell. You just called a few months too late.</p>
+<p>In over two decades of sales, I heard that line more times than I can count. It is rarely about price, and rarely about your pitch. It is about timing. When a company is setting up, someone picks the vendors early and quietly. Most sellers find out about the company only after that.</p>
+
+<h2>Companies move in steps</h2>
+<p>A new plant or office does not appear overnight. It moves in steps. First a new company or a plot of land. Then an approval. Then a few first hires. Then the vendors are picked. Then it opens, and everyone arrives at once.</p>
+<div class="ex">
+  <p><span class="d">September</span>ZF Steering Gear's unit bought more land next to its project at Supa, in Maharashtra, for its aluminium plant.</p>
+  <p><span class="d">November</span>Its aluminium division was reported to have started commercial production there.</p>
+</div>
+<p>Both were public steps, with dates. Between them were about ten weeks when a seller could have called at the right moment.</p>
+<p>Most people never see these steps. They are spread across many places and many languages, and nobody joins them up for one company. So the news arrives late, all at once, and often mixed with old stories passed off as new.</p>
+
+<h2>A note I used to write by hand</h2>
+<p>At Monster, in 2011, every account manager kept a note for each client. It said who they are, what is changing there, and who to call. We wrote it by hand, and it went stale the week we wrote it. Next Moves is that note, kept current for you.</p>
+
+<h2>What Next Moves does</h2>
+<p>Next Moves follows those early steps for thousands of Indian companies, every day. For each company it shows:</p>
+<ul class="three">
+  <li><span class="sq"></span><span><b>What moved,</b> with the date and the kind of source behind it.</span></li>
+  <li><span class="sq"></span><span><b>Why now:</b> where the company is on its way from first step to opening.</span></li>
+  <li><span class="sq"></span><span><b>Who to approach:</b> the role that usually picks vendors at that stage.</span></li>
+</ul>
+<p>You check it before you call. Then you use the contact tool you already have to reach the person. We come before that tool, not instead of it.</p>
+
+<h2>The rules we keep</h2>
+<p>Every step has a date and a source. If only a newspaper says it, we mark it "reported". If the company said it, we say so. If we do not know something, we say "not known yet" instead of guessing. A wrong date or a mixed-up company costs you a call, so we check before we show.</p>
+
+<h2>Start free today</h2>
+<p>From today, anyone who sells to companies can sign up free with a work email. You follow three companies of your own and see their moves the same day, with an email when one of them moves. Everything else on the free plan comes a week late. If it helps you call at the right time, the paid plans show more.</p>
+<p class="big">My family still asks what exactly I do. The shortest answer I have found: we track companies so that salespeople call them at the right time. That is the whole idea.</p>
+
+<div class="cta">
+  <b>Check Next Moves before your next call</b>
+  <p>Free with a work email. Three companies of your own, their moves the same day.</p>
+  <a class="btn" href="/members/?ref=blog">Sign up free</a>
+</div>
+</main>
+
+<footer><b>Provenexa Research Private Limited</b> &nbsp;&middot;&nbsp; <a href="/">Home</a> &nbsp;&middot;&nbsp; <a href="/pricing/">Pricing</a> &nbsp;&middot;&nbsp; <a href="/privacy/">Privacy</a><br>Information on this site is for general information only and is not investment advice.</footer>
+
+<script>
+(() => {
+  const r = document.documentElement, b = document.getElementById("theme");
+  const dark = () => r.dataset.theme ? r.dataset.theme === "dark" : matchMedia("(prefers-color-scheme: dark)").matches;
+  const set = () => { b.textContent = dark() ? "Light" : "Dark"; };
+  set();
+  b.onclick = () => { r.dataset.theme = dark() ? "light" : "dark"; set(); };
+})();
+</script>
+<script data-goatcounter="https://provenexa-ledger.goatcounter.com/count" data-goatcounter-settings='{"path": "site/notes/why-we-built-next-moves"}' async src="//gc.zgo.at/count.js"></script>
+<script src="/assets/ref.js"></script>
+</body>
+</html>
