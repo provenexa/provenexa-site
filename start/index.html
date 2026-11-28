@@ -1,0 +1,203 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Next Moves: sign up free</title>
+<meta name="description" content="See which companies are about to buy, with dates, before the news. Free to start.">
+<meta name="robots" content="noindex">
+<link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
+<link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32.png">
+<!-- 27 Nov 2026 (Sumit: "for the ads.. a different landing page.. with large sign up"). Ad visitors land here, not on the home page:
+     the ad's own line, the email box on the first screen (no second page), one real move as proof, what Free gives. No menu.
+     Sign-in is the same as /members/ (Supabase email code + Turnstile robot check); after the code it goes to /members/.
+     Step counts go to GoatCounter as signup/ad-* (no email or name sent). Not linked from the site; noindex. -->
+<style>
+:root{--bg:#f2f1ed;--card:#fff;--ink:#111;--body:#2b2b2b;--muted:#6b6b6b;--hair:#d4d2ca;--line:#111;--acc:#1d5c45;--acc-soft:#e0ebe5;--on-acc:#fff;--panel:#111;--on-panel:#f2f1ed;--err:#a3261b;
+  --sans:Inter,"Segoe UI",system-ui,-apple-system,Roboto,Helvetica,Arial,sans-serif}
+@media (prefers-color-scheme:dark){:root:not([data-theme=light]){--bg:#1c1c1a;--card:#252522;--ink:#ece9e1;--body:#d2cfc6;--muted:#a3a097;--hair:#3b3b36;--line:#6b6b63;--acc:#8fb9a2;--acc-soft:#26312b;--on-acc:#1c1c1a;--panel:#26312b;--on-panel:#ece9e1;--err:#e08a7f}}
+:root[data-theme=dark]{--bg:#1c1c1a;--card:#252522;--ink:#ece9e1;--body:#d2cfc6;--muted:#a3a097;--hair:#3b3b36;--line:#6b6b63;--acc:#8fb9a2;--acc-soft:#26312b;--on-acc:#1c1c1a;--panel:#26312b;--on-panel:#ece9e1;--err:#e08a7f}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--body);font-family:var(--sans);line-height:1.55;-webkit-font-smoothing:antialiased}
+a{color:var(--acc)}
+.wrap{max-width:560px;margin:0 auto;padding:0 16px}
+.top{background:var(--card);border-bottom:1px solid var(--line)}
+.top .wrap{display:flex;align-items:center;height:58px}
+.brand{display:flex;align-items:center;gap:10px;text-decoration:none;font-weight:800;font-size:18px;color:var(--ink)}
+.brand .logo{height:30px;width:30px}
+.hero{padding:26px 0 8px}
+.kicker{display:inline-block;background:var(--acc);color:var(--on-acc);font-weight:800;font-size:12px;letter-spacing:.12em;text-transform:uppercase;padding:5px 9px}
+h1{color:var(--ink);font-size:clamp(28px,8vw,40px);line-height:1.08;letter-spacing:-.03em;margin:14px 0 10px;font-weight:800}
+h1 .g{color:var(--acc);display:block}
+.lead{font-size:17px;margin:0 0 18px;color:var(--body)}
+.card{background:var(--card);border:2px solid var(--ink);padding:18px 16px 16px}
+label{display:block;font-weight:700;color:var(--ink);font-size:15px;margin-bottom:6px}
+input{width:100%;font:inherit;font-size:18px;padding:14px 12px;border:1.5px solid var(--line);background:var(--bg);color:var(--ink);border-radius:0}
+input:focus{outline:3px solid var(--acc);outline-offset:1px}
+.btn{display:block;width:100%;margin-top:12px;background:var(--acc);color:var(--on-acc);border:0;font:inherit;font-size:19px;font-weight:800;padding:16px;cursor:pointer}
+.btn:disabled{opacity:.6}
+.ghost{background:none;border:0;color:var(--acc);font:inherit;font-size:15px;text-decoration:underline;padding:10px 0 0;cursor:pointer}
+.small{font-size:13.5px;color:var(--muted);margin:10px 0 0}
+.msg{font-size:15px;margin:10px 0 0;min-height:0}
+.msg.err{color:var(--err);font-weight:600}
+.ts{margin-top:10px}
+.hide{display:none}
+h2{font-size:12.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--acc);margin:30px 0 10px;font-weight:800}
+.sw{display:flex;gap:0;margin:0 0 -1px}
+.sw button{flex:1;font:inherit;font-size:15px;font-weight:700;padding:10px 8px;background:var(--bg);color:var(--muted);border:1px solid var(--line);cursor:pointer}
+.sw button+button{border-left:0}
+.sw button[aria-selected=true]{background:var(--ink);color:var(--bg)}
+.rec{background:var(--card);border:1px solid var(--line)}
+.rec .co{padding:12px 14px 8px;border-bottom:1px solid var(--hair)}
+.rec .co b{display:block;color:var(--ink);font-size:19px}
+.rec .co span{color:var(--muted);font-size:14px}
+.rec ol{list-style:none;margin:0;padding:6px 14px 10px}
+.rec li{display:grid;grid-template-columns:86px 1fr;gap:10px;padding:8px 0;border-bottom:1px solid var(--hair);font-size:15px}
+.rec li:last-child{border-bottom:0}
+.rec li b{color:var(--ink)}
+.rec li.you{background:var(--acc-soft);margin:0 -14px;padding:8px 14px}
+.rec li.you b,.rec li.you span{color:var(--acc);font-weight:700}
+.rec .rf{display:flex;justify-content:space-between;font-size:12.5px;color:var(--muted);padding:8px 14px;border-top:1px solid var(--hair)}
+ul.get{margin:0;padding:0;list-style:none}
+ul.get li{padding:10px 0 10px 26px;border-bottom:1px solid var(--hair);position:relative;font-size:15.5px}
+ul.get li:before{content:"";position:absolute;left:4px;top:18px;width:10px;height:10px;background:var(--acc)}
+ul.get b{color:var(--ink)}
+.again{margin:26px 0 8px}
+.again a{display:block;text-align:center;background:var(--ink);color:var(--bg);text-decoration:none;font-weight:800;font-size:17px;padding:15px}
+footer{margin-top:30px;background:var(--panel);color:var(--on-panel);font-size:13px;padding:18px 0 22px}
+footer a{color:var(--on-panel)}
+footer .wrap{display:flex;flex-wrap:wrap;gap:6px 16px;justify-content:space-between}
+</style>
+</head>
+<body>
+<header class="top"><div class="wrap"><a class="brand" href="/?ref=ad-start" aria-label="Provenexa Research"><svg class="logo" viewBox="0 0 120 120" aria-hidden="true"><path d="M36 104 V24 H68 a26 26 0 0 1 0 52 H36" fill="none" stroke="currentColor" stroke-width="20" stroke-linecap="square" stroke-linejoin="miter"/><rect x="88" y="6" width="24" height="24" fill="var(--acc)"/></svg>Provenexa</a></div></header>
+
+<div class="wrap">
+  <section class="hero">
+    <span class="kicker">Next Moves · free to start</span>
+    <h1>Some sell promises.<span class="g">We show dated facts.</span></h1>
+    <p class="lead">See which companies are about to open a plant, an office or a global centre, with dates, before the news. Call them first.</p>
+
+    <form class="card" id="f-email" aria-label="Sign up free">
+      <label for="email">Your work email</label>
+      <input id="email" type="email" autocomplete="email" required placeholder="you@company.com">
+      <div id="ts" class="ts"></div>
+      <button class="btn" id="b-email" type="submit">Sign up free</button>
+      <p class="msg" id="m-email"></p>
+      <p class="small">We email you a code. No password, no card. Work email only. By signing up you agree to our <a href="/terms/">Terms</a> and <a href="/privacy/">Privacy policy</a>.</p>
+    </form>
+
+    <form class="card hide" id="f-code" aria-label="Enter your code">
+      <label for="code">Check your email: enter the code we sent to <span id="sent-to"></span></label>
+      <input id="code" inputmode="numeric" autocomplete="one-time-code" required pattern="[0-9]{6,8}" maxlength="8" placeholder="123456">
+      <button class="btn" id="b-code" type="submit">Open Next Moves</button>
+      <p class="msg" id="m-code"></p>
+      <button class="ghost" id="b-back" type="button">Use another email</button>
+      <p class="small">No code? Look in your spam folder, or wait a minute and ask again.</p>
+    </form>
+  </section>
+
+  <h2>Real moves from our record</h2>
+  <div class="sw" role="tablist">
+    <button type="button" role="tab" aria-selected="true" data-k="plant">A factory</button>
+    <button type="button" role="tab" aria-selected="false" data-k="gcc">A global centre</button>
+  </div>
+  <!-- 27 Nov: factory example (Sumit: "we will need one of factories too"). Checked 27 Nov: land sublease Aug 2024 and
+       plant under construction (company annual report); clearance 23 Sep 2025 (state environment authority's letter);
+       production hiring seen 23 Aug 2026 (company's job listings); NSE filing 26 Oct 2026: +150,000 units a year at
+       Chhatrapati Sambhajinagar, "Factory 3.0 - under construction". The filing says under construction, so the card does not say running. -->
+  <div class="rec" data-k="plant">
+    <div class="co"><b>Ather Energy</b><span>New scooter plant · AURIC Bidkin, Chhatrapati Sambhajinagar</span></div>
+    <ol>
+      <li><b>Aug 2024</b><span>Takes about 100 acres at AURIC Bidkin</span></li>
+      <li><b>Sep 2025</b><span>Environmental clearance for the plant</span></li>
+      <li class="you"><b>2 years</b><span>From land to first hires: the window to call</span></li>
+      <li><b>Aug 2026</b><span>Job ads for production and battery teams</span></li>
+      <li><b>Oct 2026</b><span>Board adds 1.5 lakh vehicles a year to the plant, still being built</span></li>
+    </ol>
+    <div class="rf"><span>Based on official sources.</span></div>
+  </div>
+  <div class="rec hide" data-k="gcc">
+    <div class="co"><b>Walgreens</b><span>New India centre · Chennai</span></div>
+    <ol>
+      <li><b>May 2026</b><span>Sets up its India company</span></li>
+      <li class="you"><b>4 months</b><span>The window to call, before any news</span></li>
+      <li><b>Sep 2026</b><span>Centre announced: 250+ jobs in year one</span></li>
+      <li><b>Oct 2026</b><span>Opens its Chennai centre and names an India head (reported)</span></li>
+      <li><b>Next</b><span>First hires and vendors picked*</span></li>
+    </ol>
+    <div class="rf"><span>Based on official sources.</span><span>* our estimate</span></div>
+  </div>
+
+  <h2>What you get free</h2>
+  <ul class="get">
+    <li><b>Follow 3 companies</b> you sell to. Their moves reach you the same day, by email.</li>
+    <li><b>A short brief</b> on each: what moved, what it means, who can act.</li>
+    <li><b>Moves in your state</b>, a week after they happen.</li>
+  </ul>
+
+  <div class="again"><a href="#f-email" id="b-again">Sign up free</a></div>
+</div>
+
+<footer><div class="wrap"><span>Provenexa Research Pvt Ltd · research@provenexa.com</span><span><a href="/pricing/?ref=ad-start">Plans</a> · <a href="/terms/">Terms</a> · <a href="/privacy/">Privacy</a></span></div></footer>
+
+<script src="/assets/ref.js"></script>
+<script src="/assets/supabase-js-2.45.4.min.js"></script>
+<script>
+let tsId = null;
+window.tsReady = () => { try { tsId = turnstile.render("#ts", {sitekey: "0x4AAAAAAGDeBOsJUCV9c5Xs", theme: "auto", size: "flexible", appearance: "interaction-only"}); } catch (e) {} };
+</script>
+<script src="https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit&onload=tsReady" defer></script>
+<script>
+// Public values only (the same ones the members page uses).
+const SUPABASE_URL = "https://kgkstbcrhpdxrrnswdju.supabase.co";
+const SUPABASE_KEY = "sb_publishable_wQZMIp77ig07CxrbHiGXlQ_jl1QlRYw";
+const $ = id => document.getElementById(id);
+const say = (id, t, k) => { const m = $(id); m.textContent = t || ""; m.className = "msg" + (k ? " " + k : ""); };
+const step = p => { try { if (window.goatcounter && window.goatcounter.count) window.goatcounter.count({path: "signup/ad-" + p, title: "ad " + p, event: true}); } catch (e) {} };
+let email = "";
+document.querySelectorAll(".sw button").forEach(b => b.onclick = () => {
+  document.querySelectorAll(".sw button").forEach(x => x.setAttribute("aria-selected", x === b ? "true" : "false"));
+  document.querySelectorAll(".rec[data-k]").forEach(r => r.classList.toggle("hide", r.dataset.k !== b.dataset.k));
+});
+$("b-again").onclick = e => { e.preventDefault(); scrollTo({top: 0, behavior: "smooth"}); setTimeout(() => $("email").focus(), 350); };
+if (!window.supabase) {
+  say("m-email", "Your browser blocked part of this page. Please allow provenexa.com in its privacy settings, then reload.", "err");
+  $("b-email").disabled = true;
+} else {
+  const sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+  // already signed in on this phone: go straight in
+  sb.auth.getSession().then(({data}) => { if (data && data.session) location.replace("/members/"); });
+  $("f-email").onsubmit = async e => {
+    e.preventDefault();
+    email = $("email").value.trim().toLowerCase();
+    $("b-email").disabled = true; say("m-email", "Sending…"); step("1-code-asked");
+    let captchaToken;
+    for (let i = 0; i < 40 && window.turnstile && tsId !== null && !(captchaToken = turnstile.getResponse(tsId)); i++) await new Promise(r => setTimeout(r, 250));
+    const {error} = await sb.auth.signInWithOtp({email, options: {shouldCreateUser: true, captchaToken}});
+    try { if (tsId !== null) turnstile.reset(tsId); } catch (e) {}
+    $("b-email").disabled = false;
+    if (error && /only request this after|rate limit/i.test(error.message)) { step("x-wait-a-minute"); say("m-email", "We just sent you a code. Check your email, or wait a minute and ask again.", "err"); return; }
+    if (error && /captcha/i.test(error.message)) { step("x-robot-check-failed"); say("m-email", "The robot check did not pass. Tick the box above if it shows, or reload and try again.", "err"); return; }
+    if (error && /work email/i.test(error.message)) { step("x-refused-personal-email"); say("m-email", error.message, "err"); return; }
+    if (error) { step("x-code-not-sent"); say("m-email", "We could not send the code: " + error.message, "err"); return; }
+    step("2-code-sent"); say("m-email", "");
+    $("sent-to").textContent = email; $("f-email").classList.add("hide"); $("f-code").classList.remove("hide"); $("code").focus();
+  };
+  $("f-code").onsubmit = async e => {
+    e.preventDefault();
+    $("b-code").disabled = true; say("m-code", "Checking…");
+    const token = $("code").value.trim();
+    let {error} = await sb.auth.verifyOtp({email, token, type: "email"});
+    if (error) ({error} = await sb.auth.verifyOtp({email, token, type: "signup"}));
+    $("b-code").disabled = false;
+    if (error) { step("x-code-wrong"); say("m-code", "That code did not work. Check it, or ask for a new one.", "err"); return; }
+    step("3-signed-in"); say("m-code", "Signed in. Opening Next Moves…");
+    location.replace("/members/");
+  };
+  $("b-back").onclick = () => { $("code").value = ""; say("m-code", ""); $("f-code").classList.add("hide"); $("f-email").classList.remove("hide"); $("email").focus(); };
+}
+</script>
+<script data-goatcounter="https://provenexa-ledger.goatcounter.com/count" data-goatcounter-settings='{"path": "site/start"}' async src="//gc.zgo.at/count.js"></script>
+</body>
+</html>
