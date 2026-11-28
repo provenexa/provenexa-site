@@ -67,6 +67,8 @@ ul.get b{color:var(--ink)}
 footer{margin-top:30px;background:var(--panel);color:var(--on-panel);font-size:13px;padding:18px 0 22px}
 footer a{color:var(--on-panel)}
 footer .wrap{display:flex;flex-wrap:wrap;gap:6px 16px;justify-content:space-between}
+.more{margin:14px 0 0;font-size:15px;color:var(--muted,#555)}
+.more a{color:inherit;font-weight:700}
 </style>
 </head>
 <body>
@@ -74,7 +76,7 @@ footer .wrap{display:flex;flex-wrap:wrap;gap:6px 16px;justify-content:space-betw
 
 <div class="wrap">
   <section class="hero">
-    <span class="kicker">Next Moves · free to start</span>
+    <span class="kicker">Founding member plan · Rs 0</span>
     <h1>Some sell promises.<span class="g">We show dated facts.</span></h1>
     <p class="lead">See which companies are about to open a plant, an office or a global centre, with dates, before the news. Call them first.</p>
 
@@ -84,7 +86,7 @@ footer .wrap{display:flex;flex-wrap:wrap;gap:6px 16px;justify-content:space-betw
       <div id="ts" class="ts"></div>
       <button class="btn" id="b-email" type="submit">Sign up free</button>
       <p class="msg" id="m-email"></p>
-      <p class="small">We email you a code. No password, no card. Work email only. By signing up you agree to our <a href="/terms/">Terms</a> and <a href="/privacy/">Privacy policy</a>.</p>
+      <p class="small"><b>Your 3 companies stay free. Paid plans start at Rs 999 a month.</b> We email you a code. No password, no card. Work email only. By signing up you agree to our <a href="/terms/">Terms</a> and <a href="/privacy/">Privacy policy</a>.</p>
     </form>
 
     <form class="card hide" id="f-code" aria-label="Enter your code">
@@ -129,12 +131,13 @@ footer .wrap{display:flex;flex-wrap:wrap;gap:6px 16px;justify-content:space-betw
     <div class="rf"><span>Based on official sources.</span><span>* our estimate</span></div>
   </div>
 
-  <h2>What you get free</h2>
+  <h2>What the founding plan gives you, at Rs 0</h2>
   <ul class="get">
     <li><b>Follow 3 companies</b> you sell to. Their moves reach you the same day, by email.</li>
     <li><b>A short brief</b> on each: what moved, what it means, who can act.</li>
     <li><b>Moves in your state</b>, a week after they happen.</li>
   </ul>
+  <p class="more">Need more companies, or every move the same day? <a href="/pricing/?ref=ad-start">Plans from Rs 999 a month.</a></p>
 
   <div class="again"><a href="#f-email" id="b-again">Sign up free</a></div>
 </div>
